@@ -12,6 +12,7 @@ public:
 	// Pbulic functions
 	Player();
 	~Player();
+	void MakeMove();
 
 private:
 	// Private functions
