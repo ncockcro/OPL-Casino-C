@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include "Deck.h"
+#include "Round.h"
 
 using namespace std;
 
@@ -14,18 +16,19 @@ public:
 	Tournament();
 	~Tournament();
 	void PlayGame();
-	void AddPoints(int points);
+	void AddPoints();
 
 private:
 	// Private functions
-	bool TossCoin();
+	string TossCoin();
 	void GameWon();
 
 	// Private variables
 	int humanPoints;
 	int computerPoints;
-	bool firstPlayer;
+	string firstPlayer;
 	int round;
+	Round currentRound = Round();
 };
 
 #endif

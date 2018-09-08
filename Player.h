@@ -9,10 +9,10 @@ using namespace std;
 class Player
 {
 public:
-	// Pbulic functions
+	// Public functions
 	Player();
 	~Player();
-	void MakeMove();
+	virtual void MakeMove(); // Virtual function so both types of players can share certain moves
 
 private:
 	// Private functions

@@ -1,16 +1,10 @@
 #include "Tournament.h"
-#include "Deck.h"
-#include "Round.h"
-
-
 
 Tournament::Tournament()
 {
 	humanPoints = 0;
 	computerPoints = 0;
-	firstPlayer = TossCoin();
 	round = 1;
-	Round currentRound = Round();
 
 }
 
@@ -21,20 +15,29 @@ Tournament::~Tournament()
 
 void Tournament::PlayGame() {
 
-	do {
-		cout << "Human plays" << endl;
+	// The first round is player by if the human won the toin coss or not
+	currentRound.PlayRound(TossCoin());
 
-		cout << "Computer plays" << endl;
+	do {
+		// After the toin coss, it is the player whoever captured last
+		currentRound.PlayRound(currentRound.GetLastCapture());
 
 		humanPoints++;
 		computerPoints++;
 
 	} while (humanPoints < 21 && computerPoints < 21);
 
+	// Checks the points of each player to see if someone won or it was a tie
 	GameWon();
 }
 
-bool Tournament::TossCoin() {
+void Tournament::AddPoints() {
+
+}
+
+// Function for the coin toss at the beginning of a new game where a randomly generated number represents
+// a coin being tossed and the player has to try and guess it to go first.
+string Tournament::TossCoin() {
 	srand(time(NULL));
 
 	// coin will either equal 0 for heads or 1 for tails
@@ -50,15 +53,16 @@ bool Tournament::TossCoin() {
 	// If the human guesses the correct virtual coin toss, then they go first
 	if (toupper(playerCoin[0]) == 'H' && coin == 0 || toupper(playerCoin[0]) == 'T' && coin == 1) {
 		cout << "You were correct! You go first." << endl;
-		return true;
+		return "human";
 	}
 	// Otherwise the computer will go first
 	else {
 		cout << "You were wrong. The computer goes first." << endl;
-		return false;
+		return "computer";
 	}
 }
 
+// Checks to see if a specific player won the game or if it was a tie.
 void Tournament::GameWon() {
 
 	// Human won
