@@ -48,10 +48,32 @@ void Deck::PrintDeck() {
 	cout << endl;
 }
 
+// Returns true if the deck of cards is empty, false if it is not.
+bool Deck::IsEmpty() {
+
+	if (deckOfCards.empty()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+// Returns the deck of cards
+const vector<string> Deck::GetDeck() {
+	return deckOfCards;
+}
+
+// Removes four cards from the deck.
+void Deck::RemoveFourCards() {
+
+	deckOfCards.erase(deckOfCards.begin(), deckOfCards.begin() + 4);
+}
+
 // Shuffles the vector that contains the deck of cards.
 void Deck::ShuffleCards() {
 
 	// Shuffles the vector of cards
-	auto rng = default_random_engine{};
-	shuffle(begin(deckOfCards), end(deckOfCards), rng);
+	//auto rng = default_random_engine{};
+	random_shuffle(begin(deckOfCards), end(deckOfCards));
 }

@@ -2,6 +2,10 @@
 #define COMPUTER_H
 
 #include "Player.h"
+#include <string>
+#include <vector>
+
+using namespace std;
 
 class Computer: public Player
 {

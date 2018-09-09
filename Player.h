@@ -13,13 +13,18 @@ public:
 	Player();
 	~Player();
 	virtual void MakeMove(); // Virtual function so both types of players can share certain moves
+	void SetHand(const vector<string> fourCards);
+	bool IsEmpty();
+
+protected:
+	vector<string> hand;
 
 private:
 	// Private functions
 
 
 	// Private variables
-	vector<string> hand;
+
 };
 
 #endif

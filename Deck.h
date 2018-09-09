@@ -16,6 +16,9 @@ public:
 	Deck(); // Default constructor
 	~Deck(); // Default destructor
 	void PrintDeck(); // Prints the current deck of cards
+	bool IsEmpty();
+	const vector<string> GetDeck();
+	void RemoveFourCards();
 
 private:
 	// Private functions

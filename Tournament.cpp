@@ -19,6 +19,8 @@ void Tournament::PlayGame() {
 	currentRound.PlayRound(TossCoin());
 
 	do {
+		currentRound = Round();
+		
 		// After the toin coss, it is the player whoever captured last
 		currentRound.PlayRound(currentRound.GetLastCapture());
 
