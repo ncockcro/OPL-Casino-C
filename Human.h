@@ -13,6 +13,7 @@ public:
 	~Human();
 
 	void MakeMove();
+	void MakeBuild();
 };
 
 #endif
