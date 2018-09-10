@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Card.h"
 
 using namespace std;
 class Player
@@ -13,11 +14,11 @@ public:
 	Player();
 	~Player();
 	virtual void MakeMove(); // Virtual function so both types of players can share certain moves
-	void SetHand(const vector<string> fourCards);
+	void SetHand(const vector<Card> fourCards);
 	bool IsEmpty();
 
 protected:
-	vector<string> hand;
+	vector<Card> hand;
 
 private:
 	// Private functions

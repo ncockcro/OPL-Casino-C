@@ -1,5 +1,6 @@
 #include "Tournament.h"
 
+// Default constructor
 Tournament::Tournament()
 {
 	humanPoints = 0;
@@ -8,21 +9,28 @@ Tournament::Tournament()
 
 }
 
-
+// Default destructor
 Tournament::~Tournament()
 {
 }
 
+// Main game loop for playing the tournament
 void Tournament::PlayGame() {
 
-	// The first round is player by if the human won the toin coss or not
+	// The first round is played by if the human won the toin coss or not
 	currentRound.PlayRound(TossCoin());
 
+	// Then we save the person who captured the last card and increment the round counter
+	SaveLastCaptured(currentRound.GetLastCapture());
+	IncrementRound();
+
+	// The rest of the game is continued onwards until one person has scored the correct amount of points
 	do {
-		currentRound = Round();
 		
+		currentRound = Round();
 		// After the toin coss, it is the player whoever captured last
-		currentRound.PlayRound(currentRound.GetLastCapture());
+		Round currentRound2 = Round();
+		currentRound2.PlayRound(lastCaptured);
 
 		humanPoints++;
 		computerPoints++;
@@ -78,5 +86,20 @@ void Tournament::GameWon() {
 	// Its a tie
 	else {
 		cout << "It's a tie!" << endl;
+	}
+}
+
+// Increases the round counter.
+void Tournament::IncrementRound() {
+	round++;
+}
+
+void Tournament::SaveLastCaptured(string capturer) {
+
+	if (capturer == "human" || capturer == "computer") {
+		lastCaptured = capturer;
+	}
+	else {
+		cout << "Error in saving the last captured player." << endl;
 	}
 }

@@ -22,7 +22,7 @@ void Player::MakeMove() {
 }
 
 // When a player is out of cards, this function will be called to add four more cards to a players hand.
-void Player::SetHand(const vector<string> fourCards) {
+void Player::SetHand(const vector<Card> fourCards) {
 
 	hand.push_back(fourCards[0]);
 	hand.push_back(fourCards[1]);

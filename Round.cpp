@@ -49,7 +49,7 @@ void Round::PlayRound(string firstPlayer) {
 }
 
 // Getter for getting the player who made the last capture.
-string Round::GetLastCapture() {
+const string Round::GetLastCapture() {
 	return lastCapture;
 }
 
@@ -82,6 +82,8 @@ void Round::DealCardsToPlayers() {
 
 }
 
+// At the beginning of each round, this function is called to set the table and place four cards on it.
+// This calls a function to add four cards to the table vector and removes four cards from the deck.
 void Round::DealCardsToTable() {
 
 	// Deal four cards to the table
@@ -91,7 +93,8 @@ void Round::DealCardsToTable() {
 	deckOfCards.RemoveFourCards();
 }
 
-void Round::SetTable(vector<string> deckOfCards) {
+// This function pushes four cards onto the table vector of cards.
+void Round::SetTable(vector<Card> deckOfCards) {
 
 	table.push_back(deckOfCards[0]);
 	table.push_back(deckOfCards[1]);

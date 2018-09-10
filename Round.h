@@ -8,6 +8,7 @@
 #include "Human.h"
 #include "Computer.h"
 #include "Deck.h"
+#include "Card.h"
 
 
 using namespace std;
@@ -18,14 +19,14 @@ public:
 	Round();
 	~Round();
 	void PlayRound(string firstPlayer);
-	string GetLastCapture();
+	const string GetLastCapture();
 
 private:
 	// Private functions
 	void SwitchPlayer();
 	void DealCardsToPlayers();
 	void DealCardsToTable();
-	void SetTable(vector<string> deckOfCards);
+	void SetTable(vector<Card> deckOfCards);
 
 	// Private variables
 	string lastCapture;
@@ -37,7 +38,7 @@ private:
 	Computer p2 = Computer();
 
 	vector<Player*> player; // A vector of player objects which will act as one index for the player and the others as the computer
-	vector<string> table;
+	vector<Card> table;
 	
 
 };

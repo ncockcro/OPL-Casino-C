@@ -22,6 +22,8 @@ private:
 	// Private functions
 	string TossCoin();
 	void GameWon();
+	void IncrementRound();
+	void SaveLastCaptured(string capturer);
 
 	// Private variables
 	int humanPoints;
@@ -29,6 +31,7 @@ private:
 	string firstPlayer;
 	int round;
 	Round currentRound = Round();
+	string lastCaptured;
 };
 
 #endif
