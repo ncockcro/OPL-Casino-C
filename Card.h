@@ -15,19 +15,19 @@ public:
 
 	// Setters
 	void SetCard(string passedCard);
-	void SetSuit(string passedSuit);
-	void SetNumber(string passedNumber);
+	void SetSuit(char passedSuit);
+	void SetNumber(char passedNumber);
 
 	// Getters
 	const string GetCard();
-	const string GetSuit();
-	const string GetNumber();
+	const char GetSuit();
+	const char GetNumber();
 
 private:
 	// Private variables
 	string card;
-	string suit;
-	string number;
+	char suit;
+	char number;
 };
 
 #endif

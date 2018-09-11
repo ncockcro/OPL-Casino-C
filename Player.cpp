@@ -39,3 +39,15 @@ bool Player::IsEmpty() {
 		return false;
 	}
 }
+
+const vector<Card> Player::GetHand() {
+	return hand;
+}
+
+const Card Player::GetPlayerCard() {
+	return playerCard;
+}
+
+const vector<Card> Player::GetBuildCards(){
+	return buildCards;
+}

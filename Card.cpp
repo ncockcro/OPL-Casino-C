@@ -21,18 +21,18 @@ void Card::SetCard(string passedCard) {
 	}
 }
 
-void Card::SetSuit(string passedSuit) {
-	if (passedSuit == "C" || passedSuit == "D" || passedSuit == "H" || passedSuit == "S") {
+void Card::SetSuit(char passedSuit) {
+	if (passedSuit == 'C' || passedSuit == 'D' || passedSuit == 'H' || passedSuit == 'S') {
 		suit = passedSuit;
 	}
 	else {
 		cout << "Error in setting the suit in the card class." << endl;
 	}
 }
-void Card::SetNumber(string passedNumber) {
-	if (passedNumber == "2" || passedNumber == "3" || passedNumber == "4" || passedNumber == "5" || passedNumber == "6" ||
-		passedNumber == "7" || passedNumber == "8" || passedNumber == "9" || passedNumber == "X" || passedNumber == "J" ||
-		passedNumber == "Q" || passedNumber == "K" || passedNumber == "A") {
+void Card::SetNumber(char passedNumber) {
+	if (passedNumber == '2' || passedNumber == '3' || passedNumber == '4' || passedNumber == '5' || passedNumber == '6' ||
+		passedNumber == '7' || passedNumber == '8' || passedNumber == '9' || passedNumber == 'X' || passedNumber == 'J' ||
+		passedNumber == 'Q' || passedNumber == 'K' || passedNumber == 'A') {
 		number = passedNumber;
 	}
 	else {
@@ -43,9 +43,9 @@ void Card::SetNumber(string passedNumber) {
 const string Card::GetCard() {
 	return card;
 }
-const string Card::GetSuit() {
+const char Card::GetSuit() {
 	return suit;
 }
-const string Card::GetNumber() {
+const char Card::GetNumber() {
 	return number;
 }

@@ -27,6 +27,9 @@ private:
 	void DealCardsToPlayers();
 	void DealCardsToTable();
 	void SetTable(vector<Card> deckOfCards);
+	void CheckMove();
+	bool CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards); // Checks the number in a players hand and the number they are trying to add up to in a build
+	int CardNumber(char number);
 
 	// Private variables
 	string lastCapture;
@@ -40,7 +43,9 @@ private:
 	vector<Player*> player; // A vector of player objects which will act as one index for the player and the others as the computer
 	vector<Card> table;
 	
-
+	// Used if the player is making a build
+	Card playerCard;
+	vector<Card> playerBuildCards;
 };
 
 #endif

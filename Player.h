@@ -7,6 +7,14 @@
 #include "Card.h"
 
 using namespace std;
+
+/*
+Joseph Allen, in CMPS 366-01, helped answer some questions about inheritance and how it works for me.
+I showed him some parts of my code such as the MakeMove() function in the player class as well as in
+the human class so he can have an understanding of what I was trying to do and how he could explain it
+to me. He looked at my code but I did not look at his.
+*/
+
 class Player
 {
 public:
@@ -16,9 +24,14 @@ public:
 	virtual void MakeMove(); // Virtual function so both types of players can share certain moves
 	void SetHand(const vector<Card> fourCards);
 	bool IsEmpty();
+	const vector<Card> GetHand();
+	const Card GetPlayerCard();
+	const vector<Card> GetBuildCards();
 
 protected:
 	vector<Card> hand;
+	Card playerCard;
+	vector<Card> buildCards;
 
 private:
 	// Private functions
