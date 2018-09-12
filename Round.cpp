@@ -368,23 +368,27 @@ void Round::CreatePlayerBuild() {
 	tableBuilds[buildCounter].SetBuildOfCards(playerTableBuildCards);
 
 	// Then remove the cards from the player's hand and the table since those cards are now part of a build
-	RemoveTableCards();
+	RemoveTableCards(playerTableBuildCards);
 	player[currentPlayer]->RemoveCard(playerHandBuildCard);
 	
 	buildCounter++;
 }
 
-void Round::RemoveTableCards() {
+void Round::RemoveTableCards(vector<Card> cards) {
 
-	vector<Card> buildCards;
-	int count = 0;
 
 	for (size_t i = 0; i < table.size(); i++) {
-		for (size_t j = 0; j < playerTableBuildCards.size(); j++) {
-			if (table[i].GetCard() == playerTableBuildCards[j].GetCard()) {
+		for (size_t j = 0; j < cards.size(); j++) {
+			if (table[i].GetCard() == cards[j].GetCard()) {
 				table.erase(table.begin() + i);
 			}
 		}
+	}
+}
+
+void Round::AddCardsToTable(vector<Card> cards) {
+	for (size_t i = 0; i < cards.size(); i++) {
+		table.push_back(cards[i]);
 	}
 }
 
@@ -472,7 +476,7 @@ bool Round::CheckCapture() {
 		return true;
 	}
 
-	return false;;
+	return false;
 }
 
 bool Round::PlayerHasCaptureCard() {
@@ -508,10 +512,46 @@ bool Round::CaptureCardsOnTable() {
 	return false;
 }
 
+/* *********************************************************************
+Function Name: CheckTrail
+Purpose: To validate if the player can make a trail move
+Parameters: None
+Return Value: True if a trail is valid, false otherwise
+Local Variables:
+playerHand, a vector of cards which temporarily holds the players current hand
+canCapture, a boolean which is true if the player can capture, false otherwise
+trailCard, a vector of cards which is to format the trail card in a way to be passed on and added to the table
+Algorithm:
+1) Check if the player is trying to make a trail when they have a card in their hand they can capture with the same on the table
+2) If not, remove the trail card from the player's hand
+3) Add the trail card to the table
+Assistance Received: none
+********************************************************************* */
 bool Round::CheckTrail() {
 
-}
+	vector<Card> playerHand;
+	playerHand = player[currentPlayer]->GetHand();
+	bool canCapture = false;
+	for (int i = 0; i < table.size(); i++) {
+		for (int j = 0; j < playerHand.size(); j++) {
+			if (table[i].GetCard() == playerHand[j].GetCard()) {
+				canCapture = true;
+			}
+		}
+	}
 
-void Round::AddTrail() {
+	if (canCapture != true) {
+		playerHandCaptureCard = player[currentPlayer]->GetPlayerCard();
+		vector<Card> trailCard;
+		trailCard.push_back(playerHandCaptureCard);
+		player[currentPlayer]->RemoveCard(playerHandCaptureCard);
+		player[currentPlayer]->AddToPile(trailCard);
+
+		// Adding the trail card to the table
+		AddCardsToTable(trailCard);
+		return true;
+	}
+
+	return false;
 
 }
