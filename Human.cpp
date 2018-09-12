@@ -27,27 +27,24 @@ void Human::MakeMove() {
  		MakeBuild();
 	}
 	else if (tolower(userInput[0]) == 'c') {
-		// Call capture function for input
+		MakeCapture();
 	}
 	else if (tolower(userInput[0]) == 't') {
-		// Call trail function for input
+		MakeTrail();
 	}
 	else {
 		cout << "Error in making a move by the player." << endl;
 	}
-	hand.pop_back();
-	hand.pop_back();
-	hand.pop_back();
-	hand.pop_back();
 }
 
 // If the player chooses to make a build, this function will get the user input from the for what card they want
 // To use and validates if they have that card.
 void Human::MakeBuild() {
-	
+
 	string userInput;
 	bool hasCard = false;
-	
+	buildCards.clear();
+
 
 	// Prompts the user for a card they would like to build
 	cout << "Type 'p' if you would like to go to the previous screen." << endl;
@@ -60,7 +57,7 @@ void Human::MakeBuild() {
 	}
 
 	// Go through the human's cards and see if they have the card they just entered
-	for (int i = 0; i < hand.size(); i++) {
+	for (size_t i = 0; i < hand.size(); i++) {
 		if (userInput == hand[i].GetCard()) {
 			hasCard = true;
 			playerCard.SetCard(userInput);
@@ -96,8 +93,61 @@ void Human::MakeBuild() {
 
 	} while (tolower(userInput[0]) != 'p');
 
-	for (int i = 0; i < buildCards.size(); i++) {
-		cout << buildCards[i].GetCard() << endl;
+}
+
+void Human::MakeCapture() {
+
+	string userInput;
+	bool hasCard = false;
+	captureCards.clear();
+
+
+	// Prompts the user for a card they would like to build
+	cout << "Type 'p' if you would like to go to the previous screen." << endl;
+	cout << "Enter the card that you have and want to use for a capture: ";
+	cin >> userInput;
+
+	// Takes the user back to the previous function so they can either build, capture, or trail
+	if (tolower(userInput[0]) == 'p') {
+		MakeMove();
 	}
 
+	// Go through the human's cards and see if they have the card they just entered
+	for (size_t i = 0; i < hand.size(); i++) {
+		if (userInput == hand[i].GetCard()) {
+			hasCard = true;
+			playerCard.SetCard(userInput);
+			playerCard.SetSuit(userInput[0]);
+			playerCard.SetNumber(userInput[1]);
+		}
+	}
+
+	// If they didn't have the card, this function will call itself again
+	if (hasCard == false) {
+		cout << "You do not have that card, enter a different one" << endl;
+		MakeCapture();
+	}
+
+
+}
+
+void Human::MakeTrail() {
+	string userInput;
+	bool validCard = false;
+
+	// Prompts the user for a card they would like to build
+	cout << "Enter the card that you have and want to use for a capture: ";
+	cin >> userInput;
+
+	for (int i = 0; i < uniqueCards.size(); i++) {
+		if (userInput == uniqueCards[i].GetCard()) {
+			validCard = true;
+		}
+	}
+
+	if (validCard = true) {
+		playerCard.SetCard(userInput);
+		playerCard.SetSuit(userInput[0]);
+		playerCard.SetNumber(userInput[1]);
+	}
 }

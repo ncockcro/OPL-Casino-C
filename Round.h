@@ -34,8 +34,15 @@ private:
 	int CardNumber(char number);
 	void CreatePlayerBuild();
 	void RemoveTableCards();
-	void PrintHand();
+	void PrintHandAndTable();
 	void PrintTable();
+
+	bool CheckCapture();
+	bool PlayerHasCaptureCard();
+	bool CaptureCardsOnTable();
+
+	bool CheckTrail();
+	void AddTrail();
 
 	// Private variables
 	string lastCapture;
@@ -55,6 +62,9 @@ private:
 
 	vector<Build> tableBuilds;
 	int buildCounter;
+
+	Card playerHandCaptureCard;
+	vector<Card> playerTableCaptureCards;
 };
 
 #endif

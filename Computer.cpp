@@ -15,7 +15,4 @@ Computer::~Computer()
 void Computer::MakeMove() {
 	cout << "Computer making move." << endl;
 	hand.pop_back();
-	hand.pop_back();
-	hand.pop_back();
-	hand.pop_back();
 }

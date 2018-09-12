@@ -41,7 +41,7 @@ void Round::PlayRound(string firstPlayer) {
 
 	do {
 		// Print hand, table, and have the player make a move
-		PrintHand();
+		PrintHandAndTable();
 		PrintTable();
 		do {
 			player[currentPlayer]->MakeMove();
@@ -51,7 +51,7 @@ void Round::PlayRound(string firstPlayer) {
 		SwitchPlayer();
 
 		// Print table and have the other player make a move
-		PrintHand();
+		PrintHandAndTable();
 		PrintTable();
 		player[currentPlayer]->MakeMove();
 		CheckMove(player[currentPlayer]->GetPlayerMove());
@@ -193,10 +193,20 @@ bool Round::CheckMove(char move) {
 		}
 	}
 	else if (move == 'c') {
-		//Check capture
+		if (CheckCapture() == true) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	else if (move == 't') {
-		// Check trail
+		if (CheckTrail() == true) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	else {
 		cerr << "Error in checking the move in the round class." << endl;
@@ -231,7 +241,7 @@ bool Round::CheckBuild() {
 	}
 
 	if (CheckBuildNumbers(playerHandBuildCard, playerTableBuildCards)) {
-		
+		CreatePlayerBuild();
 	}
 	else {
 		cout << "Error, you can not make a build with the cards you entered." << endl;
@@ -354,9 +364,13 @@ void Round::CreatePlayerBuild() {
 	// Adding the card from the player's hand onto the build that way I can send all the cards to be added to build object
 	playerTableBuildCards.push_back(playerHandBuildCard);
 
+	// With all the cards being used for a build, we push them onto the vector of builds
 	tableBuilds[buildCounter].SetBuildOfCards(playerTableBuildCards);
-	RemoveTableCards();
 
+	// Then remove the cards from the player's hand and the table since those cards are now part of a build
+	RemoveTableCards();
+	player[currentPlayer]->RemoveCard(playerHandBuildCard);
+	
 	buildCounter++;
 }
 
@@ -375,7 +389,7 @@ void Round::RemoveTableCards() {
 }
 
 /* *********************************************************************
-Function Name: PrintHand
+Function Name: PrintHandAndTable
 Purpose: Print the current hand of a player
 Parameters: None
 Return Value: Void
@@ -384,9 +398,10 @@ Algorithm:
 1) Get the player's current hand and print it out through a for loop
 Assistance Received: none
 ********************************************************************* */
-void Round::PrintHand() {
+void Round::PrintHandAndTable() {
 
 	vector<Card> tempHand = player[currentPlayer]->GetHand();
+	vector<Card> tempPile = player[currentPlayer]->GetPile();
 
 	if (currentPlayer == 0) {
 		cout << "Your hand: ";
@@ -394,11 +409,23 @@ void Round::PrintHand() {
 			cout << tempHand[i].GetCard() << " ";
 		}
 		cout << endl;
+
+		cout << "Your pile: ";
+		for (size_t i = 0; i < tempPile.size(); i++) {
+			cout << tempPile[i].GetCard() << " ";
+		}
+		cout << endl;
 	}
 	else {
 		cout << "Computer hand: ";
 		for (size_t i = 0; i < tempHand.size(); i++) {
 			cout << tempHand[i].GetCard() << " ";
+		}
+		cout << endl;
+
+		cout << "Your pile: ";
+		for (size_t i = 0; i < tempPile.size(); i++) {
+			cout << tempPile[i].GetCard() << " ";
 		}
 		cout << endl;
 	}
@@ -426,4 +453,65 @@ void Round::PrintTable() {
 		cout << table[i].GetCard() << " ";
 	}
 	cout << endl;
+}
+
+bool Round::CheckCapture() {
+
+	// Getting the player card that they want to put on the build
+	playerHandCaptureCard = player[currentPlayer]->GetPlayerCard();
+	vector<Card> playerHand = player[currentPlayer]->GetHand();
+	bool hasCard = false;
+
+	for (int i = 0; i < playerHand.size(); i++) {
+		if (playerHandCaptureCard.GetCard() == playerHand[i].GetCard()) {
+			hasCard = true;
+		}
+	}
+
+	if (PlayerHasCaptureCard() == true && CaptureCardsOnTable() == true) {
+		return true;
+	}
+
+	return false;;
+}
+
+bool Round::PlayerHasCaptureCard() {
+	// Getting the player card that they want to put on the build
+	playerHandCaptureCard = player[currentPlayer]->GetPlayerCard();
+	vector<Card> playerHand = player[currentPlayer]->GetHand();
+	bool hasCard = false;
+
+	for (int i = 0; i < playerHand.size(); i++) {
+		if (playerHandCaptureCard.GetCard() == playerHand[i].GetCard()) {
+			hasCard = true;
+			return hasCard;
+		}
+	}
+	return hasCard;
+}
+bool Round::CaptureCardsOnTable() {
+	char number = playerHandCaptureCard.GetNumber();
+	vector<Card> pile;
+	pile.push_back(playerHandCaptureCard);
+	
+
+	for (int i = 0; i < table.size(); i++) {
+		if (table[i].GetNumber() == number) {
+			pile.push_back(table[i]);
+			
+			player[currentPlayer]->AddToPile(pile);
+			return true;
+		}
+	}
+
+	cout << "There are no cards on the table you can capture with." << endl;
+	return false;
+}
+
+bool Round::CheckTrail() {
+
+}
+
+void Round::AddTrail() {
+
 }

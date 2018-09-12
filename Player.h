@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "Card.h"
+#include "Deck.h"
 
 using namespace std;
 
@@ -27,13 +28,26 @@ public:
 	const vector<Card> GetHand();
 	const Card GetPlayerCard();
 	const vector<Card> GetBuildCards();
+	const vector<Card> GetCaptureCards();
 	const char GetPlayerMove();
 	void RemoveCard(Card card);
 
+	void SetPile(vector<Card> passedPile);
+	void AddToPile(vector<Card> passedPile);
+	const vector<Card> GetPile();
+
+
 protected:
+	// Current hand and pile of the player
 	vector<Card> hand;
+	vector<Card> pile;
+
+	Deck deck = Deck();
+	vector<Card> uniqueCards;
+
 	Card playerCard;
 	vector<Card> buildCards;
+	vector<Card> captureCards;
 	char playerMove;
 
 private:

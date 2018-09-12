@@ -4,6 +4,7 @@
 // Default constructor
 Player::Player()
 {
+	vector<Card> uniqueCards = deck.GetDeck();
 }
 
 // Default destructor
@@ -52,6 +53,10 @@ const vector<Card> Player::GetBuildCards(){
 	return buildCards;
 }
 
+const vector<Card> Player::GetCaptureCards() {
+	return captureCards;
+}
+
 const char Player::GetPlayerMove() {
 	return playerMove;
 }
@@ -68,4 +73,28 @@ void Player::RemoveCard(Card card) {
 	if (notFound == false) {
 		cerr << "Error in removing a card in the player class." << endl;
 	}
+}
+
+void Player::SetPile(vector<Card> passedPile) {
+	int count = 0;
+	for (int i = 0; i < passedPile.size(); i++) {
+		if (passedPile[i].GetCard().size() == 2) {
+			count++;
+		}
+	}
+
+	if (count == passedPile.size()) {
+		pile = passedPile;
+	}
+}
+void Player::AddToPile(vector<Card> passedPile) {
+	
+	for (int i = 0; i < passedPile.size(); i++) {
+		if (passedPile[i].GetCard().size() == 2) {
+			pile.push_back(passedPile[i]);
+		}
+	}
+}
+const vector<Card> Player::GetPile() {
+	return pile;
 }

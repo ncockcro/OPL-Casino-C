@@ -14,6 +14,8 @@ public:
 
 	void MakeMove();
 	void MakeBuild();
+	void MakeCapture();
+	void MakeTrail();
 };
 
 #endif
