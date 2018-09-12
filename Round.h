@@ -9,6 +9,7 @@
 #include "Computer.h"
 #include "Deck.h"
 #include "Card.h"
+#include "Build.h"
 
 
 using namespace std;
@@ -27,9 +28,14 @@ private:
 	void DealCardsToPlayers();
 	void DealCardsToTable();
 	void SetTable(vector<Card> deckOfCards);
-	void CheckMove();
+	bool CheckMove(char move);
+	bool CheckBuild();
 	bool CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards); // Checks the number in a players hand and the number they are trying to add up to in a build
 	int CardNumber(char number);
+	void CreatePlayerBuild();
+	void RemoveTableCards();
+	void PrintHand();
+	void PrintTable();
 
 	// Private variables
 	string lastCapture;
@@ -44,8 +50,11 @@ private:
 	vector<Card> table;
 	
 	// Used if the player is making a build
-	Card playerCard;
-	vector<Card> playerBuildCards;
+	Card playerHandBuildCard;
+	vector<Card> playerTableBuildCards;
+
+	vector<Build> tableBuilds;
+	int buildCounter;
 };
 
 #endif

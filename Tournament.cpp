@@ -56,7 +56,7 @@ string Tournament::TossCoin() {
 	// Prompt the user for what they want to guess is the coin and validate if they typed in the correct letter
 	string playerCoin;
 	do {
-		cout << "Enter 'h' for heads and 't' for tails." << endl;
+		cout << "Enter 'h' for heads and 't' for tails: ";
 		cin >> playerCoin;
 	} while (toupper(playerCoin[0]) != 'H' && toupper(playerCoin[0]) != 'T');
 

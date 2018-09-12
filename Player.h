@@ -27,11 +27,14 @@ public:
 	const vector<Card> GetHand();
 	const Card GetPlayerCard();
 	const vector<Card> GetBuildCards();
+	const char GetPlayerMove();
+	void RemoveCard(Card card);
 
 protected:
 	vector<Card> hand;
 	Card playerCard;
 	vector<Card> buildCards;
+	char playerMove;
 
 private:
 	// Private functions

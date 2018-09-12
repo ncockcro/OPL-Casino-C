@@ -11,13 +11,25 @@ Card::~Card()
 {
 }
 
-
+/* *********************************************************************
+Function Name: SetCard
+Purpose: Setting a string to be the value of a card
+Parameters:
+passedCard, a string passed by value. It holds the string they want to set as the card
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) If the string passed in is of size 2
+2) Set it equal to the card variable in the Card class
+3) If it is not of size 2, output an error message
+Assistance Received: none
+********************************************************************* */
 void Card::SetCard(string passedCard) {
 	if (passedCard.size() == 2) {
 		card = passedCard;
 	}
 	else {
-		cout << "Error in setting the card in the card class." << endl;
+		cerr << "Error in setting the card in the card class." << endl;
 	}
 }
 

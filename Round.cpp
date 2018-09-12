@@ -6,6 +6,8 @@ Round::Round()
 {
 	player.push_back(&p1); // Human player
 	player.push_back(&p2); // Computer player
+
+	buildCounter = 0;
 }
 
 
@@ -13,7 +15,17 @@ Round::~Round()
 {
 }
 
-// Responsible for playing a single round in the tournament
+/* *********************************************************************
+Function Name: PlayRound
+Purpose: Playing a single round in the tournament
+Parameters:
+firstplayer, a string passed by value. It holds the player who goes first
+Return Value: void
+Local Variables: None
+Algorithm:
+1) WORK IN PROGRESS
+Assistance Received: none
+********************************************************************* */
 void Round::PlayRound(string firstPlayer) {
 
 	if (firstPlayer == "human") {
@@ -23,22 +35,26 @@ void Round::PlayRound(string firstPlayer) {
 		currentPlayer = 1;
 	}
 
-	deckOfCards.PrintDeck();
 	// At the beginning of a round, deal first four cards to player, next four to computer, and next four to the table
 	DealCardsToPlayers();
 	DealCardsToTable();
-	deckOfCards.PrintDeck();
-	system("pause");
 
 	do {
-		player[currentPlayer]->MakeMove();
-		// Check move
-		CheckMove();
+		// Print hand, table, and have the player make a move
+		PrintHand();
+		PrintTable();
+		do {
+			player[currentPlayer]->MakeMove();
+		} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
 
+		// Switch players
 		SwitchPlayer();
 
+		// Print table and have the other player make a move
+		PrintHand();
+		PrintTable();
 		player[currentPlayer]->MakeMove();
-		CheckMove();
+		CheckMove(player[currentPlayer]->GetPlayerMove());
 
 SwitchPlayer();
 
@@ -51,12 +67,30 @@ if (!deckOfCards.IsEmpty() && player[0]->IsEmpty() && player[1]->IsEmpty()) {
 	lastCapture = "computer";
 }
 
-// Getter for getting the player who made the last capture.
+/* *********************************************************************
+Function Name: GetLastCapture
+Purpose: Getter for getting the player who made the last capture
+Parameters: None
+Return Value: const string
+Local Variables: None
+Algorithm:
+1) Returns lastCapture
+Assistance Received: none
+********************************************************************* */
 const string Round::GetLastCapture() {
 	return lastCapture;
 }
 
-// Switches the player from human to computer and computer to human.
+/* *********************************************************************
+Function Name: SwitchPlayer
+Purpose: If the player is human, switches to computer and vice versa
+Parameters: None
+Return Value: void
+Local Variables: None
+Algorithm:
+1) If currentPlayer is 0 (human), switch it to 1 (computer) and vice versa
+Assistance Received: none
+********************************************************************* */
 void Round::SwitchPlayer() {
 	if (currentPlayer == 0) {
 		currentPlayer = 1;
@@ -69,8 +103,20 @@ void Round::SwitchPlayer() {
 	}
 }
 
-// Responsible for dealing four cards to each of the players once they run out of cards.
-// Then it removes those cards from the full deck.
+/* *********************************************************************
+Function Name: DealCardsToPlayers
+Purpose: At the beginning of round, deals four cards to each of the players
+Parameters:
+firstplayer, a string passed by value. It holds the player who goes first
+Return Value: void
+Local Variables: None
+Algorithm:
+1) Sets the humans hand with four cards from the deck
+2) Deletes four cards from the deck
+3) Sets the comuter hand with four cards from the deck
+4) Deletes four cards from the deck
+Assistance Received: none
+********************************************************************* */
 void Round::DealCardsToPlayers() {
 
 	// Deal four cards to the human
@@ -85,8 +131,17 @@ void Round::DealCardsToPlayers() {
 
 }
 
-// At the beginning of each round, this function is called to set the table and place four cards on it.
-// This calls a function to add four cards to the table vector and removes four cards from the deck.
+/* *********************************************************************
+Function Name: DealCardsToTable()
+Purpose: Deals four cards to the table at the beginning of a round
+Parameters: None
+Return Value: void
+Local Variables: None
+Algorithm:
+1) Deals four cards to the table
+2) Deletes four cards from the deck
+Assistance Received: none
+********************************************************************* */
 void Round::DealCardsToTable() {
 
 	// Deal four cards to the table
@@ -96,7 +151,17 @@ void Round::DealCardsToTable() {
 	deckOfCards.RemoveFourCards();
 }
 
-// This function pushes four cards onto the table vector of cards.
+/* *********************************************************************
+Function Name: SetTable
+Purpose: Add four cards to the table
+Parameters:
+deckOfCards, a vector of cards passed by value. It holds the four cards to be placed on the table
+Return Value: void
+Local Variables: None
+Algorithm:
+1) Push four cards onto the table vector of cards
+Assistance Received: none
+********************************************************************* */
 void Round::SetTable(vector<Card> deckOfCards) {
 
 	table.push_back(deckOfCards[0]);
@@ -105,20 +170,53 @@ void Round::SetTable(vector<Card> deckOfCards) {
 	table.push_back(deckOfCards[3]);
 }
 
-void Round::CheckMove() {
+/* *********************************************************************
+Function Name: CheckMove
+Purpose: Depending on the move of a player, it will call a function to check if it is valid
+Parameters:
+move, a char passed by value. It holds the move the player or computer is trying to make
+Return Value: A boolean, true if the player can make the move or false if they cant
+Local Variables: None
+Algorithm:
+1) If the move is a build, check the build
+2) If the move is a capture, check the capture
+3) If the move is a trail, check the trail
+Assistance Received: none
+********************************************************************* */
+bool Round::CheckMove(char move) {
+	if (move == 'b') {
+		if (CheckBuild() == true) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else if (move == 'c') {
+		//Check capture
+	}
+	else if (move == 't') {
+		// Check trail
+	}
+	else {
+		cerr << "Error in checking the move in the round class." << endl;
+	}
+}
+
+bool Round::CheckBuild() {
 
 	// Getting the player card that they want to put on the build
-	playerCard = player[currentPlayer]->GetPlayerCard();
+	playerHandBuildCard = player[currentPlayer]->GetPlayerCard();
 	// Getting the card on the table that the player wants to use for a build
-	playerBuildCards = player[currentPlayer]->GetBuildCards();
+	playerTableBuildCards = player[currentPlayer]->GetBuildCards();
 
-	int buildSize = playerBuildCards.size();
+	int buildSize = playerTableBuildCards.size();
 	int count = 0;
 
 	// This is checking to make sure that the cards the user entered in to make a build are actually on the table
 	for (size_t i = 0; i < table.size(); i++) {
-		for (size_t j = 0; j < playerBuildCards.size(); j++) {
-			if (table[i].GetCard() == playerBuildCards[j].GetCard()) {
+		for (size_t j = 0; j < playerTableBuildCards.size(); j++) {
+			if (table[i].GetCard() == playerTableBuildCards[j].GetCard()) {
 				count++;
 			}
 		}
@@ -126,13 +224,20 @@ void Round::CheckMove() {
 
 	if (count != buildSize) {
 		cout << "Error, the cards you entered for a build are not on the table" << endl;
-		player[currentPlayer]->MakeMove();
+		return false;
 	}
 	else {
 		cout << "You were correct with the build!" << endl;
 	}
 
-	CheckBuildNumbers(playerCard, playerBuildCards);
+	if (CheckBuildNumbers(playerHandBuildCard, playerTableBuildCards)) {
+		
+	}
+	else {
+		cout << "Error, you can not make a build with the cards you entered." << endl;
+		return false;
+	}
+	return true;
 }
 
 /*
@@ -180,6 +285,16 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 	return hasRightCards;
 }
 
+/*
+Function Name: CardNumber
+Purpose: Take a character as input and output the number that it represents.
+Parameters:
+number, a char, the number of a card (e.g. 2, X, J)
+Return Value: Int
+Local Variables:None
+Algorithm: Go through if, else if, and else statements til the corrent number is found.
+Assistance Received: none
+*/
 int Round::CardNumber(char number) {
 	
 	if (number == '2') {
@@ -222,4 +337,93 @@ int Round::CardNumber(char number) {
 		cout << "Error in the card number in the round class. Returning -1." << endl;
 		return -1;
 	}
+}
+
+void Round::CreatePlayerBuild() {
+
+	tableBuilds.push_back(Build());
+
+	// Setting the owner of a particular build
+	if (currentPlayer == 0) {
+		tableBuilds[buildCounter].SetOwner("human");
+	}
+	else {
+		tableBuilds[buildCounter].SetOwner("computer");
+	}
+
+	// Adding the card from the player's hand onto the build that way I can send all the cards to be added to build object
+	playerTableBuildCards.push_back(playerHandBuildCard);
+
+	tableBuilds[buildCounter].SetBuildOfCards(playerTableBuildCards);
+	RemoveTableCards();
+
+	buildCounter++;
+}
+
+void Round::RemoveTableCards() {
+
+	vector<Card> buildCards;
+	int count = 0;
+
+	for (size_t i = 0; i < table.size(); i++) {
+		for (size_t j = 0; j < playerTableBuildCards.size(); j++) {
+			if (table[i].GetCard() == playerTableBuildCards[j].GetCard()) {
+				table.erase(table.begin() + i);
+			}
+		}
+	}
+}
+
+/* *********************************************************************
+Function Name: PrintHand
+Purpose: Print the current hand of a player
+Parameters: None
+Return Value: Void
+Local Variables: tempHand, gets the players hand and stores it there temporarily
+Algorithm:
+1) Get the player's current hand and print it out through a for loop
+Assistance Received: none
+********************************************************************* */
+void Round::PrintHand() {
+
+	vector<Card> tempHand = player[currentPlayer]->GetHand();
+
+	if (currentPlayer == 0) {
+		cout << "Your hand: ";
+		for (size_t i = 0; i < tempHand.size(); i++) {
+			cout << tempHand[i].GetCard() << " ";
+		}
+		cout << endl;
+	}
+	else {
+		cout << "Computer hand: ";
+		for (size_t i = 0; i < tempHand.size(); i++) {
+			cout << tempHand[i].GetCard() << " ";
+		}
+		cout << endl;
+	}
+}
+
+/* *********************************************************************
+Function Name: PrintTable
+Purpose: Print the current table of the round
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Have a for loop to print any builds on the table
+2) Have another for loop to print out the table
+Assistance Received: none
+********************************************************************* */
+void Round::PrintTable() {
+
+	cout << "Table: ";
+	for (size_t i = 0; i < tableBuilds.size(); i++) {
+		tableBuilds[i].PrintBuild();
+	}
+
+	for (size_t i = 0; i < table.size(); i++) {
+		cout << table[i].GetCard() << " ";
+	}
+	cout << endl;
 }

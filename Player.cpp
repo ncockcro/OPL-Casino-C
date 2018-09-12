@@ -51,3 +51,21 @@ const Card Player::GetPlayerCard() {
 const vector<Card> Player::GetBuildCards(){
 	return buildCards;
 }
+
+const char Player::GetPlayerMove() {
+	return playerMove;
+}
+
+void Player::RemoveCard(Card card) {
+	bool notFound = false;
+	for (int i = 0; i < hand.size(); i++) {
+		if (hand[i].GetCard() == card.GetCard()) {
+			hand.erase(hand.begin() + i);
+			notFound = true;
+		}
+	}
+
+	if (notFound == false) {
+		cerr << "Error in removing a card in the player class." << endl;
+	}
+}

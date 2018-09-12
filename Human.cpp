@@ -14,15 +14,17 @@ Human::~Human()
 // Exclusive details for when the human is making a move.
 void Human::MakeMove() {
 	string userInput;
-	cout << "Human making move." << endl;
 
 	do {
 		cout << "Type 'b' to build, 'c' to capture, or 't' to trail: ";
 		cin >> userInput;
 	} while (tolower(userInput[0]) != 'b' && tolower(userInput[0]) != 'c' && tolower(userInput[0]) != 't');
 
+	// Saving the players move
+	playerMove = userInput[0];
+
 	if (tolower(userInput[0]) == 'b') {
-		MakeBuild();
+ 		MakeBuild();
 	}
 	else if (tolower(userInput[0]) == 'c') {
 		// Call capture function for input

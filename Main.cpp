@@ -6,8 +6,6 @@ Description: Main part of the program which runs everything and is responsible f
 */
 
 #include <iostream>
-#include "Deck.h"
-#include "Round.h"
 #include "Tournament.h"
 
 using namespace std;
