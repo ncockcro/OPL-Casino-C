@@ -20,12 +20,14 @@ public:
 
 private:
 	// Private functions
+	string StartMenu();
 	string TossCoin();
 	void GameWon();
 	void IncrementRound();
 	void SaveLastCaptured(string capturer);
 
 	// Private variables
+	string initialDecision;
 	int humanPoints;
 	int computerPoints;
 	string firstPlayer;

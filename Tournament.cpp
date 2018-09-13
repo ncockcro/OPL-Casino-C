@@ -17,6 +17,8 @@ Tournament::~Tournament()
 // Main game loop for playing the tournament
 void Tournament::PlayGame() {
 
+	initialDecision = StartMenu();
+
 	// The first round is played by if the human won the toin coss or not
 	currentRound.PlayRound(TossCoin());
 
@@ -39,6 +41,23 @@ void Tournament::PlayGame() {
 
 	// Checks the points of each player to see if someone won or it was a tie
 	GameWon();
+}
+
+string Tournament::StartMenu() {
+
+	string userInput;
+
+	cout << "Welcome to the game of Casino!" << endl;
+	cout << endl;
+
+	do {
+		cout << "'n' for new game: " << endl;
+		cout << "'l' for load game: " << endl;
+		cout << "'e' to exit: ";
+		cin >> userInput;
+	} while (userInput != "n" && userInput != "l" && userInput != "e");
+
+	return userInput;
 }
 
 void Tournament::AddPoints() {
