@@ -12,10 +12,18 @@ public:
 	Human();
 	~Human();
 
+	// Public functions
 	void MakeMove();
 	void MakeBuild();
 	void MakeCapture();
 	void MakeTrail();
+
+private:
+	// Private function
+	bool CheckCard(string card);
+
+	Deck deck;
+	vector<Card> standardDeckOfCards;
 };
 
 #endif

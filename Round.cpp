@@ -210,6 +210,7 @@ bool Round::CheckMove(char move) {
 	}
 	else {
 		cerr << "Error in checking the move in the round class." << endl;
+		return false;
 	}
 }
 
@@ -466,7 +467,7 @@ bool Round::CheckCapture() {
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
 	bool hasCard = false;
 
-	for (int i = 0; i < playerHand.size(); i++) {
+	for (size_t i = 0; i < playerHand.size(); i++) {
 		if (playerHandCaptureCard.GetCard() == playerHand[i].GetCard()) {
 			hasCard = true;
 		}
@@ -485,7 +486,7 @@ bool Round::PlayerHasCaptureCard() {
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
 	bool hasCard = false;
 
-	for (int i = 0; i < playerHand.size(); i++) {
+	for (size_t i = 0; i < playerHand.size(); i++) {
 		if (playerHandCaptureCard.GetCard() == playerHand[i].GetCard()) {
 			hasCard = true;
 			return hasCard;
@@ -499,11 +500,19 @@ bool Round::CaptureCardsOnTable() {
 	pile.push_back(playerHandCaptureCard);
 	
 
-	for (int i = 0; i < table.size(); i++) {
+	for (size_t i = 0; i < table.size(); i++) {
 		if (table[i].GetNumber() == number) {
 			pile.push_back(table[i]);
+			player[currentPlayer]->RemoveCard(playerHandCaptureCard);
 			
 			player[currentPlayer]->AddToPile(pile);
+
+			if (currentPlayer == 0) {
+				lastCapture = "human";
+			}
+			else {
+				lastCapture = "computer";
+			}
 			return true;
 		}
 	}
@@ -531,10 +540,12 @@ bool Round::CheckTrail() {
 
 	vector<Card> playerHand;
 	playerHand = player[currentPlayer]->GetHand();
+
 	bool canCapture = false;
-	for (int i = 0; i < table.size(); i++) {
-		for (int j = 0; j < playerHand.size(); j++) {
-			if (table[i].GetCard() == playerHand[j].GetCard()) {
+
+	for (size_t i = 0; i < table.size(); i++) {
+		for (size_t j = 0; j < playerHand.size(); j++) {
+			if (table[i].GetNumber() == playerHand[j].GetNumber()) {
 				canCapture = true;
 			}
 		}
@@ -545,13 +556,13 @@ bool Round::CheckTrail() {
 		vector<Card> trailCard;
 		trailCard.push_back(playerHandCaptureCard);
 		player[currentPlayer]->RemoveCard(playerHandCaptureCard);
-		player[currentPlayer]->AddToPile(trailCard);
 
 		// Adding the trail card to the table
 		AddCardsToTable(trailCard);
 		return true;
 	}
 
+	cout << "You can not trail because there is a card on the table with the same value as a card in your hand." << endl;
 	return false;
 
 }

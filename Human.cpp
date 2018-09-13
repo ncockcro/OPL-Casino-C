@@ -4,6 +4,8 @@
 
 Human::Human()
 {
+	deck = Deck();
+	standardDeckOfCards = deck.GetDeck();
 }
 
 
@@ -47,14 +49,10 @@ void Human::MakeBuild() {
 
 
 	// Prompts the user for a card they would like to build
-	cout << "Type 'p' if you would like to go to the previous screen." << endl;
-	cout << "Enter the card that you have and want to use for a build: ";
-	cin >> userInput;
-
-	// Takes the user back to the previous function so they can either build, capture, or trail
-	if (tolower(userInput[0]) == 'p') {
-		MakeMove();
-	}
+	do {
+		cout << "Enter the card that you have and want to use for a build: ";
+		cin >> userInput;
+	} while (!CheckCard(userInput));
 
 	// Go through the human's cards and see if they have the card they just entered
 	for (size_t i = 0; i < hand.size(); i++) {
@@ -80,7 +78,7 @@ void Human::MakeBuild() {
 		cin >> userInput;
 
 		// If they typed in the correct input, 
-		if (tolower(userInput[0]) != 'p' && userInput.size() == 2) {
+		if (CheckCard(userInput)) {
 			buildCards.push_back(Card());
 			buildCards[count].SetCard(userInput);
 			buildCards[count].SetSuit(userInput[0]);
@@ -103,14 +101,10 @@ void Human::MakeCapture() {
 
 
 	// Prompts the user for a card they would like to build
-	cout << "Type 'p' if you would like to go to the previous screen." << endl;
-	cout << "Enter the card that you have and want to use for a capture: ";
-	cin >> userInput;
-
-	// Takes the user back to the previous function so they can either build, capture, or trail
-	if (tolower(userInput[0]) == 'p') {
-		MakeMove();
-	}
+	do {
+		cout << "Enter the card that you have and want to use for a capture: ";
+		cin >> userInput;
+	} while (!CheckCard(userInput));
 
 	// Go through the human's cards and see if they have the card they just entered
 	for (size_t i = 0; i < hand.size(); i++) {
@@ -136,8 +130,10 @@ void Human::MakeTrail() {
 	bool validCard = false;
 
 	// Prompts the user for a card they would like to build
-	cout << "Enter the card that you have and want to use for a capture: ";
-	cin >> userInput;
+	do {
+		cout << "Enter the card that you have and want to use for a trail: ";
+		cin >> userInput;
+	} while (!CheckCard(userInput));
 
 	for (int i = 0; i < uniqueCards.size(); i++) {
 		if (userInput == uniqueCards[i].GetCard()) {
@@ -150,4 +146,17 @@ void Human::MakeTrail() {
 		playerCard.SetSuit(userInput[0]);
 		playerCard.SetNumber(userInput[1]);
 	}
+}
+
+bool Human::CheckCard(string card) {
+
+	bool validCard = false;
+
+	for (int i = 0; i < standardDeckOfCards.size(); i++) {
+		if (standardDeckOfCards[i].GetCard() == card) {
+			validCard = true;
+		}
+	}
+
+	return validCard;
 }

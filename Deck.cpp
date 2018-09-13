@@ -182,6 +182,7 @@ void Deck::RemoveFourCards() {
 
 // Shuffles the vector that contains the deck of cards.
 void Deck::ShuffleCards() {
+	// srand(time());
 
 	// Shuffles the vector of cards
 	random_shuffle(begin(deckOfCards), end(deckOfCards));
