@@ -56,15 +56,16 @@ void Round::PlayRound(string firstPlayer) {
 		player[currentPlayer]->MakeMove();
 		CheckMove(player[currentPlayer]->GetPlayerMove());
 
-SwitchPlayer();
+		SwitchPlayer();
 
-if (!deckOfCards.IsEmpty() && player[0]->IsEmpty() && player[1]->IsEmpty()) {
-	DealCardsToPlayers();
-}
+		if (!deckOfCards.IsEmpty() && player[0]->IsEmpty() && player[1]->IsEmpty()) {
+			DealCardsToPlayers();
+		}
 
 	} while (!deckOfCards.IsEmpty() && !player[0]->IsEmpty() && !player[1]->IsEmpty()); // while there are still cards in the deck and cards in the player's hands
 
-	lastCapture = "computer";
+	PrintPlayerPiles();
+
 }
 
 /* *********************************************************************
@@ -79,6 +80,13 @@ Assistance Received: none
 ********************************************************************* */
 const string Round::GetLastCapture() {
 	return lastCapture;
+}
+
+const vector<Card> Round::GetPlayerPoints() {
+	return player[0]->GetPile();
+}
+const vector<Card> Round::GetComputerPoints() {
+	return player[1]->GetPile();
 }
 
 /* *********************************************************************
@@ -498,27 +506,31 @@ bool Round::CaptureCardsOnTable() {
 	char number = playerHandCaptureCard.GetNumber();
 	vector<Card> pile;
 	pile.push_back(playerHandCaptureCard);
+	bool canCapture = false;
 	
 
 	for (size_t i = 0; i < table.size(); i++) {
 		if (table[i].GetNumber() == number) {
 			pile.push_back(table[i]);
-			player[currentPlayer]->RemoveCard(playerHandCaptureCard);
-			
-			player[currentPlayer]->AddToPile(pile);
-
-			if (currentPlayer == 0) {
-				lastCapture = "human";
-			}
-			else {
-				lastCapture = "computer";
-			}
-			return true;
+			canCapture = true;
 		}
 	}
 
-	cout << "There are no cards on the table you can capture with." << endl;
-	return false;
+	player[currentPlayer]->RemoveCard(playerHandCaptureCard);
+
+	player[currentPlayer]->AddToPile(pile);
+
+	if (currentPlayer == 0) {
+		lastCapture = "human";
+	}
+	else {
+		lastCapture = "computer";
+	}
+
+	if (canCapture == false) {
+		cout << "You can not capture any cards on the table." << endl;
+	}
+	return canCapture;
 }
 
 /* *********************************************************************
@@ -565,4 +577,13 @@ bool Round::CheckTrail() {
 	cout << "You can not trail because there is a card on the table with the same value as a card in your hand." << endl;
 	return false;
 
+}
+
+void Round::PrintPlayerPiles() {
+
+	cout << "Player's pile: ";
+	player[0]->PrintPile();
+
+	cout << "Computer's pile: ";
+	player[1]->PrintPile();
 }

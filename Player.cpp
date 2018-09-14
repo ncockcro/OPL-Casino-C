@@ -98,3 +98,10 @@ void Player::AddToPile(vector<Card> passedPile) {
 const vector<Card> Player::GetPile() {
 	return pile;
 }
+
+void Player::PrintPile() {
+	for (int i = 0; i < pile.size(); i++) {
+		cout << pile[i].GetCard() << " ";
+	}
+	cout << endl;
+}

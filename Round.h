@@ -21,6 +21,8 @@ public:
 	~Round();
 	void PlayRound(string firstPlayer);
 	const string GetLastCapture();
+	const vector<Card> GetPlayerPoints();
+	const vector<Card> GetComputerPoints();
 
 private:
 	// Private functions
@@ -41,6 +43,8 @@ private:
 	bool CheckCapture();
 	bool PlayerHasCaptureCard();
 	bool CaptureCardsOnTable();
+
+	void PrintPlayerPiles();
 
 	// Trailing
 	bool CheckTrail();

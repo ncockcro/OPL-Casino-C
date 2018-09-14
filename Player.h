@@ -35,6 +35,7 @@ public:
 	void SetPile(vector<Card> passedPile);
 	void AddToPile(vector<Card> passedPile);
 	const vector<Card> GetPile();
+	void PrintPile();
 
 
 protected:
