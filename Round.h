@@ -37,11 +37,9 @@ private:
 	void CreatePlayerBuild();
 	void RemoveTableCards(vector<Card> cards);
 	void AddCardsToTable(vector<Card> cards);
-	void PrintHandAndTable();
-	void PrintTable();
+	void PrintHandPileAndTable();
 
 	bool CheckCapture();
-	bool CaptureCardsOnTable();
 
 	void PrintPlayerPiles();
 
@@ -67,8 +65,12 @@ private:
 	vector<Build> tableBuilds;
 	int buildCounter;
 
+	// Used if the player is making a capture
 	Card playerHandCaptureCard;
 	vector<Card> playerTableCaptureCards;
+
+	// Used if the player is making a trail
+	Card playerHandTrailCard;
 };
 
 #endif

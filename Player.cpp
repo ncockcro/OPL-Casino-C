@@ -62,7 +62,7 @@ const char Player::GetPlayerMove() {
 
 void Player::RemoveCard(Card card) {
 	bool notFound = false;
-	for (int i = 0; i < hand.size(); i++) {
+	for (size_t i = 0; i < hand.size(); i++) {
 		if (hand[i].GetCard() == card.GetCard()) {
 			hand.erase(hand.begin() + i);
 			notFound = true;
@@ -76,7 +76,7 @@ void Player::RemoveCard(Card card) {
 
 void Player::SetPile(vector<Card> passedPile) {
 	int count = 0;
-	for (int i = 0; i < passedPile.size(); i++) {
+	for (size_t i = 0; i < passedPile.size(); i++) {
 		if (passedPile[i].GetCard().size() == 2) {
 			count++;
 		}
@@ -88,7 +88,7 @@ void Player::SetPile(vector<Card> passedPile) {
 }
 void Player::AddToPile(vector<Card> passedPile) {
 	
-	for (int i = 0; i < passedPile.size(); i++) {
+	for (size_t i = 0; i < passedPile.size(); i++) {
 		if (passedPile[i].GetCard().size() == 2) {
 			pile.push_back(passedPile[i]);
 		}
@@ -99,7 +99,7 @@ const vector<Card> Player::GetPile() {
 }
 
 void Player::PrintPile() {
-	for (int i = 0; i < pile.size(); i++) {
+	for (size_t i = 0; i < pile.size(); i++) {
 		cout << pile[i].GetCard() << " ";
 	}
 	cout << endl;
@@ -114,14 +114,12 @@ vector<Card> Player::MakeSet() {
 	int count = 0;
 
 	do {
-		cout << "Enter the two cards that make up a set for you to capture: ";
+		cout << "Enter the two cards that make up a set for you to capture (Type a card and hit enter): ";
 		cin >> userInput;
 
 		if (CheckCard(userInput)) {
 			setCards.push_back(Card());
 			setCards[count].SetCard(userInput);
-			setCards[count].SetSuit(userInput[0]);
-			setCards[count].SetNumber(userInput[1]);
 			count++;
 		}
 
@@ -134,7 +132,7 @@ bool Player::CheckCard(string card) {
 
 	bool validCard = false;
 
-	for (int i = 0; i < uniqueCards.size(); i++) {
+	for (size_t i = 0; i < uniqueCards.size(); i++) {
 		if (uniqueCards[i].GetCard() == card) {
 			validCard = true;
 		}

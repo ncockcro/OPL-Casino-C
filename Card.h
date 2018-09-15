@@ -15,8 +15,8 @@ public:
 
 	// Setters
 	void SetCard(string passedCard);
-	void SetSuit(char passedSuit);
-	void SetNumber(char passedNumber);
+	//void SetSuit(char passedSuit);
+	//void SetNumber(char passedNumber);
 
 	// Getters
 	const string GetCard();
@@ -24,10 +24,14 @@ public:
 	const char GetNumber();
 
 private:
+	//Private functions
+	bool CheckSuit(char passedSuit);
+	bool CheckNumber(char passedNumber);
 	// Private variables
 	string card;
 	char suit;
 	char number;
+
 };
 
 #endif

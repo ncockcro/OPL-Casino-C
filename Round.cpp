@@ -41,8 +41,7 @@ void Round::PlayRound(string firstPlayer) {
 
 	do {
 		// Print hand, table, and have the player make a move
-		PrintHandAndTable();
-		PrintTable();
+		PrintHandPileAndTable();
 
 		// If they make an error in making a move, they will be prompted again to make a correct move
 		do {
@@ -53,8 +52,7 @@ void Round::PlayRound(string firstPlayer) {
 		SwitchPlayer();
 
 		// Print table and have the other player make a move
-		PrintHandAndTable();
-		PrintTable();
+		PrintHandPileAndTable();
 		player[currentPlayer]->MakeMove();
 		CheckMove(player[currentPlayer]->GetPlayerMove());
 
@@ -66,7 +64,8 @@ void Round::PlayRound(string firstPlayer) {
 			DealCardsToPlayers();
 		}
 
-	} while (!deckOfCards.IsEmpty() && !player[0]->IsEmpty() && !player[1]->IsEmpty()); // while there are still cards in the deck and cards in the player's hands
+	// while there are still cards in the deck and cards in the player's hands
+	} while (!deckOfCards.IsEmpty() && !player[0]->IsEmpty() && !player[1]->IsEmpty());
 
 	// Print out the player's piles at the end of the round
 	PrintPlayerPiles();
@@ -509,54 +508,41 @@ Algorithm:
 1) Get the player's current hand and print it out through a for loop
 Assistance Received: none
 ********************************************************************* */
-void Round::PrintHandAndTable() {
+void Round::PrintHandPileAndTable() {
 
 	// Get the hand of the player and their pile
-	vector<Card> tempHand = player[currentPlayer]->GetHand();
-	vector<Card> tempPile = player[currentPlayer]->GetPile();
+	vector<Card> humanHand = player[0]->GetHand();
+	vector<Card> humanPile = player[0]->GetPile();
+	vector<Card>computerHand = player[1]->GetHand();
+	vector<Card> computerPile = player[1]->GetPile();
+
 
 	// If it is the human, print out their hand and pile
-	if (currentPlayer == 0) {
-		cout << "Your hand: ";
-		for (size_t i = 0; i < tempHand.size(); i++) {
-			cout << tempHand[i].GetCard() << " ";
-		}
-		cout << endl;
-
-		cout << "Your pile: ";
-		for (size_t i = 0; i < tempPile.size(); i++) {
-			cout << tempPile[i].GetCard() << " ";
-		}
-		cout << endl;
+	cout << "Your hand: ";
+	for (size_t i = 0; i < humanHand.size(); i++) {
+		cout << humanHand[i].GetCard() << " ";
 	}
+	cout << endl;
+
+	cout << "Your pile: ";
+	for (size_t i = 0; i < humanPile.size(); i++) {
+		cout << humanPile[i].GetCard() << " ";
+	}
+	cout << endl;
+
+
 	// If it is the computer, print out their hand and pile
-	else {
-		cout << "Computer hand: ";
-		for (size_t i = 0; i < tempHand.size(); i++) {
-			cout << tempHand[i].GetCard() << " ";
-		}
-		cout << endl;
-
-		cout << "Your pile: ";
-		for (size_t i = 0; i < tempPile.size(); i++) {
-			cout << tempPile[i].GetCard() << " ";
-		}
-		cout << endl;
+	cout << "Computer hand: ";
+	for (size_t i = 0; i < computerHand.size(); i++) {
+		cout << computerHand[i].GetCard() << " ";
 	}
-}
+	cout << endl;
+	cout << "Computer pile: ";
+	for (size_t i = 0; i < computerPile.size(); i++) {
+		cout << computerPile[i].GetCard() << " ";
+	}
+	cout << endl;
 
-/* *********************************************************************
-Function Name: PrintTable
-Purpose: Print the current table of the round
-Parameters: None
-Return Value: Void
-Local Variables: None
-Algorithm:
-1) Have a for loop to print any builds on the table
-2) Have another for loop to print out the table
-Assistance Received: none
-********************************************************************* */
-void Round::PrintTable() {
 
 	// First printing out any builds that were built
 	cout << "Table: ";
@@ -584,25 +570,72 @@ Assistance Received: none
 ********************************************************************* */
 bool Round::CheckCapture() {
 
-	// Getting the player card that they want to put on the build
+	// Getting the player card that they want to put on the build and the current player's hand
 	playerHandCaptureCard = player[currentPlayer]->GetPlayerCard();
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
 
-	if (CaptureCardsOnTable() == true) {
-		return true;
-	}
-
-	return false;
-}
-
-bool Round::CaptureCardsOnTable() {
+	// Local variables for capturing
 	char number = playerHandCaptureCard.GetNumber();
 	vector<Card> pile;
 	vector<Card> removedTableCards;
 	pile.push_back(playerHandCaptureCard);
 	bool canCapture = false;
 
+	// Looking variables for sets
+	vector<Card> setCards;
+	int count = 0;
+	int aceAs1Count = 0;
+	int aceAs14Count = 0;
+	string userInput;
 
+	// If the player said they wanted to make a set, then we will check those cards with the table cards first
+	// to make sure they are on the table and add up to the capture card
+		if (player[currentPlayer]->GetPlayerWantSet() == 'y') {
+			setCards = player[currentPlayer]->MakeSet();
+			do {
+
+			// First checking to make sure that if the cards they want a set with is on the table 
+			for (size_t i = 0; i < table.size(); i++) {
+				for (size_t j = 0; j < setCards.size(); j++) {
+
+					// If the card is on the table, push it onto the pile vector to be added later
+					if (table[i].GetCard() == setCards[j].GetCard()) {
+
+						pile.push_back(table[i]);
+						removedTableCards.push_back(table[i]);
+
+						// Special handling if the card is an ace or not
+						if (setCards[j].GetNumber() == 'A') {
+							aceAs1Count += CardNumber(setCards[j].GetNumber());
+							aceAs14Count += 14;
+						}
+						else {
+							aceAs1Count += CardNumber(setCards[j].GetNumber());
+						}
+						count++;
+					}
+				}
+			}
+
+			// If the set card's numbers add up to the capture card, then they can make the set
+			if (aceAs1Count != CardNumber(playerHandCaptureCard.GetNumber()) && aceAs14Count != CardNumber(playerHandCaptureCard.GetNumber())) {
+				cout << "Card numbers did not add up to what you were capturing with. Try again." << endl;
+				return false;
+			}
+
+			do {
+				cout << "Do you want to capture another set? (y,n): ";
+				cin >> userInput;
+			} while (userInput != "y" && userInput != "n");
+			if (userInput == "y") {
+				aceAs1Count = 0;
+				aceAs14Count = 0;
+				setCards = player[currentPlayer]->MakeSet();
+			}
+			} while (userInput == "y");
+		}
+
+	// Checking to see if there are any cards on the table that match the card the player wants to capture with the same value
 	for (size_t i = 0; i < table.size(); i++) {
 		if (table[i].GetNumber() == number) {
 			pile.push_back(table[i]);
@@ -619,43 +652,7 @@ bool Round::CaptureCardsOnTable() {
 		player[currentPlayer]->AddToPile(pile);
 	}
 
-	vector<Card> setCards;
-	int count = 0;
-	int aceAs1Count = 0;
-	int aceAs14Count = 0;
-
-	if (player[currentPlayer]->GetPlayerWantSet() == 'y') {
-		setCards = player[currentPlayer]->MakeSet();
-	}
-
-	for (size_t i = 0; i < table.size(); i++) {
-		for (size_t j = 0; j < setCards.size(); j++) {
-			if (table[i].GetCard() == setCards[j].GetCard()) {
-
-				pile.push_back(table[i]);
-
-				if (setCards[j].GetNumber() != 'A') {
-					aceAs1Count += CardNumber(setCards[j].GetNumber());
-				}
-				else {
-					aceAs1Count += CardNumber(setCards[j].GetNumber());
-					aceAs14Count += 14;
-				}
-				count++;
-			}
-		}
-	}
-
-	if (aceAs1Count == CardNumber(playerHandCaptureCard.GetNumber()) || aceAs14Count == CardNumber(playerHandCaptureCard.GetNumber())) {
-		player[currentPlayer]->RemoveCard(playerHandCaptureCard);
-		RemoveTableCards(removedTableCards);
-
-		player[currentPlayer]->AddToPile(pile);
-	}
-	else {
-		cout << "Those set cards were not in the table." << endl;
-	}
-
+	// Set lastCapture to whoever the current player is
 	if (currentPlayer == 0) {
 		lastCapture = "human";
 	}
@@ -667,6 +664,7 @@ bool Round::CaptureCardsOnTable() {
 		cout << "You can not capture any cards on the table." << endl;
 	}
 	return canCapture;
+
 }
 
 /* *********************************************************************
@@ -691,6 +689,7 @@ bool Round::CheckTrail() {
 
 	bool canCapture = false;
 
+	// Checking if the player is able to capture with a same value card
 	for (size_t i = 0; i < table.size(); i++) {
 		for (size_t j = 0; j < playerHand.size(); j++) {
 			if (table[i].GetNumber() == playerHand[j].GetNumber()) {

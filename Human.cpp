@@ -57,8 +57,6 @@ void Human::MakeBuild() {
 		if (userInput == hand[i].GetCard()) {
 			hasCard = true;
 			playerCard.SetCard(userInput);
-			playerCard.SetSuit(userInput[0]);
-			playerCard.SetNumber(userInput[1]);
 		}
 	}
 
@@ -79,8 +77,6 @@ void Human::MakeBuild() {
 		if (CheckCard(userInput)) {
 			buildCards.push_back(Card());
 			buildCards[count].SetCard(userInput);
-			buildCards[count].SetSuit(userInput[0]);
-			buildCards[count].SetNumber(userInput[1]);
 			count++;
 		}
 		else if (tolower(userInput[0]) != 'p') {
@@ -109,8 +105,6 @@ void Human::MakeCapture() {
 		if (userInput == hand[i].GetCard()) {
 			hasCard = true;
 			playerCard.SetCard(userInput);
-			playerCard.SetSuit(userInput[0]);
-			playerCard.SetNumber(userInput[1]);
 		}
 	}
 
@@ -138,17 +132,14 @@ void Human::MakeTrail() {
 	do {
 		cout << "Enter the card that you have and want to use for a trail: ";
 		cin >> userInput;
-	} while (!CheckCard(userInput));
 
-	for (int i = 0; i < uniqueCards.size(); i++) {
-		if (userInput == uniqueCards[i].GetCard()) {
-			validCard = true;
+		for (size_t i = 0; i < hand.size(); i++) {
+			if (userInput == hand[i].GetCard()) {
+				validCard = true;
+			}
 		}
-	}
 
-	if (validCard = true) {
-		playerCard.SetCard(userInput);
-		playerCard.SetSuit(userInput[0]);
-		playerCard.SetNumber(userInput[1]);
-	}
+	} while (!validCard);
+
+	playerCard.SetCard(userInput);
 }
