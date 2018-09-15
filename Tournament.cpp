@@ -14,7 +14,21 @@ Tournament::~Tournament()
 {
 }
 
-// Main game loop for playing the tournament
+/* *********************************************************************
+Function Name: PlayGame
+Purpose: The main game loop of Casino which runs the tournament 
+Parameters: None
+Return Value: Void
+Local Variables:
+currentRound2, a new Round object for each round after the first one
+Algorithm:
+1) Call the StartMenu function to find out what the player wants to do
+2) Play the first round and toss a coin to see who goes first
+3) Save the player that captured last, increment the round counter, and calculate the points that were made
+4) Repeat this process until the first player reaches 21 points
+5) Then output the winner
+Assistance Received: none
+********************************************************************* */
 void Tournament::PlayGame() {
 
 	initialDecision = StartMenu();
@@ -44,6 +58,17 @@ void Tournament::PlayGame() {
 	GameWon();
 }
 
+/* *********************************************************************
+Function Name: StartMenu
+Purpose: Prompt the user when the program is first run with different options
+Parameters: None
+Return Value: The option the player chose, a string
+Local Variables: userInput, a string which gets the menu option from the player
+Algorithm:
+1) Prompt the user for what option they want to do
+2) Return the option that the user picked
+Assistance Received: none
+********************************************************************* */
 string Tournament::StartMenu() {
 
 	string userInput;

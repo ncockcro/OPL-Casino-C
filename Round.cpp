@@ -576,7 +576,7 @@ Function Name: CheckCapture
 Purpose: To check if the player is elegible to make a capture based on what they entered
 Parameters: None
 Return Value: Whether the player can make a capture or not, a boolean value
-Local Variables:
+Local Variables: None
 Algorithm:
 1) Get the card the player wants to capture with and the player's hand
 2) Check and see if the player has any cards on the table to capture or any sets
@@ -715,6 +715,16 @@ bool Round::CheckTrail() {
 
 }
 
+/* *********************************************************************
+Function Name: PrintPlayerPiles
+Purpose: Prints both of the player's piles at the end of a round
+Parameters: None
+Return Value: None
+Local Variables: None
+Algorithm:
+1) Call print pile from the player class
+Assistance Received: none
+********************************************************************* */
 void Round::PrintPlayerPiles() {
 
 	cout << "Player's pile: ";

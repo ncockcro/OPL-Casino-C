@@ -150,7 +150,16 @@ Deck::~Deck()
 {
 }
 
-// Prints the current vector which contains the deck of cards whenever it is called.
+/* *********************************************************************
+Function Name: PrintDeck
+Purpose: Print out the cards from the deck
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Iterate through the vector of cards and print them out to the console
+Assistance Received: none
+********************************************************************* */
 void Deck::PrintDeck() {
 	for (size_t i = 0; i < deckOfCards.size(); i++) {
 	cout << deckOfCards[i].GetCard() << " ";
@@ -158,7 +167,16 @@ void Deck::PrintDeck() {
 	cout << endl;
 }
 
-// Returns true if the deck of cards is empty, false if it is not.
+/* *********************************************************************
+Function Name: IsEmpty
+Purpose: Checks if a deck of cards is empty
+Parameters: None
+Return Value: Returns if there are cards or there are not, a boolean value
+Local Variables: None
+Algorithm:
+1) If a deck is empty, return true, otherwise, return false
+Assistance Received: none
+********************************************************************* */
 bool Deck::IsEmpty() {
 
 	if (deckOfCards.empty()) {
@@ -169,18 +187,45 @@ bool Deck::IsEmpty() {
 	}
 }
 
-// Returns the deck of cards
+/* *********************************************************************
+Function Name: GetDeck
+Purpose: Getter for getting a copy of a deck of cards
+Parameters: None
+Return Value: a constant vector of cards
+Local Variables: None
+Algorithm:
+1) Return a copy of the deck of cards
+Assistance Received: none
+********************************************************************* */
 const vector<Card> Deck::GetDeck() {
 	return deckOfCards;
 }
 
-// Removes four cards from the deck.
+/* *********************************************************************
+Function Name: RemoveFourCards
+Purpose: Removes four cards from the deck, handy when dealing cards to the players
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Erase four cards from the deck
+Assistance Received: none
+********************************************************************* */
 void Deck::RemoveFourCards() {
 
 	deckOfCards.erase(deckOfCards.begin(), deckOfCards.begin() + 4);
 }
 
-// Shuffles the vector that contains the deck of cards.
+/* *********************************************************************
+Function Name: ShuffleCards
+Purpose: Shuffles the cards of a deck
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Shuffle the deck of cards
+Assistance Received: none
+********************************************************************* */
 void Deck::ShuffleCards() {
 	// srand(time());
 

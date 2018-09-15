@@ -1,11 +1,12 @@
 /*
-Written by: Nicholas Cockcroft
-Date: September 5, 2018
-
-Description: Main part of the program which runs everything and is responsible for starting the program.
+************************************************************
+* Name:  Nicholas Cockcroft                                *
+* Project:  Project #1, Casino (C++ version)               *
+* Class:  CMPS 366-01                                      *
+* Date:  October 2, 2018                                   *
+************************************************************
 */
 
-#include <iostream>
 #include "Tournament.h"
 
 using namespace std;
@@ -15,6 +16,5 @@ int main() {
 
 	masterGame.PlayGame();
 
-	system("pause");
 	return 0;
 }
