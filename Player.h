@@ -36,6 +36,8 @@ public:
 	void AddToPile(vector<Card> passedPile);
 	const vector<Card> GetPile();
 	void PrintPile();
+	const char GetPlayerWantSet();
+	vector<Card> MakeSet();
 
 
 protected:
@@ -44,12 +46,15 @@ protected:
 	vector<Card> pile;
 
 	Deck deck = Deck();
-	vector<Card> uniqueCards;
+	vector<Card> uniqueCards = deck.GetDeck();
 
 	Card playerCard;
 	vector<Card> buildCards;
 	vector<Card> captureCards;
 	char playerMove;
+	char playerWantSet;
+	vector<Card> setCards;
+	bool CheckCard(string card);
 
 private:
 	// Private functions

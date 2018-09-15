@@ -43,6 +43,8 @@ void Round::PlayRound(string firstPlayer) {
 		// Print hand, table, and have the player make a move
 		PrintHandAndTable();
 		PrintTable();
+
+		// If they make an error in making a move, they will be prompted again to make a correct move
 		do {
 			player[currentPlayer]->MakeMove();
 		} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
@@ -56,14 +58,17 @@ void Round::PlayRound(string firstPlayer) {
 		player[currentPlayer]->MakeMove();
 		CheckMove(player[currentPlayer]->GetPlayerMove());
 
+		// Switch again before the loop ends
 		SwitchPlayer();
 
+		// So long as there are still cards in the deck and both of the player's hands are empty, deal more cards
 		if (!deckOfCards.IsEmpty() && player[0]->IsEmpty() && player[1]->IsEmpty()) {
 			DealCardsToPlayers();
 		}
 
 	} while (!deckOfCards.IsEmpty() && !player[0]->IsEmpty() && !player[1]->IsEmpty()); // while there are still cards in the deck and cards in the player's hands
 
+	// Print out the player's piles at the end of the round
 	PrintPlayerPiles();
 
 }
@@ -82,10 +87,31 @@ const string Round::GetLastCapture() {
 	return lastCapture;
 }
 
-const vector<Card> Round::GetPlayerPoints() {
+/* *********************************************************************
+Function Name: GetPlayerPile
+Purpose: Getter for getting the human player's pile at the end of a round
+Parameters: None
+Return Value: const vector<Card>
+Local Variables: None
+Algorithm:
+1) Returns the human player's pile
+Assistance Received: none
+********************************************************************* */
+const vector<Card> Round::GetPlayerPile() {
 	return player[0]->GetPile();
 }
-const vector<Card> Round::GetComputerPoints() {
+
+/* *********************************************************************
+Function Name: GetComputerPile
+Purpose: Getter for getting the computer player's pile at the end of a round
+Parameters: None
+Return Value: const vector<Card>
+Local Variables: None
+Algorithm:
+1) Returns the computer player's pile
+Assistance Received: none
+********************************************************************* */
+const vector<Card> Round::GetComputerPile() {
 	return player[1]->GetPile();
 }
 
@@ -172,6 +198,7 @@ Assistance Received: none
 ********************************************************************* */
 void Round::SetTable(vector<Card> deckOfCards) {
 
+	// Put four cards onto the table after four cards were dealt to the human and computer
 	table.push_back(deckOfCards[0]);
 	table.push_back(deckOfCards[1]);
 	table.push_back(deckOfCards[2]);
@@ -192,6 +219,8 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 bool Round::CheckMove(char move) {
+
+	// If the user wants to build...
 	if (move == 'b') {
 		if (CheckBuild() == true) {
 			return true;
@@ -200,6 +229,8 @@ bool Round::CheckMove(char move) {
 			return false;
 		}
 	}
+
+	// If the user wants to capture...
 	else if (move == 'c') {
 		if (CheckCapture() == true) {
 			return true;
@@ -208,6 +239,8 @@ bool Round::CheckMove(char move) {
 			return false;
 		}
 	}
+
+	// If the user wants to trail...
 	else if (move == 't') {
 		if (CheckTrail() == true) {
 			return true;
@@ -216,12 +249,30 @@ bool Round::CheckMove(char move) {
 			return false;
 		}
 	}
+
+	// Error message if something went wrong and didnt get the correct move character
 	else {
 		cerr << "Error in checking the move in the round class." << endl;
 		return false;
 	}
 }
 
+/* *********************************************************************
+Function Name: CheckBuild
+Purpose: To check if the user is able to make a build based on the cards they entered
+Parameters: None
+Return Value: Whether the player was able to build or not, a boolean value
+Local Variables:
+buildSize, an integer used for holding how many cards the user wants to build with
+count, an integer used for making sure the cards the user entered are on the table
+Algorithm:
+1) Get the player's hand card used for the build and the cards from the table they want to build with
+2) Go through the table cards and make sure the cards they entered are on the table
+3) Have an if statement to check and make sure that if the cards add up to be able to make a build
+4) If the cards are able to make a build, call another function to handle removing cards from the 
+player's hand and table and add them to the player's pile
+Assistance Received: none
+********************************************************************* */
 bool Round::CheckBuild() {
 
 	// Getting the player card that they want to put on the build
@@ -241,6 +292,7 @@ bool Round::CheckBuild() {
 		}
 	}
 
+	// If one of the cards the player entered did not match any on the table, they entered a wrong card
 	if (count != buildSize) {
 		cout << "Error, the cards you entered for a build are not on the table" << endl;
 		return false;
@@ -249,6 +301,7 @@ bool Round::CheckBuild() {
 		cout << "You were correct with the build!" << endl;
 	}
 
+	// If the cards are suitable for a build, then the build will be created
 	if (CheckBuildNumbers(playerHandBuildCard, playerTableBuildCards)) {
 		CreatePlayerBuild();
 	}
@@ -278,22 +331,27 @@ Assistance Received: none
 */
 bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 
+	// Local variables
 	int aceAs1 = 0;
 	int aceAs14 = 0;
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
 	bool hasRightCards = false;
 
+	// Iterate through the cards the player wants to build with and count their values
 	for (size_t i = 0; i < playerBuildCards.size(); i++) {
+
+		// If the card is an ace, we must increment the two different counts with 1 and 14 as the ace card
 		if (playerBuildCards[i].GetNumber() == 'A') {
 			aceAs1++;
 			aceAs14 = aceAs14 + 14;
 		}
 		else {
-			aceAs1 = aceAs1 + CardNumber(playerBuildCards[i].GetNumber());
-			aceAs14 = aceAs14 + CardNumber(playerBuildCards[i].GetNumber());
+			aceAs1 += CardNumber(playerBuildCards[i].GetNumber());
+			aceAs14 += CardNumber(playerBuildCards[i].GetNumber());
 		}
 	}
 
+	// If the player has a card that equals the total value of the build, then return true
 	for (size_t i = 0; i < playerHand.size(); i++) {
 		if (playerHand[i].GetNumber() == aceAs1 || playerHand[i].GetNumber() == aceAs14) {
 			hasRightCards = true;
@@ -316,7 +374,10 @@ Assistance Received: none
 */
 int Round::CardNumber(char number) {
 	
-	if (number == '2') {
+	if (number == 'A') {
+		return 1;
+	}
+	else if (number == '2') {
 		return 2;
 	}
 	else if (number == '3') {
@@ -353,13 +414,25 @@ int Round::CardNumber(char number) {
 		return 13;
 	}
 	else {
-		cout << "Error in the card number in the round class. Returning -1." << endl;
+		cerr << "Error in the card number in the round class. Returning -1." << endl;
 		return -1;
 	}
 }
 
+/* *********************************************************************
+Function Name: CreatePlayerBuild
+Purpose: To remove the cards from the table and player and incorporate them into a build object
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Set the owner of the build based on the player currently playing
+2) Add the cards to the build object and remove them from the table and player hand
+Assistance Received: none
+********************************************************************* */
 void Round::CreatePlayerBuild() {
 
+	// Initialize a build
 	tableBuilds.push_back(Build());
 
 	// Setting the owner of a particular build
@@ -383,11 +456,25 @@ void Round::CreatePlayerBuild() {
 	buildCounter++;
 }
 
+/* *********************************************************************
+Function Name: RemoveTableCards
+Purpose: Remove a series of cards that are passed in from the table
+Parameters:
+cards, a vector of cards passed by value. It holds the cards to be removed
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Iterate through the table and the cards to be removed...
+2) If the card to be removed matches with the one from the table, it will be erased and the vector will shift everything over
+Assistance Received: none
+********************************************************************* */
 void Round::RemoveTableCards(vector<Card> cards) {
 
-
+	// First go through the table vector, then through the cards vector that was passed in...
 	for (size_t i = 0; i < table.size(); i++) {
 		for (size_t j = 0; j < cards.size(); j++) {
+
+			// If there is a match, erase the card from the vector
 			if (table[i].GetCard() == cards[j].GetCard()) {
 				table.erase(table.begin() + i);
 			}
@@ -395,6 +482,17 @@ void Round::RemoveTableCards(vector<Card> cards) {
 	}
 }
 
+/* *********************************************************************
+Function Name: AddCardsToTable
+Purpose: To add any cards that were passed into it to the table
+Parameters:
+cards, a vector of cards passed by value. It holds cards to be added to the table
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Iterate through the vector of cards passed in and add them to the table
+Assistance Received: none
+********************************************************************* */
 void Round::AddCardsToTable(vector<Card> cards) {
 	for (size_t i = 0; i < cards.size(); i++) {
 		table.push_back(cards[i]);
@@ -413,9 +511,11 @@ Assistance Received: none
 ********************************************************************* */
 void Round::PrintHandAndTable() {
 
+	// Get the hand of the player and their pile
 	vector<Card> tempHand = player[currentPlayer]->GetHand();
 	vector<Card> tempPile = player[currentPlayer]->GetPile();
 
+	// If it is the human, print out their hand and pile
 	if (currentPlayer == 0) {
 		cout << "Your hand: ";
 		for (size_t i = 0; i < tempHand.size(); i++) {
@@ -429,6 +529,7 @@ void Round::PrintHandAndTable() {
 		}
 		cout << endl;
 	}
+	// If it is the computer, print out their hand and pile
 	else {
 		cout << "Computer hand: ";
 		for (size_t i = 0; i < tempHand.size(); i++) {
@@ -457,68 +558,103 @@ Assistance Received: none
 ********************************************************************* */
 void Round::PrintTable() {
 
+	// First printing out any builds that were built
 	cout << "Table: ";
 	for (size_t i = 0; i < tableBuilds.size(); i++) {
 		tableBuilds[i].PrintBuild();
 	}
 
+	// Then printing out the rest of the table
 	for (size_t i = 0; i < table.size(); i++) {
 		cout << table[i].GetCard() << " ";
 	}
 	cout << endl;
 }
 
+/* *********************************************************************
+Function Name: CheckCapture
+Purpose: To check if the player is elegible to make a capture based on what they entered
+Parameters: None
+Return Value: Whether the player can make a capture or not, a boolean value
+Local Variables:
+Algorithm:
+1) Get the card the player wants to capture with and the player's hand
+2) Check and see if the player has any cards on the table to capture or any sets
+Assistance Received: none
+********************************************************************* */
 bool Round::CheckCapture() {
 
 	// Getting the player card that they want to put on the build
 	playerHandCaptureCard = player[currentPlayer]->GetPlayerCard();
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
-	bool hasCard = false;
 
-	for (size_t i = 0; i < playerHand.size(); i++) {
-		if (playerHandCaptureCard.GetCard() == playerHand[i].GetCard()) {
-			hasCard = true;
-		}
-	}
-
-	if (PlayerHasCaptureCard() == true && CaptureCardsOnTable() == true) {
+	if (CaptureCardsOnTable() == true) {
 		return true;
 	}
 
 	return false;
 }
 
-bool Round::PlayerHasCaptureCard() {
-	// Getting the player card that they want to put on the build
-	playerHandCaptureCard = player[currentPlayer]->GetPlayerCard();
-	vector<Card> playerHand = player[currentPlayer]->GetHand();
-	bool hasCard = false;
-
-	for (size_t i = 0; i < playerHand.size(); i++) {
-		if (playerHandCaptureCard.GetCard() == playerHand[i].GetCard()) {
-			hasCard = true;
-			return hasCard;
-		}
-	}
-	return hasCard;
-}
 bool Round::CaptureCardsOnTable() {
 	char number = playerHandCaptureCard.GetNumber();
 	vector<Card> pile;
+	vector<Card> removedTableCards;
 	pile.push_back(playerHandCaptureCard);
 	bool canCapture = false;
-	
+
 
 	for (size_t i = 0; i < table.size(); i++) {
 		if (table[i].GetNumber() == number) {
 			pile.push_back(table[i]);
+			removedTableCards.push_back(table[i]);
 			canCapture = true;
 		}
 	}
 
-	player[currentPlayer]->RemoveCard(playerHandCaptureCard);
+	// If everything is correct, add the cards and remove them properly
+	if (canCapture = true) {
+		player[currentPlayer]->RemoveCard(playerHandCaptureCard);
+		RemoveTableCards(removedTableCards);
 
-	player[currentPlayer]->AddToPile(pile);
+		player[currentPlayer]->AddToPile(pile);
+	}
+
+	vector<Card> setCards;
+	int count = 0;
+	int aceAs1Count = 0;
+	int aceAs14Count = 0;
+
+	if (player[currentPlayer]->GetPlayerWantSet() == 'y') {
+		setCards = player[currentPlayer]->MakeSet();
+	}
+
+	for (size_t i = 0; i < table.size(); i++) {
+		for (size_t j = 0; j < setCards.size(); j++) {
+			if (table[i].GetCard() == setCards[j].GetCard()) {
+
+				pile.push_back(table[i]);
+
+				if (setCards[j].GetNumber() != 'A') {
+					aceAs1Count += CardNumber(setCards[j].GetNumber());
+				}
+				else {
+					aceAs1Count += CardNumber(setCards[j].GetNumber());
+					aceAs14Count += 14;
+				}
+				count++;
+			}
+		}
+	}
+
+	if (aceAs1Count == CardNumber(playerHandCaptureCard.GetNumber()) || aceAs14Count == CardNumber(playerHandCaptureCard.GetNumber())) {
+		player[currentPlayer]->RemoveCard(playerHandCaptureCard);
+		RemoveTableCards(removedTableCards);
+
+		player[currentPlayer]->AddToPile(pile);
+	}
+	else {
+		cout << "Those set cards were not in the table." << endl;
+	}
 
 	if (currentPlayer == 0) {
 		lastCapture = "human";

@@ -4,7 +4,6 @@
 // Default constructor
 Player::Player()
 {
-	vector<Card> uniqueCards = deck.GetDeck();
 }
 
 // Default destructor
@@ -104,4 +103,42 @@ void Player::PrintPile() {
 		cout << pile[i].GetCard() << " ";
 	}
 	cout << endl;
+}
+
+const char Player::GetPlayerWantSet() {
+	return playerWantSet;
+}
+
+vector<Card> Player::MakeSet() {
+	string userInput;
+	int count = 0;
+
+	do {
+		cout << "Enter the two cards that make up a set for you to capture: ";
+		cin >> userInput;
+
+		if (CheckCard(userInput)) {
+			setCards.push_back(Card());
+			setCards[count].SetCard(userInput);
+			setCards[count].SetSuit(userInput[0]);
+			setCards[count].SetNumber(userInput[1]);
+			count++;
+		}
+
+	} while (count < 2);
+
+	return setCards;
+}
+
+bool Player::CheckCard(string card) {
+
+	bool validCard = false;
+
+	for (int i = 0; i < uniqueCards.size(); i++) {
+		if (uniqueCards[i].GetCard() == card) {
+			validCard = true;
+		}
+	}
+
+	return validCard;
 }

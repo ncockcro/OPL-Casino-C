@@ -126,15 +126,15 @@ void Tournament::SaveLastCaptured(string capturer) {
 
 void Tournament::CalculatePoints() {
 
-	vector<Card> humanPile = currentRound.GetPlayerPoints();
-	vector<Card> computerPile = currentRound.GetComputerPoints();
+	vector<Card> humanPile = currentRound.GetPlayerPile();
+	vector<Card> computerPile = currentRound.GetComputerPile();
 	int humanRoundPoints = 0;
 	int computerRoundPoints = 0;
 	int humanSpadeCount = 0;
 	int computerSpadeCount = 0;
 
 	// Checking for specific cards through the human pile
-	for (int i = 0; i < humanPile.size(); i++) {
+	for (size_t i = 0; i < humanPile.size(); i++) {
 
 		if (humanPile[i].GetSuit() == 'S') {
 			humanSpadeCount++;
@@ -151,7 +151,7 @@ void Tournament::CalculatePoints() {
 	}
 
 	// Checking for specific cards through the computer pile
-	for (int i = 0; i < computerPile.size(); i++) {
+	for (size_t i = 0; i < computerPile.size(); i++) {
 
 		if (computerPile[i].GetSuit() == 'S') {
 			humanSpadeCount++;

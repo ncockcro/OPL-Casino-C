@@ -4,8 +4,6 @@
 
 Human::Human()
 {
-	deck = Deck();
-	standardDeckOfCards = deck.GetDeck();
 }
 
 
@@ -122,6 +120,13 @@ void Human::MakeCapture() {
 		MakeCapture();
 	}
 
+	do {
+		cout << "Are there any sets you would like to capture? (y, n): ";
+		cin >> userInput;
+	} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
+
+	playerWantSet = userInput[0];
+
 
 }
 
@@ -146,17 +151,4 @@ void Human::MakeTrail() {
 		playerCard.SetSuit(userInput[0]);
 		playerCard.SetNumber(userInput[1]);
 	}
-}
-
-bool Human::CheckCard(string card) {
-
-	bool validCard = false;
-
-	for (int i = 0; i < standardDeckOfCards.size(); i++) {
-		if (standardDeckOfCards[i].GetCard() == card) {
-			validCard = true;
-		}
-	}
-
-	return validCard;
 }

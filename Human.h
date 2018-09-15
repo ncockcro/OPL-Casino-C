@@ -20,10 +20,6 @@ public:
 
 private:
 	// Private function
-	bool CheckCard(string card);
-
-	Deck deck;
-	vector<Card> standardDeckOfCards;
 };
 
 #endif
