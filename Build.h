@@ -18,9 +18,12 @@ public:
 	void SetBuildOfCards(vector<Card> buildCards);
 	const vector<Card> GetBuildOfCards();
 	void PrintBuild();
-	bool CheckCardInBuild(string card, int currentPlayer);
+	bool CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int currentPlayer, vector<Card> playerHand);
 
 private:
+	// Private functions
+	int CardNumber(char number);
+
 	int owner;
 	vector<Card> buildOfCards;
 };

@@ -266,6 +266,7 @@ Return Value: Whether the player was able to build or not, a boolean value
 Local Variables:
 buildSize, an integer used for holding how many cards the user wants to build with
 count, an integer used for making sure the cards the user entered are on the table
+addExistingBuildSuccessful, a boolean for seeing if the player can add to a build or not
 Algorithm:
 1) Get the player's hand card used for the build and the cards from the table they want to build with
 2) Go through the table cards and make sure the cards they entered are on the table
@@ -283,6 +284,7 @@ bool Round::CheckBuild() {
 
 	int buildSize = playerTableBuildCards.size();
 	int count = 0;
+	bool addExistingBuildSuccessful = false;
 
 	if (player[currentPlayer]->GetNewOrExistingBuild() == 'n') {
 		// This is checking to make sure that the cards the user entered in to make a build are actually on the table
@@ -313,8 +315,20 @@ bool Round::CheckBuild() {
 		}
 		return true;
 	}
+	// If the player wants to add to an existing build, then we will go through each build to find which one
+	// they want to add to and if it is possible
 	else if (player[currentPlayer]->GetNewOrExistingBuild() == 'e') {
-
+		for (int i = 0; i < tableBuilds.size(); i++) {
+			tableBuilds[i].CheckAndAddCardInBuild(playerHandBuildCard, player[currentPlayer]->GetExistingBuildCard(), currentPlayer,
+				player[currentPlayer]->GetHand());
+			addExistingBuildSuccessful = true;
+		}
+		if (addExistingBuildSuccessful) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	else {
 		cerr << "Error, dont know if it is a new or existing build in round class." << endl;
@@ -602,7 +616,7 @@ bool Round::CheckCapture() {
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
 
 	// Local variables for capturing
-	char number = playerHandCaptureCard.GetNumber();
+	char number = CardNumber(playerHandCaptureCard.GetNumber());
 	vector<Card> pile;
 	vector<Card> removedTableCards;
 	pile.push_back(playerHandCaptureCard);
@@ -666,7 +680,7 @@ bool Round::CheckCapture() {
 
 	// Checking to see if there are any cards on the table that match the card the player wants to capture with the same value
 	for (size_t i = 0; i < table.size(); i++) {
-		if (table[i].GetNumber() == number) {
+		if (CardNumber(table[i].GetNumber()) == number) {
 			pile.push_back(table[i]);
 			removedTableCards.push_back(table[i]);
 			canCapture = true;
@@ -674,7 +688,7 @@ bool Round::CheckCapture() {
 	}
 
 	// If everything is correct, add the cards and remove them properly
-	if (canCapture = true) {
+	if (canCapture == true) {
 		player[currentPlayer]->RemoveCard(playerHandCaptureCard);
 		RemoveTableCards(removedTableCards);
 
@@ -690,7 +704,7 @@ bool Round::CheckCapture() {
 	}
 
 	if (canCapture == false) {
-		cout << "You can not capture any cards on the table." << endl;
+		cout << "You can not capture any cards on the table with that capture card." << endl;
 	}
 	return canCapture;
 

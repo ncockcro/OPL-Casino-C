@@ -15,8 +15,6 @@ public:
 
 	// Setters
 	void SetCard(string passedCard);
-	//void SetSuit(char passedSuit);
-	//void SetNumber(char passedNumber);
 
 	// Getters
 	const string GetCard();
