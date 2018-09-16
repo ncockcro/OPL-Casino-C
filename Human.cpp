@@ -11,7 +11,18 @@ Human::~Human()
 {
 }
 
-// Exclusive details for when the human is making a move.
+/* *********************************************************************
+Function Name: MakeMove
+Purpose: Prompts the user for what kind of move they want to make
+Parameters: None
+Return Value: Void
+Local Variables:
+userInput, an string used to get user input
+Algorithm:
+1) Prompt the user to enter a type of move to make
+2) Depending on what the user picked, another function will be called for each type of move
+Assistance Received: none
+********************************************************************* */
 void Human::MakeMove() {
 	string userInput;
 
@@ -23,22 +34,38 @@ void Human::MakeMove() {
 	// Saving the players move
 	playerMove = userInput[0];
 
+	// Building
 	if (tolower(userInput[0]) == 'b') {
  		MakeBuild();
 	}
+	// Capturing
 	else if (tolower(userInput[0]) == 'c') {
 		MakeCapture();
 	}
+	// Trailing
 	else if (tolower(userInput[0]) == 't') {
 		MakeTrail();
 	}
 	else {
-		cout << "Error in making a move by the player." << endl;
+		cerr << "Error in making a move by the player." << endl;
 	}
 }
 
-// If the player chooses to make a build, this function will get the user input from the for what card they want
-// To use and validates if they have that card.
+/* *********************************************************************
+Function Name: MakeBuild
+Purpose: Get user input for a build card from there hand and build cards from the table
+Parameters: None
+Return Value: Void
+Local Variables:
+userInput, an string used to get user input
+hasCard, a boolean for if the user has a card in their hand or not
+count, an integer counter for keeping track of how many build cards
+Algorithm:
+1) Prompt the user for what card from their hand they want to build with
+2) Check if they have that card
+3) Then ask them for the cards on the table they want to build with
+Assistance Received: none
+********************************************************************* */
 void Human::MakeBuild() {
 
 	string userInput;
@@ -87,6 +114,21 @@ void Human::MakeBuild() {
 
 }
 
+/* *********************************************************************
+Function Name: MakeCapture
+Purpose: Prompts the user for information reguarding a capture
+Parameters: None
+Return Value: Void
+Local Variables:
+userInput, an string used to get user input
+hasCard, a boolean for checking if a card they entered exists in their hand
+Algorithm:
+1) Prompt the user to enter a card they want to capture with
+2) Check and make sure they have that card
+3) If they have the card, then ask if they want to make a set
+4) If they say yes, it sets a variable, "playerWantSet" to y which is used in another function
+Assistance Received: none
+********************************************************************* */
 void Human::MakeCapture() {
 
 	string userInput;
@@ -113,6 +155,7 @@ void Human::MakeCapture() {
 		MakeCapture();
 	}
 
+	// Finally, ask the user if they want to make a set while using the capture card
 	do {
 		cout << "Are there any sets you would like to capture? (y, n): ";
 		cin >> userInput;
@@ -123,6 +166,20 @@ void Human::MakeCapture() {
 
 }
 
+/* *********************************************************************
+Function Name: MakeTrail
+Purpose: Prompts the user for any kind of information regaurding a trail
+Parameters: None
+Return Value: Void
+Local Variables:
+userInput, an string used to get user input
+hasCard, a boolean for checking if the user has the card they enter in
+Algorithm:
+1) Prompt the user to enter a card to trail with
+2) Once they enter a card they have, the variable, "playerCard", is set
+to be that card
+Assistance Received: none
+********************************************************************* */
 void Human::MakeTrail() {
 	string userInput;
 	bool validCard = false;

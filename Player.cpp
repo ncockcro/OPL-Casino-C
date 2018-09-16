@@ -38,13 +38,11 @@ Assistance Received: none
 ********************************************************************* */
 void Player::SetHand(vector<Card> fourCards) {
 
-	for (size_t i = 0; i < uniqueCards.size(); i++) {
-		for (size_t j = 0; j < fourCards.size(); j++) {
-			if (uniqueCards[i].GetCard() == fourCards[j].GetCard()) {
-				hand.push_back(fourCards[j]);
-			}
-		}
-	}
+		hand.push_back(fourCards[0]);
+		hand.push_back(fourCards[1]);
+		hand.push_back(fourCards[2]);
+		hand.push_back(fourCards[3]);
+
 }
 
 /* *********************************************************************

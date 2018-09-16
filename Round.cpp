@@ -472,12 +472,12 @@ Assistance Received: none
 void Round::RemoveTableCards(vector<Card> cards) {
 
 	// First go through the table vector, then through the cards vector that was passed in...
-	for (size_t i = 0; i < table.size(); i++) {
-		for (size_t j = 0; j < cards.size(); j++) {
+	for (size_t i = 0; i < cards.size(); i++) {
+		for (size_t j = 0; j < table.size(); j++) {
 
 			// If there is a match, erase the card from the vector
-			if (table[i].GetCard() == cards[j].GetCard()) {
-				table.erase(table.begin() + i);
+			if (cards[i].GetCard() == table[j].GetCard()) {
+				table.erase(table.begin() + j);
 			}
 		}
 	}
@@ -632,6 +632,8 @@ bool Round::CheckCapture() {
 			if (userInput == "y") {
 				aceAs1Count = 0;
 				aceAs14Count = 0;
+				setCards.pop_back();
+				setCards.pop_back();
 				setCards = player[currentPlayer]->MakeSet();
 			}
 			} while (userInput == "y");
