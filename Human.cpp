@@ -91,7 +91,6 @@ void Human::MakeCapture() {
 
 	string userInput;
 	bool hasCard = false;
-	captureCards.clear();
 
 
 	// Prompts the user for a card they would like to build

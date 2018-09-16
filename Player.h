@@ -23,7 +23,7 @@ public:
 	Player();
 	~Player();
 	virtual void MakeMove(); // Virtual function so both types of players can share certain moves
-	void SetHand(const vector<Card> fourCards);
+	void SetHand(vector<Card> fourCards);
 	bool IsEmpty();
 	const vector<Card> GetHand();
 	const Card GetPlayerCard();
@@ -50,7 +50,6 @@ protected:
 
 	Card playerCard;
 	vector<Card> buildCards;
-	vector<Card> captureCards;
 	char playerMove;
 	char playerWantSet;
 	vector<Card> setCards;

@@ -4,8 +4,10 @@
 
 Round::Round()
 {
-	player.push_back(&p1); // Human player
-	player.push_back(&p2); // Computer player
+	// Human player
+	player.push_back(&p1);
+	// Computer player
+	player.push_back(&p2);
 
 	buildCounter = 0;
 }
