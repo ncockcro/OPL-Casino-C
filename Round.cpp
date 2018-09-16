@@ -284,33 +284,42 @@ bool Round::CheckBuild() {
 	int buildSize = playerTableBuildCards.size();
 	int count = 0;
 
-	// This is checking to make sure that the cards the user entered in to make a build are actually on the table
-	for (size_t i = 0; i < table.size(); i++) {
-		for (size_t j = 0; j < playerTableBuildCards.size(); j++) {
-			if (table[i].GetCard() == playerTableBuildCards[j].GetCard()) {
-				count++;
+	if (player[currentPlayer]->GetNewOrExistingBuild() == 'n') {
+		// This is checking to make sure that the cards the user entered in to make a build are actually on the table
+		for (size_t i = 0; i < table.size(); i++) {
+			for (size_t j = 0; j < playerTableBuildCards.size(); j++) {
+				if (table[i].GetCard() == playerTableBuildCards[j].GetCard()) {
+					count++;
+				}
 			}
 		}
-	}
 
-	// If one of the cards the player entered did not match any on the table, they entered a wrong card
-	if (count != buildSize) {
-		cout << "Error, the cards you entered for a build are not on the table" << endl;
-		return false;
+		// If one of the cards the player entered did not match any on the table, they entered a wrong card
+		if (count != buildSize) {
+			cout << "Error, the cards you entered for a build are not on the table" << endl;
+			return false;
+		}
+		else {
+			cout << "You were correct with the build!" << endl;
+		}
+
+		// If the cards are suitable for a build, then the build will be created
+		if (CheckBuildNumbers(playerHandBuildCard, playerTableBuildCards)) {
+			CreatePlayerBuild();
+		}
+		else {
+			cout << "Error, you can not make a build with the cards you entered." << endl;
+			return false;
+		}
+		return true;
+	}
+	else if (player[currentPlayer]->GetNewOrExistingBuild() == 'e') {
+
 	}
 	else {
-		cout << "You were correct with the build!" << endl;
-	}
-
-	// If the cards are suitable for a build, then the build will be created
-	if (CheckBuildNumbers(playerHandBuildCard, playerTableBuildCards)) {
-		CreatePlayerBuild();
-	}
-	else {
-		cout << "Error, you can not make a build with the cards you entered." << endl;
+		cerr << "Error, dont know if it is a new or existing build in round class." << endl;
 		return false;
 	}
-	return true;
 }
 
 /*
@@ -338,6 +347,8 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
 	bool hasRightCards = false;
 
+	playerBuildCards.push_back(playerCard);
+
 	// Iterate through the cards the player wants to build with and count their values
 	for (size_t i = 0; i < playerBuildCards.size(); i++) {
 
@@ -354,7 +365,7 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 
 	// If the player has a card that equals the total value of the build, then return true
 	for (size_t i = 0; i < playerHand.size(); i++) {
-		if (playerHand[i].GetNumber() == aceAs1 || playerHand[i].GetNumber() == aceAs14) {
+		if (CardNumber(playerHand[i].GetNumber()) == aceAs1 || CardNumber(playerHand[i].GetNumber()) == aceAs14) {
 			hasRightCards = true;
 			return hasRightCards;
 		}
@@ -438,10 +449,10 @@ void Round::CreatePlayerBuild() {
 
 	// Setting the owner of a particular build
 	if (currentPlayer == 0) {
-		tableBuilds[buildCounter].SetOwner("human");
+		tableBuilds[buildCounter].SetOwner(0);
 	}
 	else {
-		tableBuilds[buildCounter].SetOwner("computer");
+		tableBuilds[buildCounter].SetOwner(1);
 	}
 
 	// Adding the card from the player's hand onto the build that way I can send all the cards to be added to build object
@@ -455,6 +466,20 @@ void Round::CreatePlayerBuild() {
 	player[currentPlayer]->RemoveCard(playerHandBuildCard);
 	
 	buildCounter++;
+}
+
+/* *********************************************************************
+Function Name: AddToExistingBuild
+Purpose: To validate if a player can add to a build and if so, add to it
+Parameters: None
+Return Value: Returns true if successful, false otherwise, a bolean value
+Local Variables: None
+Algorithm:
+1) 
+Assistance Received: none
+********************************************************************* */
+bool Round::AddToExistingBuild() {
+	return false;
 }
 
 /* *********************************************************************

@@ -109,6 +109,34 @@ const vector<Card> Player::GetBuildCards(){
 }
 
 /* *********************************************************************
+Function Name: GetNewOrExistingBuild
+Purpose: To retrieve the indicator if the user wants to make a new or add to existing build
+Parameters: None
+Return Value: The string indicating new or existing build, a char value
+Local Variables: None
+Algorithm:
+1) Return the char indicating a new or existing build
+Assistance Received: none
+********************************************************************* */
+const char Player::GetNewOrExistingBuild() {
+	return newOrExistingBuild;
+}
+
+/* *********************************************************************
+Function Name: GetExistingBuildCard
+Purpose: To retrieve the card of a build the human wants to add to
+Parameters: None
+Return Value: The card from an existing build, a card value
+Local Variables: None
+Algorithm:
+1) Return the card of an existing build
+Assistance Received: none
+********************************************************************* */
+const Card Player::GetExistingBuildCard() {
+	return existingBuildCard;
+}
+
+/* *********************************************************************
 Function Name: GetPlayerMove
 Purpose: To retrieve the move that the player wants to make (build, capture, or trail
 Parameters: None

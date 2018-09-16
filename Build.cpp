@@ -11,15 +11,15 @@ Build::~Build()
 {
 }
 
-void Build::SetOwner(string passedOwner) {
-	if (passedOwner == "human" || passedOwner == "computer") {
+void Build::SetOwner(int passedOwner) {
+	if (passedOwner == 0 || passedOwner == 1) {
 		owner = passedOwner;
 	}
 	else {
 		cout << "Error in setting the owner of a build in the build class." << endl;
 	}
 }
-const string Build::GetOwner() {
+const int Build::GetOwner() {
 	return owner;
 }
 
@@ -44,4 +44,18 @@ void Build::PrintBuild() {
 		cout << buildOfCards[i].GetCard() << " ";
 	}
 	cout << " ] ";
+}
+
+bool Build::CheckCardInBuild(string card, int currentPlayer) {
+	bool cardInBuild = false;
+	for (size_t i = 0; i < buildOfCards.size(); i++) {
+		if (buildOfCards[i].GetCard() == card) {
+			cardInBuild = true;
+		}
+	}
+
+	if (cardInBuild = true && owner != currentPlayer) {
+		return true;
+	}
+	return false;
 }

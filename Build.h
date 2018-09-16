@@ -13,14 +13,15 @@ public:
 	Build();
 	~Build();
 
-	void SetOwner(string passedOwner);
-	const string GetOwner();
+	void SetOwner(int passedOwner);
+	const int GetOwner();
 	void SetBuildOfCards(vector<Card> buildCards);
 	const vector<Card> GetBuildOfCards();
 	void PrintBuild();
+	bool CheckCardInBuild(string card, int currentPlayer);
 
 private:
-	string owner;
+	int owner;
 	vector<Card> buildOfCards;
 };
 

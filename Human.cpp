@@ -72,7 +72,6 @@ void Human::MakeBuild() {
 	bool hasCard = false;
 	buildCards.clear();
 
-
 	// Prompts the user for a card they would like to build
 	do {
 		cout << "Enter the card that you have and want to use for a build: ";
@@ -93,24 +92,44 @@ void Human::MakeBuild() {
 		MakeBuild();
 	}
 
-	int count = 0;
-
-	// Have a loop go through and ask the user for how many cards they would like to build with
 	do {
-		cout << "Enter the card(s) you want to build with, press 'enter' after each card('p' to stop): ";
+		cout << "Are you making a new build or adding to a build? ('n' for new and 'e' for existing): ";
 		cin >> userInput;
+	} while (userInput[0] != 'n' && userInput[0] != 'e' && userInput.size() == 1);
 
-		// If they typed in the correct input, 
-		if (CheckCard(userInput)) {
-			buildCards.push_back(Card());
-			buildCards[count].SetCard(userInput);
-			count++;
-		}
-		else if (tolower(userInput[0]) != 'p') {
-			cout << "**** Incorrect input, disreguarding. ****" << endl;
-		}
+	newOrExistingBuild = userInput[0];
 
-	} while (tolower(userInput[0]) != 'p');
+	// If they want to add to an existing build, then ask them for a card from an existing build they want to add to
+	if (newOrExistingBuild == 'e') {
+		do {
+			cout << "Enter a card from a build you want to add onto: ";
+			cin >> userInput;
+		} while (!CheckCard(userInput));
+
+		existingBuildCard.SetCard(userInput);
+	}
+
+	// If they are making a new build, then prompt them for all the necessary information
+	if (newOrExistingBuild == 'n') {
+		int count = 0;
+
+		// Have a loop go through and ask the user for how many cards they would like to build with
+		do {
+			cout << "Enter the card(s) you want to build with, press 'enter' after each card('p' to stop): ";
+			cin >> userInput;
+
+			// If they typed in the correct input, 
+			if (CheckCard(userInput)) {
+				buildCards.push_back(Card());
+				buildCards[count].SetCard(userInput);
+				count++;
+			}
+			else if (tolower(userInput[0]) != 'p') {
+				cout << "**** Incorrect input, disreguarding. ****" << endl;
+			}
+
+		} while (tolower(userInput[0]) != 'p');
+	}
 
 }
 

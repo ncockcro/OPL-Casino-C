@@ -35,6 +35,7 @@ private:
 	bool CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards); // Checks the number in a players hand and the number they are trying to add up to in a build
 	int CardNumber(char number);
 	void CreatePlayerBuild();
+	bool AddToExistingBuild();
 	void RemoveTableCards(vector<Card> cards);
 	void AddCardsToTable(vector<Card> cards);
 	void PrintHandPileAndTable();

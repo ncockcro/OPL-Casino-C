@@ -29,6 +29,8 @@ public:
 	const Card GetPlayerCard();
 	const vector<Card> GetBuildCards();
 	const vector<Card> GetCaptureCards();
+	const char GetNewOrExistingBuild();
+	const Card GetExistingBuildCard();
 	const char GetPlayerMove();
 	void RemoveCard(Card card);
 
@@ -50,6 +52,8 @@ protected:
 
 	Card playerCard;
 	vector<Card> buildCards;
+	char newOrExistingBuild;
+	Card existingBuildCard;
 	char playerMove;
 	char playerWantSet;
 	vector<Card> setCards;
