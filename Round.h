@@ -36,6 +36,7 @@ private:
 	int CardNumber(char number);
 	void CreatePlayerBuild();
 	bool AddToExistingBuild();
+	bool CaptureExistingBuild();
 	void RemoveTableCards(vector<Card> cards);
 	void AddCardsToTable(vector<Card> cards);
 	void PrintHandPileAndTable();

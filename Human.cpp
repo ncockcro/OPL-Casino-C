@@ -174,6 +174,9 @@ void Human::MakeCapture() {
 		MakeCapture();
 	}
 
+	// Ask the user if they are capturing a build, and if so, skip the sets and prompt them
+	// For a card from the build
+
 	// Finally, ask the user if they want to make a set while using the capture card
 	do {
 		cout << "Are there any sets you would like to capture? (y, n): ";

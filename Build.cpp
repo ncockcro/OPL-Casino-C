@@ -139,7 +139,7 @@ bool Build::CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int cur
 		tempBuild.push_back(cardToBeAdded);
 
 		// Iterate through the build with the card added and see what number it adds up to
-		for (int i = 0; i < tempBuild.size(); i++) {
+		for (size_t i = 0; i < tempBuild.size(); i++) {
 			if (tempBuild[i].GetNumber() != 'A') {
 				aceAs1 += CardNumber(tempBuild[i].GetNumber());
 				aceAs14 += CardNumber(tempBuild[i].GetNumber());
@@ -151,7 +151,7 @@ bool Build::CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int cur
 		}
 		// Then iterate through the players hand and check and see with the card they want to add being added,
 		// Does it equal one of the cards in their hand
-		for (int i = 0; i < playerHand.size(); i++) {
+		for (size_t i = 0; i < playerHand.size(); i++) {
 			// If it does equal, update the build with the added card and return true
 			if (CardNumber(playerHand[i].GetNumber()) == aceAs1 || CardNumber(playerHand[i].GetNumber()) == aceAs14) {
 				buildOfCards = tempBuild;
@@ -225,4 +225,34 @@ int Build::CardNumber(char number) {
 		cerr << "Error in the card number in the round class. Returning -1." << endl;
 		return -1;
 	}
+}
+
+
+bool Build::CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vector<Card> playerHand) {
+	bool isCardInBuild = false;
+	int captureCardNum = CardNumber(cardToBeCaptured.GetNumber());
+	int captureCardAce = 14;
+
+	for (size_t i = 0; i < buildOfCards.size(); i++) {
+		if (buildOfCards[i].GetCard() == cardInBuild.GetCard()) {
+			isCardInBuild = true;
+		}
+	}
+
+	// If the card the user typed in is in the build and the card the user
+	// wants to capture with is not an ace, then we need to make sure the card they are
+	// capturing with is the same value as the total build
+	if (isCardInBuild && cardToBeCaptured.GetNumber() != 'A') {
+		if (CardNumber(cardToBeCaptured.GetNumber()) == cardValueOfBuild) {
+			return true;
+		}
+	}
+	// If the card is in the build and the card is an ace, then we treat the capturing
+	// card as 14 and see if it matches the total build value
+	else if (isCardInBuild && cardToBeCaptured.GetNumber() == 'A') {
+		if (captureCardAce == cardValueOfBuild) {
+			return true;
+		}
+	}
+	return false;
 }

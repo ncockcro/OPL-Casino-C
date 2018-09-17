@@ -318,15 +318,17 @@ bool Round::CheckBuild() {
 	// If the player wants to add to an existing build, then we will go through each build to find which one
 	// they want to add to and if it is possible
 	else if (player[currentPlayer]->GetNewOrExistingBuild() == 'e') {
-		for (int i = 0; i < tableBuilds.size(); i++) {
-			tableBuilds[i].CheckAndAddCardInBuild(playerHandBuildCard, player[currentPlayer]->GetExistingBuildCard(), currentPlayer,
-				player[currentPlayer]->GetHand());
-			addExistingBuildSuccessful = true;
+		for (size_t i = 0; i < tableBuilds.size(); i++) {
+			if (tableBuilds[i].CheckAndAddCardInBuild(playerHandBuildCard, player[currentPlayer]->GetExistingBuildCard(), currentPlayer,
+				player[currentPlayer]->GetHand())) {
+				addExistingBuildSuccessful = true;
+			}
 		}
 		if (addExistingBuildSuccessful) {
 			return true;
 		}
 		else {
+			cout << "No existing build. In round class." << endl;
 			return false;
 		}
 	}
@@ -493,6 +495,10 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 bool Round::AddToExistingBuild() {
+	return false;
+}
+
+bool CaptureExistingBuild() {
 	return false;
 }
 

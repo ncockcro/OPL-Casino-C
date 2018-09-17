@@ -19,12 +19,16 @@ public:
 	const vector<Card> GetBuildOfCards();
 	void PrintBuild();
 	bool CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int currentPlayer, vector<Card> playerHand);
+	bool CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vector<Card> playerHand);
 
 private:
 	// Private functions
 	int CardNumber(char number);
 
+	// Owner of a specific build
 	int owner;
+	// The value of the card that is equal to the total value of a build
+	int cardValueOfBuild;
 	vector<Card> buildOfCards;
 };
 
