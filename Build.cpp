@@ -64,7 +64,7 @@ void Build::SetBuildOfCards(vector<Card> buildCards) {
 			buildOfCards.push_back(buildCards[i]);
 		}
 		else {
-			cout << "Error in added a card to the build vector in the build.cpp" << endl;
+			cerr << "Error in added a card to the build vector in the build.cpp" << endl;
 		}
 	}
 }
@@ -233,6 +233,7 @@ bool Build::CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vect
 	int captureCardNum = CardNumber(cardToBeCaptured.GetNumber());
 	int captureCardAce = 14;
 
+	// First checking to see if the build the user wants to capture exists by looking for the card they provided
 	for (size_t i = 0; i < buildOfCards.size(); i++) {
 		if (buildOfCards[i].GetCard() == cardInBuild.GetCard()) {
 			isCardInBuild = true;
@@ -255,4 +256,13 @@ bool Build::CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vect
 		}
 	}
 	return false;
+}
+
+void Build::SetValueOfBuild(int value) {
+	if (value > 0 && value < 15) {
+		cardValueOfBuild = value;
+	}
+	else {
+		cerr << "Error in setting the value of a build in the build class." << endl;
+	}
 }

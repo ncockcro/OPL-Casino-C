@@ -37,7 +37,10 @@ public:
 	void SetPile(vector<Card> passedPile);
 	void AddToPile(vector<Card> passedPile);
 	const vector<Card> GetPile();
+	void AddToPlayerBuildCards(Card buildCard);
+	vector<Card> GetPlayerBuildCards() const;
 	void PrintPile();
+	char GetPlayerWantBuild() const;
 	const char GetPlayerWantSet();
 	vector<Card> MakeSet();
 
@@ -46,6 +49,7 @@ protected:
 	// Current hand and pile of the player
 	vector<Card> hand;
 	vector<Card> pile;
+	vector<Card> playerBuildCards;
 
 	Deck deck = Deck();
 	vector<Card> uniqueCards = deck.GetDeck();
@@ -55,6 +59,7 @@ protected:
 	char newOrExistingBuild;
 	Card existingBuildCard;
 	char playerMove;
+	char playerWantBuild;
 	char playerWantSet;
 	vector<Card> setCards;
 	bool CheckCard(string card);

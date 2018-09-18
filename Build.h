@@ -20,6 +20,7 @@ public:
 	void PrintBuild();
 	bool CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int currentPlayer, vector<Card> playerHand);
 	bool CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vector<Card> playerHand);
+	void SetValueOfBuild(int value);
 
 private:
 	// Private functions

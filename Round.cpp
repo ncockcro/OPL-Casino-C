@@ -324,11 +324,13 @@ bool Round::CheckBuild() {
 				addExistingBuildSuccessful = true;
 			}
 		}
+		// If addExistingBuildSuccessful is true, then that means the card was added to the build successfully
 		if (addExistingBuildSuccessful) {
 			return true;
 		}
+		// Otherwise, they were not able to add the card to the build they specified
 		else {
-			cout << "No existing build. In round class." << endl;
+			cout << "There are no builds you can add to with those cards." << endl;
 			return false;
 		}
 	}
@@ -338,7 +340,7 @@ bool Round::CheckBuild() {
 	}
 }
 
-/*
+/***********************************************************************
 Function Name: CheckBuildNumbers
 Purpose: To figure out if the cards that a player wants to use to build adds up to something in their deck and 
 if those cards they chose to build with are on the table.
@@ -354,7 +356,7 @@ hasRightCards, a boolean which is true if everything is valid, false otherwise
 Algorithm:
 Still working on!
 Assistance Received: none
-*/
+********************************************************************* */
 bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 
 	// Local variables
@@ -383,6 +385,7 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 	for (size_t i = 0; i < playerHand.size(); i++) {
 		if (CardNumber(playerHand[i].GetNumber()) == aceAs1 || CardNumber(playerHand[i].GetNumber()) == aceAs14) {
 			hasRightCards = true;
+			player[currentPlayer]->AddToPlayerBuildCards(playerHand[i]);
 			return hasRightCards;
 		}
 	}
@@ -390,7 +393,7 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 	return hasRightCards;
 }
 
-/*
+/***********************************************************************
 Function Name: CardNumber
 Purpose: Take a character as input and output the number that it represents.
 Parameters:
@@ -399,7 +402,7 @@ Return Value: Int
 Local Variables:None
 Algorithm: Go through if, else if, and else statements til the corrent number is found.
 Assistance Received: none
-*/
+********************************************************************* */
 int Round::CardNumber(char number) {
 	
 	if (number == 'A') {
@@ -460,6 +463,9 @@ Assistance Received: none
 ********************************************************************* */
 void Round::CreatePlayerBuild() {
 
+	vector<Card> playersBuildCards = player[currentPlayer]->GetPlayerBuildCards();
+	char lastAddedCard = playersBuildCards.back().GetNumber();
+
 	// Initialize a build
 	tableBuilds.push_back(Build());
 
@@ -470,6 +476,8 @@ void Round::CreatePlayerBuild() {
 	else {
 		tableBuilds[buildCounter].SetOwner(1);
 	}
+
+	tableBuilds[buildCounter].SetValueOfBuild(CardNumber(lastAddedCard));
 
 	// Adding the card from the player's hand onto the build that way I can send all the cards to be added to build object
 	playerTableBuildCards.push_back(playerHandBuildCard);
@@ -495,10 +503,6 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 bool Round::AddToExistingBuild() {
-	return false;
-}
-
-bool CaptureExistingBuild() {
 	return false;
 }
 
@@ -628,7 +632,7 @@ bool Round::CheckCapture() {
 	pile.push_back(playerHandCaptureCard);
 	bool canCapture = false;
 
-	// Looking variables for sets
+	// Local variables for sets
 	vector<Card> setCards;
 	int count = 0;
 	int aceAs1Count = 0;
@@ -637,10 +641,9 @@ bool Round::CheckCapture() {
 
 	// If the player said they wanted to make a set, then we will check those cards with the table cards first
 	// to make sure they are on the table and add up to the capture card
-		if (player[currentPlayer]->GetPlayerWantSet() == 'y') {
-			setCards = player[currentPlayer]->MakeSet();
-			do {
-
+	if (player[currentPlayer]->GetPlayerWantSet() == 'y') {
+		setCards = player[currentPlayer]->MakeSet();
+		do {
 			// First checking to make sure that if the cards they want a set with is on the table 
 			for (size_t i = 0; i < table.size(); i++) {
 				for (size_t j = 0; j < setCards.size(); j++) {
@@ -681,24 +684,33 @@ bool Round::CheckCapture() {
 				setCards.pop_back();
 				setCards = player[currentPlayer]->MakeSet();
 			}
-			} while (userInput == "y");
-		}
+		} while (userInput == "y");
+	}
 
-	// Checking to see if there are any cards on the table that match the card the player wants to capture with the same value
-	for (size_t i = 0; i < table.size(); i++) {
-		if (CardNumber(table[i].GetNumber()) == number) {
-			pile.push_back(table[i]);
-			removedTableCards.push_back(table[i]);
+	// If the player wanted to build, then this function will check if it is possible based on
+	// the information the user provided
+	if (player[currentPlayer]->GetPlayerWantBuild() == 'y') {
+		if (CheckIfPlayerCanCaptureBuild(playerHandCaptureCard, playerHand)) {
 			canCapture = true;
 		}
 	}
+	else {
+		// Checking to see if there are any cards on the table that match the card the player wants to capture with the same value
+		for (size_t i = 0; i < table.size(); i++) {
+			if (CardNumber(table[i].GetNumber()) == number) {
+				pile.push_back(table[i]);
+				removedTableCards.push_back(table[i]);
+				canCapture = true;
+			}
+		}
 
-	// If everything is correct, add the cards and remove them properly
-	if (canCapture == true) {
-		player[currentPlayer]->RemoveCard(playerHandCaptureCard);
-		RemoveTableCards(removedTableCards);
+		// If everything is correct, add the cards and remove them properly
+		if (canCapture == true) {
+			player[currentPlayer]->RemoveCard(playerHandCaptureCard);
+			RemoveTableCards(removedTableCards);
 
-		player[currentPlayer]->AddToPile(pile);
+			player[currentPlayer]->AddToPile(pile);
+		}
 	}
 
 	// Set lastCapture to whoever the current player is
@@ -714,6 +726,45 @@ bool Round::CheckCapture() {
 	}
 	return canCapture;
 
+}
+
+/* *********************************************************************
+Function Name: CheckIfPlayerCanCaptureBuild
+Purpose: To check if the player is elegible to capture a build
+Parameters:
+playerHandCapturedCard, a card passed by value. It holds the card the player wants to capture with
+playerHand, a vector of cards. It refers to the player's hand
+Return Value: Whether the player can make a capture or not, a boolean value
+Local Variables:
+existingBuildCard, a card used to store the card the player wants to add to a build
+tempPile, a vector of cards used to add the cards to a player's pile
+Algorithm:
+1) Get the card the player wants to capture with and the player's hand
+2) Check and see if the player has any cards on the table to capture or any sets
+Assistance Received: none
+********************************************************************* */
+bool Round::CheckIfPlayerCanCaptureBuild(Card playerHandCaptureCard, vector<Card> playerHand) {
+
+	Card existingBuildCard = player[currentPlayer]->GetExistingBuildCard();
+	vector<Card> tempPile;
+
+	// Iterate through each of the builds on the table and check if any of them can be captured
+	// based on the specifications the user entered in
+	for (size_t i = 0; i < tableBuilds.size(); i++) {
+		// If there was a build that can be successfully captured after checking if possible, move the cards
+		// from the build element into player's pile, move the card used for capture to player pile, and 
+		// erase this build
+		if (tableBuilds[i].CanCaptureBuildOfCards(playerHandCaptureCard, existingBuildCard, playerHand)) {
+			tempPile = tableBuilds[i].GetBuildOfCards();
+			tempPile.push_back(playerHandCaptureCard);
+			player[currentPlayer]->AddToPile(tempPile);
+
+			tableBuilds.erase(tableBuilds.begin() + i);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /* *********************************************************************

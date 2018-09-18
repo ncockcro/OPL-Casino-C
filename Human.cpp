@@ -176,14 +176,31 @@ void Human::MakeCapture() {
 
 	// Ask the user if they are capturing a build, and if so, skip the sets and prompt them
 	// For a card from the build
-
-	// Finally, ask the user if they want to make a set while using the capture card
 	do {
-		cout << "Are there any sets you would like to capture? (y, n): ";
+		cout << "Do you want to capture a build? (y,n): ";
 		cin >> userInput;
-	} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
+	} while (userInput[0] != 'y' && userInput[0] != 'n' && userInput.size() != 1);
 
-	playerWantSet = userInput[0];
+	playerWantBuild = userInput[0];
+
+	if (playerWantBuild == 'y') {
+		do {
+			cout << "Enter a card from the build you want to capture: ";
+			cin >> userInput;
+		} while (!CheckCard(userInput));
+
+		existingBuildCard.SetCard(userInput);
+	}
+
+	if (playerWantBuild != 'y') {
+		// Finally, ask the user if they want to make a set while using the capture card
+		do {
+			cout << "Are there any sets you would like to capture? (y, n): ";
+			cin >> userInput;
+		} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
+
+		playerWantSet = userInput[0];
+	}
 
 
 }

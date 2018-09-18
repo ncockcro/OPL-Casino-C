@@ -244,6 +244,40 @@ const vector<Card> Player::GetPile() {
 }
 
 /* *********************************************************************
+Function Name: AddToPlayerBuildCards
+Purpose: To add a card to the list of build cards a player must put down at some point to
+complete a build
+Parameters: A build card to be added to the vector, a card type
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Cycle through and ensure the card passed in is a valid card
+2) Push the card to the back of the vector of build cards
+Assistance Received: none
+********************************************************************* */
+void Player::AddToPlayerBuildCards(Card buildCard) {
+	for (size_t i = 0; i < uniqueCards.size(); i++) {
+		if (buildCard.GetCard() == uniqueCards[i].GetCard()) {
+			playerBuildCards.push_back(buildCard);
+		}
+	}
+}
+
+/* *********************************************************************
+Function Name: GetPlayerBuildCards
+Purpose: To retrieve the cards the player must use for a build
+Parameters: None
+Return Value: the vector of cards the player must use to build, a vector of cards
+Local Variables: None
+Algorithm:
+1) Return the vector of cards the player must build with
+Assistance Received: none
+********************************************************************* */
+vector<Card> Player::GetPlayerBuildCards() const {
+	return playerBuildCards;
+}
+
+/* *********************************************************************
 Function Name: PrintPile
 Purpose: To print out a player's pile to the console
 Parameters: None
@@ -258,6 +292,20 @@ void Player::PrintPile() {
 		cout << pile[i].GetCard() << " ";
 	}
 	cout << endl;
+}
+
+/* *********************************************************************
+Function Name: GetPlayerWantBuild
+Purpose: To retrieve the character indicating if a player wants to capture a set or not
+Parameters: None
+Return Value: The character either being 'y' or 'n', a constant char value
+Local Variables: None
+Algorithm:
+1) Return the playerWantBuild variable
+Assistance Received: none
+********************************************************************* */
+char Player::GetPlayerWantBuild() const {
+	return playerWantBuild;
 }
 
 /* *********************************************************************
