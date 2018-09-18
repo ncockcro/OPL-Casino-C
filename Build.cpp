@@ -43,7 +43,7 @@ Algorithm:
 1) Return the owner
 Assistance Received: none
 ********************************************************************* */
-const int Build::GetOwner() {
+int Build::GetOwner() const {
 	return owner;
 }
 
@@ -79,7 +79,7 @@ Algorithm:
 1) Return the buildOfCards
 Assistance Received: none
 ********************************************************************* */
-const vector<Card> Build::GetBuildOfCards() {
+vector<Card> Build::GetBuildOfCards() const {
 	return buildOfCards;
 }
 

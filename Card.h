@@ -17,9 +17,9 @@ public:
 	void SetCard(string passedCard);
 
 	// Getters
-	const string GetCard();
-	const char GetSuit();
-	const char GetNumber();
+	string GetCard() const;
+	char GetSuit() const;
+	char GetNumber() const;
 
 private:
 	//Private functions

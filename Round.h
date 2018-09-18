@@ -20,9 +20,9 @@ public:
 	Round();
 	~Round();
 	void PlayRound(string firstPlayer);
-	const string GetLastCapture();
-	const vector<Card> GetPlayerPile();
-	const vector<Card> GetComputerPile();
+	string GetLastCapture() const;
+	vector<Card> GetPlayerPile() const;
+	vector<Card> GetComputerPile() const;
 
 private:
 	// Private functions

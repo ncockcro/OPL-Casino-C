@@ -84,7 +84,7 @@ Algorithm:
 1) Returns lastCapture
 Assistance Received: none
 ********************************************************************* */
-const string Round::GetLastCapture() {
+string Round::GetLastCapture() const{
 	return lastCapture;
 }
 
@@ -98,7 +98,7 @@ Algorithm:
 1) Returns the human player's pile
 Assistance Received: none
 ********************************************************************* */
-const vector<Card> Round::GetPlayerPile() {
+vector<Card> Round::GetPlayerPile() const{
 	return player[0]->GetPile();
 }
 
@@ -112,7 +112,7 @@ Algorithm:
 1) Returns the computer player's pile
 Assistance Received: none
 ********************************************************************* */
-const vector<Card> Round::GetComputerPile() {
+vector<Card> Round::GetComputerPile() const{
 	return player[1]->GetPile();
 }
 

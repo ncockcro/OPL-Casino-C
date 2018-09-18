@@ -149,7 +149,7 @@ Algorithm:
 1) Return a copy of the deck of cards
 Assistance Received: none
 ********************************************************************* */
-const vector<Card> Deck::GetDeck() {
+vector<Card> Deck::GetDeck() const {
 	return deckOfCards;
 }
 

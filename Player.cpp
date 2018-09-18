@@ -76,7 +76,7 @@ Algorithm:
 1) Return the player's hand
 Assistance Received: none
 ********************************************************************* */
-const vector<Card> Player::GetHand() {
+vector<Card> Player::GetHand() const {
 	return hand;
 }
 
@@ -90,7 +90,7 @@ Algorithm:
 1) Return the player's card for a build or capture
 Assistance Received: none
 ********************************************************************* */
-const Card Player::GetPlayerCard() {
+Card Player::GetPlayerCard() const {
 	return playerCard;
 }
 
@@ -104,7 +104,7 @@ Algorithm:
 1) Return the cards used for a build
 Assistance Received: none
 ********************************************************************* */
-const vector<Card> Player::GetBuildCards(){
+vector<Card> Player::GetBuildCards() const {
 	return buildCards;
 }
 
@@ -118,7 +118,7 @@ Algorithm:
 1) Return the char indicating a new or existing build
 Assistance Received: none
 ********************************************************************* */
-const char Player::GetNewOrExistingBuild() {
+char Player::GetNewOrExistingBuild() const {
 	return newOrExistingBuild;
 }
 
@@ -132,7 +132,7 @@ Algorithm:
 1) Return the card of an existing build
 Assistance Received: none
 ********************************************************************* */
-const Card Player::GetExistingBuildCard() {
+Card Player::GetExistingBuildCard() const {
 	return existingBuildCard;
 }
 
@@ -146,7 +146,7 @@ Algorithm:
 1) Return the playerMove variable
 Assistance Received: none
 ********************************************************************* */
-const char Player::GetPlayerMove() {
+char Player::GetPlayerMove() const {
 	return playerMove;
 }
 
@@ -239,7 +239,7 @@ Algorithm:
 1) Returns a player's pile
 Assistance Received: none
 ********************************************************************* */
-const vector<Card> Player::GetPile() {
+vector<Card> Player::GetPile() const {
 	return pile;
 }
 
@@ -318,7 +318,7 @@ Algorithm:
 1) Return the playerWantSet variable
 Assistance Received: none
 ********************************************************************* */
-const char Player::GetPlayerWantSet() {
+char Player::GetPlayerWantSet() const {
 	return playerWantSet;
 }
 

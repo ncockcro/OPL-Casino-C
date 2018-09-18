@@ -18,7 +18,7 @@ public:
 	~Deck(); // Default destructor
 	void PrintDeck(); // Prints the current deck of cards
 	bool IsEmpty();
-	const vector<Card> GetDeck();
+	vector<Card> GetDeck() const;
 	void RemoveFourCards();
 
 private:

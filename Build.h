@@ -14,9 +14,9 @@ public:
 	~Build();
 
 	void SetOwner(int passedOwner);
-	const int GetOwner();
+	int GetOwner() const;
 	void SetBuildOfCards(vector<Card> buildCards);
-	const vector<Card> GetBuildOfCards();
+	vector<Card> GetBuildOfCards() const;
 	void PrintBuild();
 	bool CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int currentPlayer, vector<Card> playerHand);
 	bool CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vector<Card> playerHand);

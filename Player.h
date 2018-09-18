@@ -25,23 +25,22 @@ public:
 	virtual void MakeMove(); // Virtual function so both types of players can share certain moves
 	void SetHand(vector<Card> fourCards);
 	bool IsEmpty();
-	const vector<Card> GetHand();
-	const Card GetPlayerCard();
-	const vector<Card> GetBuildCards();
-	const vector<Card> GetCaptureCards();
-	const char GetNewOrExistingBuild();
-	const Card GetExistingBuildCard();
-	const char GetPlayerMove();
+	vector<Card> GetHand() const;
+	Card GetPlayerCard() const;
+	vector<Card> GetBuildCards() const;
+	char GetNewOrExistingBuild() const;
+	Card GetExistingBuildCard() const;
+	char GetPlayerMove() const;
 	void RemoveCard(Card card);
 
 	void SetPile(vector<Card> passedPile);
 	void AddToPile(vector<Card> passedPile);
-	const vector<Card> GetPile();
+	vector<Card> GetPile() const;
 	void AddToPlayerBuildCards(Card buildCard);
 	vector<Card> GetPlayerBuildCards() const;
 	void PrintPile();
 	char GetPlayerWantBuild() const;
-	const char GetPlayerWantSet();
+	char GetPlayerWantSet() const;
 	vector<Card> MakeSet();
 
 
