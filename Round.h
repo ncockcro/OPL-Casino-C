@@ -23,6 +23,7 @@ public:
 	string GetLastCapture() const;
 	vector<Card> GetPlayerPile() const;
 	vector<Card> GetComputerPile() const;
+	void SetRoundInfo(int round, int humanScore, int computerScore);
 
 private:
 	// Private functions
@@ -30,6 +31,8 @@ private:
 	void DealCardsToPlayers();
 	void DealCardsToTable();
 	void SetTable(vector<Card> deckOfCards);
+
+	// Used for validating a player's move
 	bool CheckMove(char move);
 	bool CheckBuild();
 	bool CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards); // Checks the number in a players hand and the number they are trying to add up to in a build
@@ -48,12 +51,12 @@ private:
 	// Trailing
 	bool CheckTrail();
 
+	void SaveGame();
+
 	// Private variables
 	string lastCapture;
 	int currentPlayer;
-
 	Deck deckOfCards = Deck();
-
 	Human p1 = Human();
 	Computer p2 = Computer();
 
@@ -73,6 +76,10 @@ private:
 
 	// Used if the player is making a trail
 	Card playerHandTrailCard;
+
+	int currentRound;
+	int humanPoints;
+	int computerPoints;
 };
 
 #endif

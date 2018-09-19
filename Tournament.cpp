@@ -33,6 +33,17 @@ void Tournament::PlayGame() {
 
 	initialDecision = StartMenu();
 
+	// If the decision is "l", than we have to load a file
+	if (initialDecision == "l") {
+		LoadGame();
+	}
+	// If the user wants to exit, just return to main
+	else if (initialDecision == "e") {
+		cout << "Goodbye!" << endl;
+		return;
+	}
+
+	currentRound.SetRoundInfo(round, humanPoints, computerPoints);
 	// The first round is played by if the human won the toin coss or not
 	currentRound.PlayRound(TossCoin());
 
@@ -48,6 +59,7 @@ void Tournament::PlayGame() {
 		currentRound = Round();
 		// After the toin coss, it is the player whoever captured last
 		Round currentRound2 = Round();
+		currentRound2.SetRoundInfo(round, humanPoints, computerPoints);
 		currentRound2.PlayRound(lastCaptured);
 
 		CalculatePoints();
@@ -81,6 +93,10 @@ string Tournament::StartMenu() {
 		cout << "'l' for load game: " << endl;
 		cout << "'e' to exit: ";
 		cin >> userInput;
+		if (userInput.size() > 1) {
+			cout << "Try again." << endl;
+			userInput = "-1";
+		}
 	} while (userInput != "n" && userInput != "l" && userInput != "e");
 
 	return userInput;
@@ -103,10 +119,14 @@ string Tournament::TossCoin() {
 	do {
 		cout << "Enter 'h' for heads and 't' for tails: ";
 		cin >> playerCoin;
-	} while (toupper(playerCoin[0]) != 'H' && toupper(playerCoin[0]) != 'T');
+		if (playerCoin.size() > 1) {
+			cout << "Try again." << endl;
+			playerCoin = "-1";
+		}
+	} while (tolower(playerCoin[0]) != 'h' && tolower(playerCoin[0]) != 't');
 
 	// If the human guesses the correct virtual coin toss, then they go first
-	if (toupper(playerCoin[0]) == 'H' && coin == 0 || toupper(playerCoin[0]) == 'T' && coin == 1) {
+	if (tolower(playerCoin[0]) == 'h' && coin == 0 || tolower(playerCoin[0]) == 't' && coin == 1) {
 		cout << "You were correct! You go first." << endl;
 		return "human";
 	}
@@ -226,4 +246,8 @@ void Tournament::CalculatePoints() {
 
 	cout << "Total player points: " << humanPoints << endl;
 	cout << "Total computer points: " << computerPoints << endl;
+}
+
+void Tournament::LoadGame() {
+
 }

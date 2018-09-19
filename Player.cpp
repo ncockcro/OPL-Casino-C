@@ -4,6 +4,7 @@
 // Default constructor
 Player::Player()
 {
+	playerWantSave = false;
 }
 
 // Default destructor
@@ -21,7 +22,7 @@ Algorithm:
 1) This is a virtual function so the actualfunction is used in the child classes
 Assistance Received: none
 ********************************************************************* */
-void Player::MakeMove() {
+void Player::MakeMove(bool falseMove) {
 }
 
 /* *********************************************************************
@@ -220,7 +221,7 @@ Assistance Received: none
 ********************************************************************* */
 void Player::AddToPile(vector<Card> passedPile) {
 	
-	for (int i = 0; i < uniqueCards.size(); i++) {
+	for (size_t i = 0; i < uniqueCards.size(); i++) {
 		for (size_t j = 0; j < passedPile.size(); j++) {
 			if (uniqueCards[i].GetCard() == passedPile[j].GetCard()) {
 				pile.push_back(passedPile[j]);
@@ -323,6 +324,20 @@ char Player::GetPlayerWantSet() const {
 }
 
 /* *********************************************************************
+Function Name: GetPlayerWantSave
+Purpose: To retrieve the bool indicating if the player wants to save or not
+Parameters: None
+Return Value: The bool either being true or false, a constant boolean value
+Local Variables: None
+Algorithm:
+1) Return the playerWantSave variable
+Assistance Received: none
+********************************************************************* */
+bool Player::GetPlayerWantSave() const {
+	return playerWantSave;
+}
+
+/* *********************************************************************
 Function Name: MakeSet
 Purpose: Has the user enter more kids for capturing a set
 Parameters: None
@@ -359,9 +374,7 @@ Function Name: CheckCard
 Purpose: Takes a card in as input and checks to see if it is one of the 52 in a deck
 Parameters: None
 Return Value: True if the card is valid, false otherwise, a boolean value
-Local Variables:
-validCard, a boolean for tracking if a card is valid or not
-count, an int for keeping track of how many cards they entered
+Local Variables: None
 Algorithm:
 1) Iterate through the 52 card deck and see if the passed in card matches one of them
 2) If it does, return true, otherwise, return false
@@ -369,13 +382,12 @@ Assistance Received: none
 ********************************************************************* */
 bool Player::CheckCard(string card) {
 
-	bool validCard = false;
-
 	for (size_t i = 0; i < uniqueCards.size(); i++) {
 		if (uniqueCards[i].GetCard() == card) {
-			validCard = true;
+			return true;
 		}
 	}
 
-	return validCard;
+	cout << "You don't have that card, enter a different one." << endl;
+	return false;
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "Card.h"
 #include "Deck.h"
 
@@ -22,7 +23,7 @@ public:
 	// Public functions
 	Player();
 	~Player();
-	virtual void MakeMove(); // Virtual function so both types of players can share certain moves
+	virtual void MakeMove(bool falseMove); // Virtual function so both types of players can share certain moves
 	void SetHand(vector<Card> fourCards);
 	bool IsEmpty();
 	vector<Card> GetHand() const;
@@ -41,6 +42,7 @@ public:
 	void PrintPile();
 	char GetPlayerWantBuild() const;
 	char GetPlayerWantSet() const;
+	bool GetPlayerWantSave() const;
 	vector<Card> MakeSet();
 
 
@@ -52,6 +54,7 @@ protected:
 
 	Deck deck = Deck();
 	vector<Card> uniqueCards = deck.GetDeck();
+	bool playerWantSave;
 
 	Card playerCard;
 	vector<Card> buildCards;
@@ -62,13 +65,6 @@ protected:
 	char playerWantSet;
 	vector<Card> setCards;
 	bool CheckCard(string card);
-
-private:
-	// Private functions
-
-
-	// Private variables
-
 };
 
 #endif

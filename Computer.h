@@ -13,7 +13,7 @@ public:
 	Computer();
 	~Computer();
 
-	void MakeMove();
+	void MakeMove(bool falseMove);
 };
 
 #endif

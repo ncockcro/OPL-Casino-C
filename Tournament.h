@@ -26,6 +26,7 @@ private:
 	void IncrementRound();
 	void SaveLastCaptured(string capturer);
 	void CalculatePoints();
+	void LoadGame();
 
 	// Private variables
 	string initialDecision;

@@ -13,7 +13,8 @@ public:
 	~Human();
 
 	// Public functions
-	void MakeMove();
+	void MakeMove(bool falseMove);
+	void MakePlay();
 	void MakeBuild();
 	void MakeCapture();
 	void MakeTrail();

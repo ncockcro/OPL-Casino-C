@@ -19,16 +19,66 @@ Return Value: Void
 Local Variables:
 userInput, an string used to get user input
 Algorithm:
+1) Prompt the user to enter what they want to do
+2) Depending on what the user picked, another function will be called for each type of play
+Assistance Received: none
+********************************************************************* */
+void Human::MakeMove(bool falseMove) {
+	string userInput;
+
+	// If the player just made a move and it was wrong, it will take them directly to making a move again
+	if (falseMove == false) {
+		MakePlay();
+		return;
+	}
+
+	do {
+		cout << "1. Save the game" << endl;
+		cout << "2. Make a move" << endl;
+		cout << "3. Ask for help" << endl;
+		cout << "4. Quit the game: ";
+		cin >> userInput;
+	} while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");
+
+	// Save game
+	if (userInput == "1") {
+		playerWantSave = true;
+	}
+	else if (userInput == "2") {
+		MakePlay();
+	}
+	else if (userInput == "3") {
+		// Use the computer's AI for help
+	}
+	// Quit the game
+	else if (userInput == "4") {
+		exit(1);
+	}
+}
+
+/* *********************************************************************
+Function Name: MakePlay
+Purpose: Prompts the user for what kind of play they want to make
+Parameters: None
+Return Value: Void
+Local Variables:
+userInput, an string used to get user input
+Algorithm:
 1) Prompt the user to enter a type of move to make
 2) Depending on what the user picked, another function will be called for each type of move
 Assistance Received: none
 ********************************************************************* */
-void Human::MakeMove() {
-	string userInput;
+void Human::MakePlay() {
 
+	string userInput;
 	do {
 		cout << "Type 'b' to build, 'c' to capture, or 't' to trail: ";
 		cin >> userInput;
+
+		if (userInput.size() > 1) {
+			cout << "Try again." << endl;
+			userInput = "-1";
+		}
 	} while (tolower(userInput[0]) != 'b' && tolower(userInput[0]) != 'c' && tolower(userInput[0]) != 't');
 
 	// Saving the players move
@@ -36,7 +86,7 @@ void Human::MakeMove() {
 
 	// Building
 	if (tolower(userInput[0]) == 'b') {
- 		MakeBuild();
+		MakeBuild();
 	}
 	// Capturing
 	else if (tolower(userInput[0]) == 'c') {
