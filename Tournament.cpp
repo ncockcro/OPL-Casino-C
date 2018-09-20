@@ -291,7 +291,6 @@ bool Tournament::LoadGame() {
 		string tempString;
 		string buildString;
 		Build tempBuild;
-		char letter;
 
 		// If the build keyword is in the text file, then we need to parse it for a build
 		if (userInput == "Build") {
@@ -300,7 +299,7 @@ bool Tournament::LoadGame() {
 			// If the string is not computer or human, then we know there is some text of the build we need to parse
 			while (userInput != "Computer" && userInput != "Human") {
 				inputFile >> userInput;
-				for (int i = 0; i < userInput.size(); i++) {
+				for (size_t i = 0; i < userInput.size(); i++) {
 					// Checking for a suit
 					if (userInput[i] == 'C' || userInput[i] == 'D' || userInput[i] == 'H' || userInput[i] == 'S') {
 						buildString += userInput[i];
@@ -344,7 +343,7 @@ bool Tournament::LoadGame() {
 			loadInfo.nextPlayer = userInput;
 		}
 
-		for (int i = 0; i < loadInfo.deck.size(); i++) {
+		for (size_t i = 0; i < loadInfo.deck.size(); i++) {
 			cout << loadInfo.deck[i].GetCard() << endl;
 		}
 
@@ -356,6 +355,8 @@ bool Tournament::LoadGame() {
 // Function for the coin toss at the beginning of a new game where a randomly generated number represents
 // a coin being tossed and the player has to try and guess it to go first.
 string Tournament::TossCoin() {
+
+	// Seeding the rng with time
 	srand(time(NULL));
 
 	// coin will either equal 0 for heads or 1 for tails

@@ -1,7 +1,6 @@
 #include "Round.h"
 
 
-
 Round::Round()
 {
 	// Human player
@@ -981,4 +980,21 @@ void Round::SaveGame() {
 	outputFile.close();
 
 	exit(1);
+}
+
+/* *********************************************************************
+Function Name: LoadRound
+Purpose: Load all of the appropriate information for a round to be picked up on
+Parameters: None
+Return Value: None
+Local Variables:
+outputFile, an output stream object, used for writing to an output file
+tempBuild, a vector of cards, used to temporarily store a build
+tempDeck, a vector of cards, used to temporarily store the remaining cards in the deck
+Algorithm:
+1) WORK IN PROGRESS
+Assistance Received: none
+********************************************************************* */
+void Round::LoadRound() {
+
 }

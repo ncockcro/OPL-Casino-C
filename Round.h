@@ -53,6 +53,7 @@ private:
 	bool CheckTrail();
 
 	void SaveGame();
+	void LoadRound();
 
 	// Private variables
 	string lastCapture;

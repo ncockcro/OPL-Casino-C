@@ -20,6 +20,21 @@ public:
 	~Tournament();
 	void PlayGame();
 
+	struct LoadGameInfo {
+		int round;
+		int computerScore;
+		vector<Card> computerHand;
+		vector<Card> computerPile;
+		int humanScore;
+		vector<Card> humanHand;
+		vector<Card> humanPile;
+		vector<Card> table;
+		vector<Card> buildCards;
+		vector<Build> builds;
+		vector<Card> deck;
+		string nextPlayer;
+	};
+
 private:
 	// Private functions
 	string StartMenu();
@@ -40,21 +55,6 @@ private:
 	Round currentRound = Round();
 	string lastCaptured;
 	vector<Card> loadedDeck;
-
-	struct LoadGameInfo {
-		int round;
-		int computerScore;
-		vector<Card> computerHand;
-		vector<Card> computerPile;
-		int humanScore;
-		vector<Card> humanHand;
-		vector<Card> humanPile;
-		vector<Card> table;
-		vector<Card> buildCards;
-		vector<Build> builds;
-		vector<Card> deck;
-		string nextPlayer;
-	};
 
 	LoadGameInfo loadInfo;
 };
