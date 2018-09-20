@@ -15,6 +15,7 @@ class Deck
 public:
 	// Public functions
 	Deck(); // Default constructor
+	Deck(vector<Card> cards);
 	~Deck(); // Default destructor
 	void PrintDeck(); // Prints the current deck of cards
 	bool IsEmpty();

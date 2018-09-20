@@ -10,6 +10,9 @@ Round::Round()
 	player.push_back(&p2);
 
 	buildCounter = 0;
+	playTrue = true;
+
+	deckOfCards = Deck();
 }
 
 
@@ -30,8 +33,6 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 void Round::PlayRound(string firstPlayer) {
-
-	bool playTrue = true;
 
 	if (firstPlayer == "human") {
 		currentPlayer = 0;
@@ -56,7 +57,6 @@ void Round::PlayRound(string firstPlayer) {
 				SaveGame();
 			}
 
-			playTrue = CheckMove(player[currentPlayer]->GetPlayerMove());
 		} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
 
 		// Switch players
@@ -154,6 +154,23 @@ void Round::SetRoundInfo(int round, int humanScore, int computerScore) {
 	else {
 		cerr << "Error in setting score in the round class." << endl;
 	}
+}
+
+/* *********************************************************************
+Function Name: SetRoundInfo
+Purpose: Setting the round info so if the player decides to save the game, the info is available
+Parameters:
+round, an integer value, holds the current round
+humanScore, an integer value, holds the human's score
+computerScore, an integer value, holds the computer's score
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Set the round, human score, and computer score
+Assistance Received: none
+********************************************************************* */
+void Round::LoadDeck(vector<Card> loadedDeck) {
+	deckOfCards = Deck(loadedDeck);
 }
 
 /* *********************************************************************
@@ -764,6 +781,8 @@ bool Round::CheckCapture() {
 	if (canCapture == false) {
 		cout << "You can not capture any cards on the table with that capture card." << endl;
 	}
+
+	playTrue = canCapture;
 	return canCapture;
 
 }

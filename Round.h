@@ -24,6 +24,7 @@ public:
 	vector<Card> GetPlayerPile() const;
 	vector<Card> GetComputerPile() const;
 	void SetRoundInfo(int round, int humanScore, int computerScore);
+	void LoadDeck(vector<Card> loadedDeck);
 
 private:
 	// Private functions
@@ -56,9 +57,10 @@ private:
 	// Private variables
 	string lastCapture;
 	int currentPlayer;
-	Deck deckOfCards = Deck();
+	Deck deckOfCards;
 	Human p1 = Human();
 	Computer p2 = Computer();
+	bool playTrue;
 
 	vector<Player*> player; // A vector of player objects which will act as one index for the player and the others as the computer
 	vector<Card> table;

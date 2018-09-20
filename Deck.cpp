@@ -97,6 +97,22 @@ Deck::Deck()
 
 }
 
+/* *********************************************************************
+Function Name: Deck(vector<Card> cards)
+Purpose: Overloaded constructor used for when the player wants to load their own deck in
+Parameters:
+cards, holds cards read in from a file, a vector of cards value
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Iterate through the vector of cards and store them in the deck
+Assistance Received: none
+********************************************************************* */
+Deck::Deck(vector<Card> cards) {
+
+	deckOfCards = cards;
+}
+
 
 Deck::~Deck()
 {

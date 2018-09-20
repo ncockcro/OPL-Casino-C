@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <fstream>
+#include <sstream>
 #include "Deck.h"
 #include "Round.h"
 
@@ -16,17 +18,17 @@ public:
 	Tournament();
 	~Tournament();
 	void PlayGame();
-	void AddPoints();
 
 private:
 	// Private functions
 	string StartMenu();
+	bool LoadGame();
+	bool LoadDeck();
 	string TossCoin();
 	void GameWon();
 	void IncrementRound();
 	void SaveLastCaptured(string capturer);
 	void CalculatePoints();
-	void LoadGame();
 
 	// Private variables
 	string initialDecision;
@@ -36,6 +38,23 @@ private:
 	int round;
 	Round currentRound = Round();
 	string lastCaptured;
+	vector<Card> loadedDeck;
+
+	struct LoadGameInfo {
+		int round;
+		int computerScore;
+		vector<Card> computerHand;
+		vector<Card> computerPile;
+		int humanScore;
+		vector<Card> humanHand;
+		vector<Card> humanPile;
+		vector<Card> table;
+		vector<Card> builds;
+		vector<Card> deck;
+		string nextPlayer;
+	};
+
+	LoadGameInfo loadInfo;
 };
 
 #endif

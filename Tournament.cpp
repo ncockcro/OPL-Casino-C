@@ -31,6 +31,9 @@ Assistance Received: none
 ********************************************************************* */
 void Tournament::PlayGame() {
 
+	string userInput;
+
+	// Prompt the user for what they want to do
 	initialDecision = StartMenu();
 
 	// If the decision is "l", than we have to load a file
@@ -43,7 +46,12 @@ void Tournament::PlayGame() {
 		return;
 	}
 
+	// Passed general information about the round
 	currentRound.SetRoundInfo(round, humanPoints, computerPoints);
+
+	if(initialDecision == "n" && LoadDeck() == true) {
+		currentRound.LoadDeck(loadedDeck);
+	}
 	// The first round is played by if the human won the toin coss or not
 	currentRound.PlayRound(TossCoin());
 
@@ -102,8 +110,214 @@ string Tournament::StartMenu() {
 	return userInput;
 }
 
-void Tournament::AddPoints() {
+/* *********************************************************************
+Function Name: LoadDeck
+Purpose: Prompt the user if they want to load a deck or not, if so, handles reading in the file
+Parameters: None
+Return Value: Whether the user loaded in a deck of not, true or false, a boolean value
+Local Variables: userInput, a string which gets the menu option from the player
+Algorithm:
+1) Prompt the user for what option they want to do
+2) Return the option that the user picked
+Assistance Received: none
+********************************************************************* */
+bool Tournament::LoadDeck() {
+	string userInput;
+	Card tempCard;
+	ifstream inputFile;
 
+// Prompting the user if they want to load a deck
+do {
+	cout << "Do you want to load in a deck? (y,n): ";
+	cin >> userInput;
+
+	if (userInput.size() > 1) {
+		cout << "Try again." << endl;
+		userInput = "-1";
+	}
+} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
+
+if (tolower(userInput[0]) == 'n') {
+	return false;
+}
+
+do {
+	cout << "Enter the name of the file you want to load your deck from." << endl;
+	cout << "Enter 'n' if you don't want to load a deck: ";
+	cin >> userInput;
+
+	inputFile.open(userInput);
+
+	// If the user doesn't actually want to load from a file, then they can say no and start a new game
+	if (userInput == "n" || userInput == "N") {
+		return false;
+	}
+
+	// If the file they entered can't be opened, ask them for another file name
+	if (!inputFile.is_open()) {
+		cout << "Can not find file, try again." << endl;
+	}
+} while (!inputFile.is_open());
+
+// Reading each line for a card and storing it into a vector of cards variable
+while (inputFile.good()) {
+	inputFile >> userInput;
+	tempCard.SetCard(userInput);
+	loadedDeck.push_back(tempCard);
+
+}
+
+return true;
+}
+
+/* *********************************************************************
+Function Name: LoadGame
+Purpose: Prompt the user for a text file and load a game for it to be picked up from
+Parameters: None
+Return Value: Whether the user loaded in a deck of not, true or false, a boolean value
+Local Variables: userInput, a string which gets the menu option from the player
+Algorithm:
+1) Prompt the user for what file they want to load in
+2) Return the option that the user picked
+Assistance Received: none
+********************************************************************* */
+bool Tournament::LoadGame() {
+	string userInput;
+	Card tempCard;
+	ifstream inputFile;
+
+	do {
+		cout << "Enter the name of the file you want to load your deck from." << endl;
+		cout << "Enter 'n' if you just want to play a new game: ";
+		cin >> userInput;
+
+		inputFile.open(userInput);
+
+		// If the user doesn't actually want to load from a file, then they can say no and start a new game
+		if (userInput == "n" || userInput == "N") {
+			return false;
+		}
+
+		// If the file they entered can't be opened, ask them for another file name
+		if (!inputFile.is_open()) {
+			cout << "Can not find file, try again." << endl;
+		}
+	} while (!inputFile.is_open());
+
+	istringstream ss;
+
+	// Reading each line for a card and storing it into a vector of cards variable
+	while (inputFile.good()) {
+		inputFile >> userInput;
+
+		// Getting the round
+		if (userInput == "Round:") {
+			inputFile >> userInput;
+			loadInfo.round = stoi(userInput);
+		}
+
+		inputFile >> userInput;
+		inputFile >> userInput;
+
+		// Getting the computer score
+		if (userInput == "Score:") {
+			inputFile >> userInput;
+			loadInfo.computerScore = stoi(userInput);
+		}
+
+		inputFile >> userInput;
+
+		// Getting the computer hand
+		if (userInput == "Hand:") {
+			inputFile >> userInput;
+			while (userInput.size() == 2) {
+				tempCard.SetCard(userInput);
+				loadInfo.computerHand.push_back(tempCard);
+				inputFile >> userInput;
+			}
+		}
+
+		// Getting the computer pile
+		if (userInput == "Pile:") {
+			inputFile >> userInput;
+			while (userInput.size() == 2) {
+				tempCard.SetCard(userInput);
+				loadInfo.computerPile.push_back(tempCard);
+				inputFile >> userInput;
+			}
+		}
+
+		inputFile >> userInput;
+
+		// Getting the human score
+		if (userInput == "Score:") {
+			inputFile >> userInput;
+			loadInfo.humanScore = stoi(userInput);
+		}
+
+		inputFile >> userInput;
+
+		// Getting the human hand
+		if (userInput == "Hand:") {
+			inputFile >> userInput;
+			while (userInput.size() == 2) {
+				tempCard.SetCard(userInput);
+				loadInfo.humanHand.push_back(tempCard);
+				inputFile >> userInput;
+			}
+		}
+
+		// Getting the human pile
+		if (userInput == "Pile:") {
+			inputFile >> userInput;
+			while (userInput.size() == 2) {
+				tempCard.SetCard(userInput);
+				loadInfo.humanPile.push_back(tempCard);
+				inputFile >> userInput;
+			}
+		}
+
+		// Getting the table
+		if (userInput == "Table:") {
+			inputFile >> userInput;
+			while (userInput != "Build" && userInput != "Deck:") {
+				if (userInput.size() == 2) {
+					tempCard.SetCard(userInput);
+					loadInfo.table.push_back(tempCard);
+				}
+				inputFile >> userInput;
+			}
+		}
+
+		// Handle builds here
+		if (userInput == "Build") {
+			inputFile >> userInput;
+			inputFile >> userInput;
+		}
+
+		// Getting the deck
+		if (userInput == "Deck:") {
+			inputFile >> userInput;
+			while (userInput.size() == 2) {
+				tempCard.SetCard(userInput);
+				loadInfo.deck.push_back(tempCard);
+			}
+		inputFile >> userInput;
+		}
+
+		// Getting the current player
+		if (userInput == "Player:") {
+			inputFile >> userInput;
+			loadInfo.nextPlayer = userInput;
+		}
+
+		for (int i = 0; i < loadInfo.deck.size(); i++) {
+			cout << loadInfo.deck[i].GetCard() << endl;
+		}
+
+	}
+
+	return true;
 }
 
 // Function for the coin toss at the beginning of a new game where a randomly generated number represents
@@ -246,8 +460,4 @@ void Tournament::CalculatePoints() {
 
 	cout << "Total player points: " << humanPoints << endl;
 	cout << "Total computer points: " << computerPoints << endl;
-}
-
-void Tournament::LoadGame() {
-
 }
