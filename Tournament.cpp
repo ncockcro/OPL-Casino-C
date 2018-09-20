@@ -49,11 +49,20 @@ void Tournament::PlayGame() {
 	// Passed general information about the round
 	currentRound.SetRoundInfo(round, humanPoints, computerPoints);
 
+	// If it is a new game and if they want to load their own deck...
 	if(initialDecision == "n" && LoadDeck() == true) {
 		currentRound.LoadDeck(loadedDeck);
 	}
-	// The first round is played by if the human won the toin coss or not
-	currentRound.PlayRound(TossCoin());
+	else if (initialDecision == "l") {
+		//load data into the current round
+		currentRound.LoadRound(loadInfo.computerHand, loadInfo.computerPile, loadInfo.humanHand, loadInfo.humanPile, 
+			loadInfo.table, loadInfo.builds, loadInfo.deck);
+		currentRound.PlayRound(loadInfo.nextPlayer);
+	}
+	else {
+		// The first round is played by if the human won the toin coss or not
+		currentRound.PlayRound(TossCoin());
+	}
 
 	// Then we save the person who captured the last card and increment the round counter
 	SaveLastCaptured(currentRound.GetLastCapture());

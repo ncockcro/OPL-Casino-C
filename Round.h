@@ -25,6 +25,8 @@ public:
 	vector<Card> GetComputerPile() const;
 	void SetRoundInfo(int round, int humanScore, int computerScore);
 	void LoadDeck(vector<Card> loadedDeck);
+	void LoadRound(vector<Card> loadComputerHand, vector<Card> loadComputerPile, vector<Card> loadHumanHand, vector<Card> loadHumanPile,
+		vector<Card> loadTable, vector<Build> loadBuilds, vector<Card> loadDeck);
 
 private:
 	// Private functions
@@ -53,7 +55,16 @@ private:
 	bool CheckTrail();
 
 	void SaveGame();
-	void LoadRound();
+
+	vector<Card> computerPile;
+	int humanScore;
+	vector<Card> humanHand;
+	vector<Card> humanPile;
+	vector<Card> table;
+	vector<Card> buildCards;
+	vector<Build> builds;
+	vector<Card> deck;
+	string nextPlayer;
 
 	// Private variables
 	string lastCapture;
@@ -64,7 +75,6 @@ private:
 	bool playTrue;
 
 	vector<Player*> player; // A vector of player objects which will act as one index for the player and the others as the computer
-	vector<Card> table;
 	
 	// Used if the player is making a build
 	Card playerHandBuildCard;
@@ -83,6 +93,8 @@ private:
 	int currentRound;
 	int humanPoints;
 	int computerPoints;
+
+	bool loadGame;
 };
 
 #endif

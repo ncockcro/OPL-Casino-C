@@ -12,6 +12,7 @@ Round::Round()
 	playTrue = true;
 
 	deckOfCards = Deck();
+	loadGame = false;
 }
 
 
@@ -40,9 +41,12 @@ void Round::PlayRound(string firstPlayer) {
 		currentPlayer = 1;
 	}
 
-	// At the beginning of a round, deal first four cards to player, next four to computer, and next four to the table
-	DealCardsToPlayers();
-	DealCardsToTable();
+	// If we are NOT loading from a previous game then we need to deal cards to the players
+	if (loadGame == false) {
+		// At the beginning of a round, deal first four cards to player, next four to computer, and next four to the table
+		DealCardsToPlayers();
+		DealCardsToTable();
+	}
 
 	do {
 		// Print hand, table, and have the player make a move
@@ -985,16 +989,41 @@ void Round::SaveGame() {
 /* *********************************************************************
 Function Name: LoadRound
 Purpose: Load all of the appropriate information for a round to be picked up on
-Parameters: None
+Parameters:
+loadComputerHand, holds the computer's hand, a vector of cards
+loadComputerPile, holds the computer's pile, a vector of cards
+loadHumanHand, holds the human's hand, a vector of cards
+loadHumanPile, holds the human's pile, a vector of cards
+loadTable, holds the cards on the table, a vector of cards
+loadBuils, holds any builds on the table, a vector of builds
+loadDeck, holds the cards left in a deck, a vector of cards
+loadNextPlayer, holds the player who plays next, a string
 Return Value: None
-Local Variables:
-outputFile, an output stream object, used for writing to an output file
-tempBuild, a vector of cards, used to temporarily store a build
-tempDeck, a vector of cards, used to temporarily store the remaining cards in the deck
+Local Variables: None
 Algorithm:
-1) WORK IN PROGRESS
+1) Set each of the different fields to what the data was passed in.
+2) No error checking here as saved input files should always be properly formatted
 Assistance Received: none
 ********************************************************************* */
-void Round::LoadRound() {
+void Round::LoadRound(vector<Card> loadComputerHand, vector<Card> loadComputerPile, vector<Card> loadHumanHand,
+	vector<Card> loadHumanPile, vector<Card> loadTable, vector<Build> loadBuilds, vector<Card> loadDeck) {
 
+	// Load in computer's attributes
+	player[1]->SetHand(loadComputerHand);
+	player[1]->SetPile(loadComputerPile);
+
+	// Load in player's attributes
+	player[0]->SetHand(loadHumanHand);
+	player[0]->SetPile(loadHumanPile);
+
+	// Load in the table
+	table = loadTable;
+
+	// Load in the builds
+	tableBuilds = loadBuilds;
+
+	// Load in the deck
+	deck = loadDeck;
+
+	loadGame = true;
 }
