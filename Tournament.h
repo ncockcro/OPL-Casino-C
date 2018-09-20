@@ -8,6 +8,7 @@
 #include <sstream>
 #include "Deck.h"
 #include "Round.h"
+#include "Build.h"
 
 using namespace std;
 
@@ -49,7 +50,8 @@ private:
 		vector<Card> humanHand;
 		vector<Card> humanPile;
 		vector<Card> table;
-		vector<Card> builds;
+		vector<Card> buildCards;
+		vector<Build> builds;
 		vector<Card> deck;
 		string nextPlayer;
 	};

@@ -204,8 +204,6 @@ bool Tournament::LoadGame() {
 		}
 	} while (!inputFile.is_open());
 
-	istringstream ss;
-
 	// Reading each line for a card and storing it into a vector of cards variable
 	while (inputFile.good()) {
 		inputFile >> userInput;
@@ -289,10 +287,45 @@ bool Tournament::LoadGame() {
 			}
 		}
 
-		// Handle builds here
+		vector<string> tempVector;
+		string tempString;
+		string buildString;
+		Build tempBuild;
+		char letter;
+
+		// If the build keyword is in the text file, then we need to parse it for a build
 		if (userInput == "Build") {
 			inputFile >> userInput;
-			inputFile >> userInput;
+
+			// If the string is not computer or human, then we know there is some text of the build we need to parse
+			while (userInput != "Computer" && userInput != "Human") {
+				inputFile >> userInput;
+				for (int i = 0; i < userInput.size(); i++) {
+					// Checking for a suit
+					if (userInput[i] == 'C' || userInput[i] == 'D' || userInput[i] == 'H' || userInput[i] == 'S') {
+						buildString += userInput[i];
+					}
+					// Checking for a number
+					if (userInput[i] == '2' || userInput[i] == '3' || userInput[i] == '4' || userInput[i] == '5' ||
+						userInput[i] == '6' || userInput[i] == '7' || userInput[i] == '8' || userInput[i] == '9' ||
+						userInput[i] == 'X' || userInput[i] == 'J' || userInput[i] == 'Q' || userInput[i] == 'K' ||
+						userInput[i] == 'A') {
+						buildString += userInput[i];
+					}
+				}
+	
+				// So long as what was parsed is a valid card, push it into a card and add it to the vector of cards to make up a build
+				if (buildString.size() == 2) {
+					tempCard.SetCard(buildString);
+					loadInfo.buildCards.push_back(tempCard);
+
+				}
+					buildString.erase();
+			}
+			// Once out of the loop of a build, add the cards to a build object and clear the vector of cards variable
+			tempBuild.SetBuildOfCards(loadInfo.buildCards);
+			loadInfo.builds.push_back(tempBuild);
+			loadInfo.buildCards.clear();
 		}
 
 		// Getting the deck
