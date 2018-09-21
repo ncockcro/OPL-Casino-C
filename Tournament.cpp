@@ -135,48 +135,48 @@ bool Tournament::LoadDeck() {
 	Card tempCard;
 	ifstream inputFile;
 
-// Prompting the user if they want to load a deck
-do {
-	cout << "Do you want to load in a deck? (y,n): ";
-	cin >> userInput;
+	// Prompting the user if they want to load a deck
+	do {
+		cout << "Do you want to load in a deck? (y,n): ";
+		cin	>> userInput;
 
-	if (userInput.size() > 1) {
-		cout << "Try again." << endl;
-		userInput = "-1";
-	}
-} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
+		if (userInput.size() > 1) {
+			cout << "Try again." << endl;
+			userInput = "-1";
+		}
+	} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
 
-if (tolower(userInput[0]) == 'n') {
-	return false;
-}
-
-do {
-	cout << "Enter the name of the file you want to load your deck from." << endl;
-	cout << "Enter 'n' if you don't want to load a deck: ";
-	cin >> userInput;
-
-	inputFile.open(userInput);
-
-	// If the user doesn't actually want to load from a file, then they can say no and start a new game
-	if (userInput == "n" || userInput == "N") {
+	if (tolower(userInput[0]) == 'n') {
 		return false;
 	}
 
-	// If the file they entered can't be opened, ask them for another file name
-	if (!inputFile.is_open()) {
-		cout << "Can not find file, try again." << endl;
+	do {
+		cout << "Enter the name of the file you want to load your deck from." << endl;
+		cout << "Enter 'n' if you don't want to load a deck: ";
+		cin >> userInput;
+
+		inputFile.open(userInput);
+
+		// If the user doesn't actually want to load from a file, then they can say no and start a new game
+		if (userInput == "n" || userInput == "N") {
+			return false;
+		}
+
+		// If the file they entered can't be opened, ask them for another file name
+		if (!inputFile.is_open()) {
+			cout << "Can not find file, try again." << endl;
+		}
+	} while (!inputFile.is_open());
+
+	// Reading each line for a card and storing it into a vector of cards variable
+	while (inputFile.good()) {
+		inputFile >> userInput;
+		tempCard.SetCard(userInput);
+		loadedDeck.push_back(tempCard);
+
 	}
-} while (!inputFile.is_open());
 
-// Reading each line for a card and storing it into a vector of cards variable
-while (inputFile.good()) {
-	inputFile >> userInput;
-	tempCard.SetCard(userInput);
-	loadedDeck.push_back(tempCard);
-
-}
-
-return true;
+	return true;
 }
 
 /* *********************************************************************
@@ -361,12 +361,25 @@ bool Tournament::LoadGame() {
 	return true;
 }
 
-// Function for the coin toss at the beginning of a new game where a randomly generated number represents
-// a coin being tossed and the player has to try and guess it to go first.
+/* *********************************************************************
+Function Name: TossCoin
+Purpose: At the beginning of a new game, a coin toss is initiated to determine who goes first
+Parameters: None
+Return Value: Returns "Human" or "Computer" for whoever goes first, a string value
+Local Variables: 
+coin, an int which either holds 0 or 1 for the representation of a coin
+playerCoin, a string which holds the user's guess for the coin
+Algorithm:
+1) Use rng to create a "coin toss"
+2) Prompt the user for what they think the coin is
+3) If they are right, return with the string "Human"
+4) Otherwise, return with the string "Computer"
+Assistance Received: none
+********************************************************************* */
 string Tournament::TossCoin() {
 
 	// Seeding the rng with time
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	// coin will either equal 0 for heads or 1 for tails
 	int coin = rand() % 2;
@@ -385,16 +398,27 @@ string Tournament::TossCoin() {
 	// If the human guesses the correct virtual coin toss, then they go first
 	if (tolower(playerCoin[0]) == 'h' && coin == 0 || tolower(playerCoin[0]) == 't' && coin == 1) {
 		cout << "You were correct! You go first." << endl;
-		return "human";
+		return "Human";
 	}
 	// Otherwise the computer will go first
 	else {
 		cout << "You were wrong. The computer goes first." << endl;
-		return "computer";
+		return "Computer";
 	}
 }
 
-// Checks to see if a specific player won the game or if it was a tie.
+/* *********************************************************************
+Function Name: GameWon
+Purpose: Used at the end of the game to output who won
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) If the human has more points, output that they won
+2) If the computer has more points, output that they won
+3) If it was a tie, output that
+Assistance Received: none
+********************************************************************* */
 void Tournament::GameWon() {
 
 	// Human won
@@ -411,14 +435,34 @@ void Tournament::GameWon() {
 	}
 }
 
-// Increases the round counter.
+/* *********************************************************************
+Function Name: IncrementRound
+Purpose: Increments the round counter at the end of a round
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Increment the round counter
+Assistance Received: none
+********************************************************************* */
 void Tournament::IncrementRound() {
 	round++;
 }
 
+/* *********************************************************************
+Function Name: SaveLastCapture
+Purpose: At the end of the round, save the player who got the last capture so they go first next round
+Parameters:
+capturer, the player that captured last, a string value
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Set the last capturer
+Assistance Received: none
+********************************************************************* */
 void Tournament::SaveLastCaptured(string capturer) {
 
-	if (capturer == "human" || capturer == "computer") {
+	if (capturer == "Human" || capturer == "Computer") {
 		lastCaptured = capturer;
 	}
 	else {
@@ -426,6 +470,25 @@ void Tournament::SaveLastCaptured(string capturer) {
 	}
 }
 
+/* *********************************************************************
+Function Name: CalculatePoints
+Purpose: At the end of each round, this function calculates the points being made from the round
+Parameters: None
+Return Value: Void
+Local Variables:
+humanPile, a vector of cards which holds the humans pile
+computerPile, a vector of cards which holds the computers pile
+humanRoundPoints, an integer which holds the amount of points a player earned from the round
+computerRoundPoints, an integer which holds the amount of points a computer earned from the round
+humanSpadeCount, an integer which holds the count of the number of spades the human has
+computerSpadeCount, an integer which holds the count of the number of spades the computer has
+Algorithm:
+1) First go through the human and calculate their points
+2) Prompt the user for what they think the coin is
+3) If they are right, return with the string "Human"
+4) Otherwise, return with the string "Computer"
+Assistance Received: none
+********************************************************************* */
 void Tournament::CalculatePoints() {
 
 	vector<Card> humanPile = currentRound.GetPlayerPile();

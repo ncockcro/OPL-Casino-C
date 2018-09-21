@@ -34,7 +34,7 @@ Assistance Received: none
 ********************************************************************* */
 void Round::PlayRound(string firstPlayer) {
 
-	if (firstPlayer == "human") {
+	if (firstPlayer == "Human") {
 		currentPlayer = 0;
 	}
 	else {
@@ -775,10 +775,10 @@ bool Round::CheckCapture() {
 
 	// Set lastCapture to whoever the current player is
 	if (currentPlayer == 0) {
-		lastCapture = "human";
+		lastCapture = "Human";
 	}
 	else {
-		lastCapture = "computer";
+		lastCapture = "Computer";
 	}
 
 	if (canCapture == false) {
