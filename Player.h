@@ -7,6 +7,7 @@
 #include <fstream>
 #include "Card.h"
 #include "Deck.h"
+#include "Build.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ public:
 	// Public functions
 	Player();
 	~Player();
-	virtual void MakeMove(bool falseMove); // Virtual function so both types of players can share certain moves
+	virtual void MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTable); // Virtual function so both types of players can share certain moves
 	void SetHand(vector<Card> fourCards);
 	bool IsEmpty();
 	vector<Card> GetHand() const;
@@ -48,8 +49,8 @@ public:
 
 protected:
 	// Protected functions
-	bool AICheckForBuild(vector<Card> playerHand);
-	bool AICheckForCapture(vector<Card> playerHand);
+	bool AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector<Build> tableBuilds);
+	bool AICheckForCapture(vector<Card> playerHand, vector<Card> table, vector<Build>tableBuilds);
 	void AIMakeTrail(vector<Card> playerHand);
 	int CardNumber(char number);
 

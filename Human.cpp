@@ -23,7 +23,7 @@ Algorithm:
 2) Depending on what the user picked, another function will be called for each type of play
 Assistance Received: none
 ********************************************************************* */
-void Human::MakeMove(bool falseMove) {
+void Human::MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTable) {
 	string userInput;
 
 	// If the player just made a move and it was wrong, it will take them directly to making a move again

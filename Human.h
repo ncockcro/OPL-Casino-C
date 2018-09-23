@@ -13,7 +13,7 @@ public:
 	~Human();
 
 	// Public functions
-	void MakeMove(bool falseMove);
+	void MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTable);
 	void MakePlay();
 	void MakeBuild();
 	void MakeCapture();

@@ -54,7 +54,7 @@ void Round::PlayRound(string firstPlayer) {
 
 		// If they make an error in making a move, they will be prompted again to make a correct move
 		do {
-			player[currentPlayer]->MakeMove(playTrue);
+			player[currentPlayer]->MakeMove(playTrue, table, tableBuilds);
 
 			if (player[currentPlayer]->GetPlayerWantSave() == true) {
 				SaveGame();
@@ -69,7 +69,7 @@ void Round::PlayRound(string firstPlayer) {
 		PrintHandPileAndTable();
 
 		do {
-			player[currentPlayer]->MakeMove(playTrue);
+			player[currentPlayer]->MakeMove(playTrue, table, tableBuilds);
 
 			if (player[currentPlayer]->GetPlayerWantSave() == true) {
 				SaveGame();

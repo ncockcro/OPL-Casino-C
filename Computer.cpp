@@ -24,16 +24,16 @@ Algorithm:
 3) If it can't build or capture, then just trail
 Assistance Received: none
 ********************************************************************* */
-void Computer::MakeMove(bool falseMove) {
+void Computer::MakeMove(bool falseMove, vector<Card> table, vector<Build> tableBuilds) {
 
 	// Check if the computer can make a build
-	if (AICheckForBuild(hand)) {
+	if (AICheckForBuild(hand, table, tableBuilds)) {
 		playerMove = 'b';
 		return;
 	}
 
 	// Check if the player can make a capture
-	if (AICheckForCapture(hand)) {
+	if (AICheckForCapture(hand, table, tableBuilds)) {
 		playerMove = 'c';
 		return;
 	}

@@ -22,7 +22,7 @@ Algorithm:
 1) This is a virtual function so the actualfunction is used in the child classes
 Assistance Received: none
 ********************************************************************* */
-void Player::MakeMove(bool falseMove) {
+void Player::MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTable) {
 }
 
 /* *********************************************************************
@@ -403,13 +403,65 @@ Algorithm:
 1) WORK IN PROGRESS
 Assistance Received: none
 ********************************************************************* */
-bool Player::AICheckForBuild(vector<Card> playerHand) {
+bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector<Build> buildTable) {
 	return false;
 }
-bool Player::AICheckForCapture(vector<Card> playerHand) {
+bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vector<Build> buildTable) {
+
+	vector<Card> currentBuild;
+	int count = 0;
+
+	// Checking to see if any builds can be captured
+	for (int i = 0; i < buildTable.size(); i++) {
+		currentBuild = buildTable[i].GetBuildOfCards();
+
+		for (int j = 0; j < currentBuild.size(); j++) {
+			count += CardNumber(currentBuild[i].GetNumber());
+		}
+
+		for (int j = 0; j < playerHand.size(); j++) {
+			if (playerHand[i].GetNumber() == 'A' && count == 14) {
+				// Capture with an ace
+				playerWantBuild = 'y';
+				playerCard = playerHand[i];
+				return true;
+			}
+
+			if (CardNumber(playerHand[i].GetNumber()) == count) {
+				// Capture the build with this card
+				playerWantBuild = 'y';
+				playerCard = playerHand[i];
+				return true;
+			}
+		}
+	}
+
+	// Checking to see if any cards on the table can be captured
+	for (int i = 0; i < table.size(); i++) {
+		for (int j = 0; j < playerHand.size(); j++) {
+			if (CardNumber(playerHand[j].GetNumber()) == CardNumber(table[i].GetNumber())) {
+				// Capture the build with this card
+				playerCard = playerHand[j];
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
+/* *********************************************************************
+Function Name: AIMakeTrail
+Purpose: To pick the lowest card the computer has and trail
+Parameters:
+playerHand, a vector of cards passed by value. It holds the player's cards
+Return Value: Void
+Local Variables:
+lowestCard, a card object used to hold the lowest valued card in a player hand
+Algorithm:
+1) Cycle through a player's hand and find which card has the lowest value
+2) Add it to the playerCard and trail with it so maybe it can be incorporated into a build
+Assistance Received: none
+********************************************************************* */
 void Player::AIMakeTrail(vector<Card> playerHand) {
 
 	Card lowestCard;
