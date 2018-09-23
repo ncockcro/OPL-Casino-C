@@ -391,3 +391,91 @@ bool Player::CheckCard(string card) {
 	cout << "You don't have that card, enter a different one." << endl;
 	return false;
 }
+
+/* *********************************************************************
+Function Name: AICheckForBuild
+Purpose: Check if there is a build for a player's hand and suggest what to do
+Parameters:
+playerHand, an vector of cards passed by value. It holds a player's hand
+Return Value: If the computer can build or not, a boolean value
+Local Variables: None
+Algorithm:
+1) WORK IN PROGRESS
+Assistance Received: none
+********************************************************************* */
+bool Player::AICheckForBuild(vector<Card> playerHand) {
+	return false;
+}
+bool Player::AICheckForCapture(vector<Card> playerHand) {
+	return false;
+}
+
+void Player::AIMakeTrail(vector<Card> playerHand) {
+
+	Card lowestCard;
+	lowestCard.SetCard("CK");
+	for (size_t i = 0; i < playerHand.size(); i++) {
+		if (CardNumber(playerHand[i].GetNumber()) <= CardNumber(lowestCard.GetNumber())) {
+			lowestCard = playerHand[i];
+		}
+	}
+
+	playerCard = lowestCard;
+}
+
+/***********************************************************************
+Function Name: CardNumber
+Purpose: Take a character as input and output the number that it represents.
+Parameters:
+number, a char, the number of a card (e.g. 2, X, J)
+Return Value: Int
+Local Variables:None
+Algorithm: Go through if, else if, and else statements til the corrent number is found.
+Assistance Received: none
+********************************************************************* */
+int Player::CardNumber(char number) {
+
+	if (number == 'A') {
+		return 1;
+	}
+	else if (number == '2') {
+		return 2;
+	}
+	else if (number == '3') {
+		return 3;
+	}
+	else if (number == '4') {
+		return 4;
+	}
+	else if (number == '5') {
+		return 5;
+	}
+	else if (number == '6') {
+		return 6;
+	}
+	else if (number == '7') {
+		return 7;
+	}
+	else if (number == '8') {
+		return 8;
+	}
+	else if (number == '9') {
+		return 9;
+	}
+	else if (number == 'X') {
+		return 10;
+	}
+	else if (number == 'J') {
+		return 11;
+	}
+	else if (number == 'Q') {
+		return 12;
+	}
+	else if (number == 'K') {
+		return 13;
+	}
+	else {
+		cerr << "Error in the card number in the computer class. Returning -1." << endl;
+		return -1;
+	}
+}

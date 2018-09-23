@@ -68,8 +68,14 @@ void Round::PlayRound(string firstPlayer) {
 		// Print table and have the other player make a move
 		PrintHandPileAndTable();
 
-		player[currentPlayer]->MakeMove(playTrue);
-		playTrue = CheckMove(player[currentPlayer]->GetPlayerMove());
+		do {
+			player[currentPlayer]->MakeMove(playTrue);
+
+			if (player[currentPlayer]->GetPlayerWantSave() == true) {
+				SaveGame();
+			}
+
+		} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
 
 		// Switch again before the loop ends
 		SwitchPlayer();

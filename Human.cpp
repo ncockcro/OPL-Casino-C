@@ -169,7 +169,7 @@ void Human::MakeBuild() {
 			cin >> userInput;
 
 			// If they typed in the correct input, 
-			if (CheckCard(userInput)) {
+			if (tolower(userInput[0]) != 'p' && CheckCard(userInput)) {
 				buildCards.push_back(Card());
 				buildCards[count].SetCard(userInput);
 				count++;

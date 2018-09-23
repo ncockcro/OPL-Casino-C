@@ -47,6 +47,13 @@ public:
 
 
 protected:
+	// Protected functions
+	bool AICheckForBuild(vector<Card> playerHand);
+	bool AICheckForCapture(vector<Card> playerHand);
+	void AIMakeTrail(vector<Card> playerHand);
+	int CardNumber(char number);
+
+	// Protected varaibles
 	// Current hand and pile of the player
 	vector<Card> hand;
 	vector<Card> pile;
