@@ -43,6 +43,7 @@ public:
 	vector<Card> GetPlayerBuildCards() const;
 	void PrintPile();
 	char GetPlayerWantBuild() const;
+	void SetPlayerWantBuild(char choice);
 	char GetPlayerWantSet() const;
 	vector<Card> GetPlayerSetCards() const;
 	vector<Set> GetPlayerOfSetCards() const;

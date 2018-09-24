@@ -709,8 +709,6 @@ bool Round::CheckCapture() {
 	// If the player said they wanted to make a set, then we will check those cards with the table cards first
 	// to make sure they are on the table and add up to the capture card
 	if (player[currentPlayer]->GetPlayerWantSet() == 'y') {
-		//player[currentPlayer]->MakeSet();
-		setCards = player[currentPlayer]->GetPlayerSetCards();
 		vector <Set> playerSets;
 		playerSets = player[currentPlayer]->GetPlayerOfSetCards();
 		vector<Card> cardsOfSet;
@@ -721,20 +719,20 @@ bool Round::CheckCapture() {
 
 			// For each set, we must check and make sure that the cards are actually on the table
 			for (size_t j = 0; j < table.size(); j++) {
-				for (size_t l = 0; l < setCards.size(); l++) {
+				for (size_t l = 0; l < cardsOfSet.size(); l++) {
 					// If the card is on the table, push it onto the pile vector to be added later
-					if (table[i].GetCard() == setCards[j].GetCard()) {
+					if (table[j].GetCard() == cardsOfSet[l].GetCard()) {
 
-						pile.push_back(table[i]);
-						removedTableCards.push_back(table[i]);
+						pile.push_back(table[j]);
+						removedTableCards.push_back(table[j]);
 
 						// Special handling if the card is an ace or not
-						if (setCards[j].GetNumber() == 'A') {
-							aceAs1Count += CardNumber(setCards[j].GetNumber());
+						if (cardsOfSet[l].GetNumber() == 'A') {
+							aceAs1Count += CardNumber(cardsOfSet[l].GetNumber());
 							aceAs14Count += 14;
 						}
 						else {
-							aceAs1Count += CardNumber(setCards[j].GetNumber());
+							aceAs1Count += CardNumber(cardsOfSet[l].GetNumber());
 						}
 						count++;
 					}
@@ -746,6 +744,8 @@ bool Round::CheckCapture() {
 				cout << "Card numbers did not add up to what you were capturing with. Try again." << endl;
 				return false;
 			}
+			aceAs1Count = 0;
+			aceAs14Count = 0;
 		}
 		/*do {
 			// First checking to make sure that if the cards they want a set with is on the table 
@@ -796,6 +796,8 @@ bool Round::CheckCapture() {
 	if (player[currentPlayer]->GetPlayerWantBuild() == 'y') {
 		if (CheckIfPlayerCanCaptureBuild(playerHandCaptureCard, playerHand)) {
 			canCapture = true;
+			// Resetting this variable so the player doesn't always want a build
+			player[currentPlayer]->SetPlayerWantBuild('n');
 		}
 	}
 	else {
@@ -852,25 +854,26 @@ Assistance Received: none
 bool Round::CheckIfPlayerCanCaptureBuild(Card playerHandCaptureCard, vector<Card> playerHand) {
 
 	Card existingBuildCard = player[currentPlayer]->GetExistingBuildCard();
-vector<Card> tempPile;
+	vector<Card> tempPile;
 
-// Iterate through each of the builds on the table and check if any of them can be captured
-// based on the specifications the user entered in
-for (size_t i = 0; i < tableBuilds.size(); i++) {
-	// If there was a build that can be successfully captured after checking if possible, move the cards
-	// from the build element into player's pile, move the card used for capture to player pile, and 
-	// erase this build
-	if (tableBuilds[i].CanCaptureBuildOfCards(playerHandCaptureCard, existingBuildCard, playerHand)) {
-		tempPile = tableBuilds[i].GetBuildOfCards();
-		tempPile.push_back(playerHandCaptureCard);
-		player[currentPlayer]->AddToPile(tempPile);
+	// Iterate through each of the builds on the table and check if any of them can be captured
+	// based on the specifications the user entered in
+	for (size_t i = 0; i < tableBuilds.size(); i++) {
+		// If there was a build that can be successfully captured after checking if possible, move the cards
+		// from the build element into player's pile, move the card used for capture to player pile, and 
+		// erase this build
+		if (tableBuilds[i].CanCaptureBuildOfCards(playerHandCaptureCard, existingBuildCard, playerHand)) {
+			tempPile = tableBuilds[i].GetBuildOfCards();
+			tempPile.push_back(playerHandCaptureCard);
+			player[currentPlayer]->AddToPile(tempPile);
 
-		tableBuilds.erase(tableBuilds.begin() + i);
-		return true;
+			tableBuilds.erase(tableBuilds.begin() + i);
+			player[currentPlayer]->RemoveCard(playerHandCaptureCard);
+			return true;
+		}
 	}
-}
 
-return false;
+	return false;
 }
 
 /* *********************************************************************
