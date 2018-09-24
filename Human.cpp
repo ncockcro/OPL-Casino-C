@@ -202,6 +202,7 @@ void Human::MakeCapture() {
 
 	string userInput;
 	bool hasCard = false;
+	vector<Card> setCards;
 
 
 	// Prompts the user for a card they would like to build
@@ -252,7 +253,37 @@ void Human::MakeCapture() {
 		playerWantSet = userInput[0];
 	}
 
+	// If the user wants to capture a set aswell, this is the code that will handle user input for that
+	Set tempSet;
+	Card tempCard;
+	if (playerWantSet == 'y') {
+		do {
 
+			// Prompt the user for two cards they want to use for a set
+			do {
+				cout << "Enter two cards for a set: ";
+				cin >> userInput;
+
+				// So long as what they entered is a valid card, it will be pushed onto the vector of cards
+				if (CheckCard(userInput)) {
+					tempCard.SetCard(userInput);
+					setCards.push_back(tempCard);
+				}
+				else {
+					cout << "Invalid card, entry is disreguarded. Try again." << endl;
+				}
+			} while (setCards.size() != 2);
+
+			// After the user entered two cards, the vector of cards is pushed onto a set object and then that
+			// set object is pushed onto a vector of sets
+			tempSet.SetCardsOfSet(setCards);
+			playerOfSetCards.push_back(tempSet);
+
+			// After that the user has the option to enter in another set and repeat the process
+			cout << "Do you want to capture another set? (y,n): ";
+			cin >> userInput;
+		} while (tolower(userInput[0]) != 'n');
+	}
 }
 
 /* *********************************************************************

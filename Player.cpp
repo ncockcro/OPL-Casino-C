@@ -324,6 +324,34 @@ char Player::GetPlayerWantSet() const {
 }
 
 /* *********************************************************************
+Function Name: GetPlayerSetCards
+Purpose: To retrieve the cards the player wants to use for a set
+Parameters: None
+Return Value: The cards used for a set, a vector of cards value
+Local Variables: None
+Algorithm:
+1) Return the playerSetCards variable
+Assistance Received: none
+********************************************************************* */
+vector<Card> Player::GetPlayerSetCards() const {
+	return playerSetCards;
+}
+
+/* *********************************************************************
+Function Name: GetPlayerOfSetCards
+Purpose: To retrieve the cards the player wants to use for a set
+Parameters: None
+Return Value: The sets the player wants to capture, a vector of sets value
+Local Variables: None
+Algorithm:
+1) Return the playerOfSetCards variable
+Assistance Received: none
+********************************************************************* */
+vector<Set> Player::GetPlayerOfSetCards() const {
+	return playerOfSetCards;
+}
+
+/* *********************************************************************
 Function Name: GetPlayerWantSave
 Purpose: To retrieve the bool indicating if the player wants to save or not
 Parameters: None
@@ -359,14 +387,14 @@ vector<Card> Player::MakeSet() {
 		cin >> userInput;
 
 		if (CheckCard(userInput)) {
-			setCards.push_back(Card());
-			setCards[count].SetCard(userInput);
+			playerSetCards.push_back(Card());
+			playerSetCards[count].SetCard(userInput);
 			count++;
 		}
 
 	} while (count < 2);
 
-	return setCards;
+	return playerSetCards;
 }
 
 /* *********************************************************************
@@ -410,6 +438,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 
 	vector<Card> currentBuild;
 	int count = 0;
+	bool isCapturing = false;
 
 	// Checking to see if any builds can be captured
 	for (int i = 0; i < buildTable.size(); i++) {
@@ -442,11 +471,78 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 			if (CardNumber(playerHand[j].GetNumber()) == CardNumber(table[i].GetNumber())) {
 				// Capture the build with this card
 				playerCard = playerHand[j];
-				return true;
+				isCapturing = true;
 			}
 		}
 	}
-	return false;
+
+	vector<Card> tempCards;
+	vector<Card> setOfCards;
+	Set tempSet;
+	bool canCapture = true;
+	if (isCapturing) {
+		// Checking if there are any sets which can be captured
+		for (int i = 0; i < table.size(); i++) {
+			for (int j = 0; j < table.size(); j++) {
+				// If the card the player is capturing with is an ace, then we need to look for sets that add up to 14
+				if (playerCard.GetNumber() == 'A' && CardNumber(table[i].GetNumber()) + CardNumber(table[j].GetNumber()) == 14) {
+					tempCards.push_back(table[j]);
+					tempCards.push_back(table[i]);
+					// Before adding the cards to a set, we need to check if they were already placed in a set prior
+					// This for loop will cycle through each of the prior sets
+					for (int l = 0; l < playerOfSetCards.size(); l++) {
+						setOfCards = tempSet.GetCardsOfSet();
+						
+						// This for loop will cycle through a specific set of cards and determine if the cards
+						// were used in a set prior
+						for (int m = 0; m < setOfCards.size(); m++) {
+							if (setOfCards[m].GetCard() == tempCards[m].GetCard()) {
+								canCapture = false;
+							}
+						}
+					}
+					tempCards.clear();
+					if (canCapture) {
+						playerWantSet = 'y';
+						tempCards.push_back(table[i]);
+						tempCards.push_back(table[j]);
+						tempSet.SetCardsOfSet(tempCards);
+						playerOfSetCards.push_back(tempSet);
+						tempCards.clear();
+					}
+
+				}
+				// Otherwise, were are just looking for any set that adds up to the card the player chose
+				if (CardNumber(table[i].GetNumber()) + CardNumber(table[j].GetNumber()) == CardNumber(playerCard.GetNumber())) {
+					tempCards.push_back(table[j]);
+					tempCards.push_back(table[i]);
+					// Before adding the cards to a set, we need to check if they were already placed in a set prior
+					// This for loop will cycle through each of the prior sets
+					for (int l = 0; l < playerOfSetCards.size(); l++) {
+						setOfCards = tempSet.GetCardsOfSet();
+
+						// This for loop will cycle through a specific set of cards and determine if the cards
+						// were used in a set prior
+						for (int m = 0; m < setOfCards.size(); m++) {
+							if (setOfCards[m].GetCard() == tempCards[m].GetCard()) {
+								canCapture = false;
+							}
+						}
+					}
+					tempCards.clear();
+					if (canCapture) {
+						playerWantSet = 'y';
+						tempCards.push_back(table[i]);
+						tempCards.push_back(table[j]);
+						tempSet.SetCardsOfSet(tempCards);
+						playerOfSetCards.push_back(tempSet);
+						tempCards.clear();
+					}
+				}
+			}
+		}
+	}
+	return isCapturing;
 }
 
 /* *********************************************************************

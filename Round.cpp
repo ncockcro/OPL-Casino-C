@@ -49,7 +49,7 @@ void Round::PlayRound(string firstPlayer) {
 	}
 
 	do {
-		// Print hand, table, and have the player make a move
+		// Print hand, pile, and table and then have the player make a move
 		PrintHandPileAndTable();
 
 		// If they make an error in making a move, they will be prompted again to make a correct move
@@ -633,7 +633,7 @@ void Round::PrintHandPileAndTable() {
 	vector<Card>computerHand = player[1]->GetHand();
 	vector<Card> computerPile = player[1]->GetPile();
 
-
+	cout << endl;
 	// If it is the human, print out their hand and pile
 	cout << "Your hand: ";
 	for (size_t i = 0; i < humanHand.size(); i++) {
@@ -672,6 +672,7 @@ void Round::PrintHandPileAndTable() {
 		cout << table[i].GetCard() << " ";
 	}
 	cout << endl;
+	cout << endl;
 }
 
 /* *********************************************************************
@@ -708,8 +709,45 @@ bool Round::CheckCapture() {
 	// If the player said they wanted to make a set, then we will check those cards with the table cards first
 	// to make sure they are on the table and add up to the capture card
 	if (player[currentPlayer]->GetPlayerWantSet() == 'y') {
-		setCards = player[currentPlayer]->MakeSet();
-		do {
+		//player[currentPlayer]->MakeSet();
+		setCards = player[currentPlayer]->GetPlayerSetCards();
+		vector <Set> playerSets;
+		playerSets = player[currentPlayer]->GetPlayerOfSetCards();
+		vector<Card> cardsOfSet;
+
+		// Cycling through all of the sets that the player wants to capture
+		for (int i = 0; i < playerSets.size(); i++) {
+			cardsOfSet = playerSets[i].GetCardsOfSet();
+
+			// For each set, we must check and make sure that the cards are actually on the table
+			for (size_t j = 0; j < table.size(); j++) {
+				for (size_t l = 0; l < setCards.size(); l++) {
+					// If the card is on the table, push it onto the pile vector to be added later
+					if (table[i].GetCard() == setCards[j].GetCard()) {
+
+						pile.push_back(table[i]);
+						removedTableCards.push_back(table[i]);
+
+						// Special handling if the card is an ace or not
+						if (setCards[j].GetNumber() == 'A') {
+							aceAs1Count += CardNumber(setCards[j].GetNumber());
+							aceAs14Count += 14;
+						}
+						else {
+							aceAs1Count += CardNumber(setCards[j].GetNumber());
+						}
+						count++;
+					}
+				}
+			}
+
+			// If the set card's numbers add up to the capture card, then they can make the set
+			if (aceAs1Count != CardNumber(playerHandCaptureCard.GetNumber()) && aceAs14Count != CardNumber(playerHandCaptureCard.GetNumber())) {
+				cout << "Card numbers did not add up to what you were capturing with. Try again." << endl;
+				return false;
+			}
+		}
+		/*do {
 			// First checking to make sure that if the cards they want a set with is on the table 
 			for (size_t i = 0; i < table.size(); i++) {
 				for (size_t j = 0; j < setCards.size(); j++) {
@@ -750,7 +788,7 @@ bool Round::CheckCapture() {
 				setCards.pop_back();
 				setCards = player[currentPlayer]->MakeSet();
 			}
-		} while (userInput == "y");
+		} while (userInput == "y");*/
 	}
 
 	// If the player wanted to build, then this function will check if it is possible based on

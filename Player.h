@@ -8,6 +8,7 @@
 #include "Card.h"
 #include "Deck.h"
 #include "Build.h"
+#include "Set.h"
 
 using namespace std;
 
@@ -43,6 +44,8 @@ public:
 	void PrintPile();
 	char GetPlayerWantBuild() const;
 	char GetPlayerWantSet() const;
+	vector<Card> GetPlayerSetCards() const;
+	vector<Set> GetPlayerOfSetCards() const;
 	bool GetPlayerWantSave() const;
 	vector<Card> MakeSet();
 
@@ -59,6 +62,8 @@ protected:
 	vector<Card> hand;
 	vector<Card> pile;
 	vector<Card> playerBuildCards;
+	vector<Card> playerSetCards;
+	vector<Set> playerOfSetCards;
 
 	Deck deck = Deck();
 	vector<Card> uniqueCards = deck.GetDeck();
@@ -71,7 +76,6 @@ protected:
 	char playerMove;
 	char playerWantBuild;
 	char playerWantSet;
-	vector<Card> setCards;
 	bool CheckCard(string card);
 };
 

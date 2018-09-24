@@ -10,6 +10,7 @@
 #include "Deck.h"
 #include "Card.h"
 #include "Build.h"
+#include "Set.h"
 
 
 using namespace std;
