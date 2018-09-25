@@ -41,6 +41,7 @@ public:
 	vector<Card> GetPile() const;
 	void AddToPlayerBuildCards(Card buildCard);
 	vector<Card> GetPlayerBuildCards() const;
+	void RemovePlayerBuildCard(Card card);
 	void PrintPile();
 	char GetPlayerWantBuild() const;
 	void SetPlayerWantBuild(char choice);

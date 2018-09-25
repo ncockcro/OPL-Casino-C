@@ -279,6 +279,33 @@ vector<Card> Player::GetPlayerBuildCards() const {
 }
 
 /* *********************************************************************
+Function Name: RemovePlayerBuildCard
+Purpose: To remove a card from the list of cards the player has tied to a build
+Parameters:
+card, a card object passed by value, the card to be removed from a build
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Cycle through the list of cards tied to a build and if the one that is passed in matches
+2) Remove it from the vector
+Assistance Received: none
+********************************************************************* */
+void Player::RemovePlayerBuildCard(Card card) {
+
+	// Cycle through the vector of cards and make sure what was passed in is a valid card
+	for (size_t i = 0; i < playerBuildCards.size(); i++) {
+
+		// If it is, erase the card from the list of build cards
+		if (card.GetCard() == playerBuildCards[i].GetCard()) {
+			playerBuildCards.erase(playerBuildCards.begin(), playerBuildCards.begin() + i);
+			return;
+		}
+	}
+
+	cerr << "Error in removing the player build card in the player class." << endl;
+}
+
+/* *********************************************************************
 Function Name: PrintPile
 Purpose: To print out a player's pile to the console
 Parameters: None

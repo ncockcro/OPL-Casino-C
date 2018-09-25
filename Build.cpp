@@ -136,6 +136,8 @@ bool Build::CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int cur
 
 	// If the card the user wants to add to a build exists and they are not the owner...
 	if (isCardInBuild = true && owner != currentPlayer) {
+		// Push the card the player wants to add to the build onto a temporary copy of the build to 
+		// be added if the numbers correctly add up to a card in their hand
 		tempBuild.push_back(cardToBeAdded);
 
 		// Iterate through the build with the card added and see what number it adds up to
@@ -156,10 +158,12 @@ bool Build::CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int cur
 			if (CardNumber(playerHand[i].GetNumber()) == aceAs1 || CardNumber(playerHand[i].GetNumber()) == aceAs14) {
 				buildOfCards = tempBuild;
 				owner = currentPlayer;
+
 				return true;
 			}
 		}
 
+		// If we get out of the for loop then that means that it never added up to a card in the player's hand
 		cout << "You do not have a card that adds up to the build you are trying to make." << endl;
 		return false;
 
@@ -227,7 +231,23 @@ int Build::CardNumber(char number) {
 	}
 }
 
-
+/* *********************************************************************
+Function Name: CanCaptureBuildOfCards
+Purpose: To verify if a player can capture a build
+Parameters:
+cardToBeCaptured, a card passed by value. It holds the card that will capture the build
+cardInBuild, a card passed by value. It holds the card that is in the build already
+playerHand, a vector of cards. It holds the hand of a player
+Return Value: True if the build can be captured, false otherwise, a boolean value
+Local Variables:
+isCardInBuild, a boolean used to track if a card is in a build or not
+captureCardNum, an int to represent the value of the card the player is capturing with
+captureCardAce, an int to represent the value of an ace if the player is capturing with one
+Algorithm:
+1) Check and see if the build they want to capture exists
+2) If it is and the player is capturing with a card equivalent to the value of the build, then return true
+Assistance Received: none
+********************************************************************* */
 bool Build::CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vector<Card> playerHand) {
 	bool isCardInBuild = false;
 	int captureCardNum = CardNumber(cardToBeCaptured.GetNumber());
@@ -258,7 +278,21 @@ bool Build::CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vect
 	return false;
 }
 
+/* *********************************************************************
+Function Name: SetValueOfBuild
+Purpose: To set the numeric value of a build (what it adds up to)
+Parameters:
+value, an int passed by value. It holds the value of the build
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) If the value is greater than 0 and less than 15
+2) Set the value of the build to what was passed in
+Assistance Received: none
+********************************************************************* */
 void Build::SetValueOfBuild(int value) {
+
+	// Value must be greater than 0 and less than 15 to remain in the size of a build
 	if (value > 0 && value < 15) {
 		cardValueOfBuild = value;
 	}

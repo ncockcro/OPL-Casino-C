@@ -52,10 +52,12 @@ void Round::PlayRound(string firstPlayer) {
 		// Print hand, pile, and table and then have the player make a move
 		PrintHandPileAndTable();
 
+		// Player 1 is going now
 		// If they make an error in making a move, they will be prompted again to make a correct move
 		do {
 			player[currentPlayer]->MakeMove(playTrue, table, tableBuilds);
 
+			// If the player made the choice to save the game, then this function will be triggered
 			if (player[currentPlayer]->GetPlayerWantSave() == true) {
 				SaveGame();
 			}
@@ -68,9 +70,11 @@ void Round::PlayRound(string firstPlayer) {
 		// Print table and have the other player make a move
 		PrintHandPileAndTable();
 
+		// Player 2 is going now
 		do {
 			player[currentPlayer]->MakeMove(playTrue, table, tableBuilds);
 
+			// If the player made the choice to save the game, then this function will be triggered
 			if (player[currentPlayer]->GetPlayerWantSave() == true) {
 				SaveGame();
 			}
@@ -149,6 +153,8 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 void Round::SetRoundInfo(int round, int humanScore, int computerScore) {
+
+	// So long as it is not a negative round or 0, set the currentRound to be that round
 	if (round > 0) {
 		currentRound = round;
 	}
@@ -156,6 +162,7 @@ void Round::SetRoundInfo(int round, int humanScore, int computerScore) {
 		cerr << "Error in setting round in the round class." << endl;
 	}
 
+	// So long as the human and computer scores are 0 or greater, set them
 	if (humanScore >= 0 && computerScore >= 0) {
 		humanPoints = humanScore;
 		computerPoints = computerScore;
@@ -352,7 +359,9 @@ bool Round::CheckBuild() {
 	int count = 0;
 	bool addExistingBuildSuccessful = false;
 
+	// If the player is creating a new build...
 	if (player[currentPlayer]->GetNewOrExistingBuild() == 'n') {
+
 		// This is checking to make sure that the cards the user entered in to make a build are actually on the table
 		for (size_t i = 0; i < table.size(); i++) {
 			for (size_t j = 0; j < playerTableBuildCards.size(); j++) {
@@ -367,11 +376,8 @@ bool Round::CheckBuild() {
 			cout << "You can not make a build with those cards." << endl;
 			return false;
 		}
-		else {
-			cout << "You were correct with the build!" << endl;
-		}
 
-		// If the cards are suitable for a build, then the build will be created
+		// If the cards are suitable for a build , then the build will be created
 		if (CheckBuildNumbers(playerHandBuildCard, playerTableBuildCards)) {
 			CreatePlayerBuild();
 		}
@@ -385,6 +391,11 @@ bool Round::CheckBuild() {
 	// they want to add to and if it is possible
 	else if (player[currentPlayer]->GetNewOrExistingBuild() == 'e') {
 		for (size_t i = 0; i < tableBuilds.size(); i++) {
+			
+			// If this function that is called returns true, then it was successful in validating the new build with the
+			// card added and created the new build already so all that is left to do is return true
+			// Here, we are also passing into the function the card to be added, the existing build, the current player,
+			// and the current player's hand
 			if (tableBuilds[i].CheckAndAddCardInBuild(playerHandBuildCard, player[currentPlayer]->GetExistingBuildCard(), currentPlayer,
 				player[currentPlayer]->GetHand())) {
 				addExistingBuildSuccessful = true;
@@ -400,6 +411,9 @@ bool Round::CheckBuild() {
 			return false;
 		}
 	}
+
+	// Error handling in case something really got messed up and the program can't determine
+	// if the user wants a new or existing build
 	else {
 		cerr << "Error, dont know if it is a new or existing build in round class." << endl;
 		return false;
@@ -441,6 +455,7 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 			aceAs1++;
 			aceAs14 = aceAs14 + 14;
 		}
+		// Otherwise, just increment with whatever the number is
 		else {
 			aceAs1 += CardNumber(playerBuildCards[i].GetNumber());
 			aceAs14 += CardNumber(playerBuildCards[i].GetNumber());
@@ -450,6 +465,12 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 	// If the player has a card that equals the total value of the build, then return true
 	for (size_t i = 0; i < playerHand.size(); i++) {
 		if (CardNumber(playerHand[i].GetNumber()) == aceAs1 || CardNumber(playerHand[i].GetNumber()) == aceAs14) {
+			hasRightCards = true;
+			player[currentPlayer]->AddToPlayerBuildCards(playerHand[i]);
+			return hasRightCards;
+		}
+		// If the player is creating a build with an ace as the card they will use to capture it with later...
+		if (playerHand[i].GetNumber() == 'A' && aceAs14) {
 			hasRightCards = true;
 			player[currentPlayer]->AddToPlayerBuildCards(playerHand[i]);
 			return hasRightCards;
@@ -550,6 +571,15 @@ void Round::CreatePlayerBuild() {
 
 	// With all the cards being used for a build, we push them onto the vector of builds
 	tableBuilds[buildCounter].SetBuildOfCards(playerTableBuildCards);
+
+	// If the card the player is going to capture the build with is an ace, set the value of the build to 14
+	if (playersBuildCards.back().GetNumber() == 'A') {
+		tableBuilds[buildCounter].SetValueOfBuild(14);
+	}
+	// Otherwise, set the value to be whatever else the card is
+	else {
+		tableBuilds[buildCounter].SetValueOfBuild(playersBuildCards.back().GetNumber());
+	}
 
 	// Then remove the cards from the player's hand and the table since those cards are now part of a build
 	RemoveTableCards(playerTableBuildCards);
@@ -867,6 +897,7 @@ bool Round::CheckIfPlayerCanCaptureBuild(Card playerHandCaptureCard, vector<Card
 			tempPile.push_back(playerHandCaptureCard);
 			player[currentPlayer]->AddToPile(tempPile);
 
+			player[currentPlayer]->RemovePlayerBuildCard(playerHandCaptureCard);
 			tableBuilds.erase(tableBuilds.begin() + i);
 			player[currentPlayer]->RemoveCard(playerHandCaptureCard);
 			return true;
@@ -897,6 +928,14 @@ bool Round::CheckTrail() {
 	playerHand = player[currentPlayer]->GetHand();
 
 	bool canCapture = false;
+
+	// Iterating through the cards a player can not place down because the card is needed to complete a build
+	for (size_t i = 0; i < player[currentPlayer]->GetPlayerBuildCards().size(); i++) {
+		if (player[currentPlayer]->GetPlayerBuildCards()[i].GetCard() == player[currentPlayer]->GetPlayerCard().GetCard()) {
+			cout << "You can not trail because this card is part of a build." << endl;
+			return false;
+		}
+	}
 
 	// Checking if the player is able to capture with a same value card
 	for (size_t i = 0; i < table.size(); i++) {
