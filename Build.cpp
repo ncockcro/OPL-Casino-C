@@ -300,3 +300,17 @@ void Build::SetValueOfBuild(int value) {
 		cerr << "Error in setting the value of a build in the build class." << endl;
 	}
 }
+
+/* *********************************************************************
+Function Name: GetValueOfBuild
+Purpose: To retrieve the added up value of a build
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Return the value of the build
+Assistance Received: none
+********************************************************************* */
+int Build::GetValueOfBuild() const {
+	return cardValueOfBuild;
+}

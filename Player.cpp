@@ -480,8 +480,6 @@ Assistance Received: none
 ********************************************************************* */
 bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector<Build> buildTable) {
 
-
-
 	// ****** For creating a new build ******
 	int handCardNumber;
 	// Cycling through the computer's hand and checking if there are cards that add up to that card
@@ -505,6 +503,40 @@ bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector
 			}
 		}
 	}
+
+	// **** Adding to an existing build ****
+	int buildValue;
+	vector<int> buildWithAddedCards;
+	
+	// Cycling through each of the builds on the table to see if any of the builds can be added to
+	for (size_t i = 0; i < buildTable.size(); i++) {
+
+		// Storing the value of a particular build into a variable
+		buildValue = buildTable[i].GetValueOfBuild();
+
+		// If the computer is the build owner, then it can not add to the build
+		if (buildTable[i].GetOwner() == 1) {
+			continue;
+		}
+		// Now cycling through the player's hand to gather different combinations of adding a card to a build
+		for (size_t j = 0; j < playerHand.size(); j++) {
+
+			buildWithAddedCards.push_back(buildValue + CardNumber(playerHand[j].GetNumber()));
+
+			// Finally, with a card added, are there any other cards in a player's hand that equal up to that
+			for (size_t k = 0; k < playerHand.size(); k++) {
+
+				// If there is, then save that and add it to the existing build
+				if (CardNumber(playerHand[i].GetNumber()) == buildWithAddedCards[j]) {
+					newOrExistingBuild = 'e';
+					playerCard = playerHand[j];
+					existingBuildCard = buildTable[i].GetBuildOfCards().back();
+					return true;
+				}
+			}
+		}
+	}
+
 	return false;
 }
 bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vector<Build> buildTable) {
@@ -726,4 +758,18 @@ int Player::CardNumber(char number) {
 		cerr << "Error in the card number in the computer class. Returning -1." << endl;
 		return -1;
 	}
+}
+
+/***********************************************************************
+Function Name: AskForHelp
+Purpose: To find what the best move would be using the ai's capabilities
+Parameters: None
+Return Value: Void
+Local Variables:None
+Algorithm:
+1) WORK IN PROGRESS
+Assistance Received: none
+********************************************************************* */
+void Player::AskForHelp() {
+
 }

@@ -21,6 +21,7 @@ public:
 	bool CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int currentPlayer, vector<Card> playerHand);
 	bool CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vector<Card> playerHand);
 	void SetValueOfBuild(int value);
+	int GetValueOfBuild() const;
 
 private:
 	// Private functions
