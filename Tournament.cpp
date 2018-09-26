@@ -120,66 +120,6 @@ string Tournament::StartMenu() {
 }
 
 /* *********************************************************************
-Function Name: LoadDeck
-Purpose: Prompt the user if they want to load a deck or not, if so, handles reading in the file
-Parameters: None
-Return Value: Whether the user loaded in a deck of not, true or false, a boolean value
-Local Variables: userInput, a string which gets the menu option from the player
-Algorithm:
-1) Prompt the user for what option they want to do
-2) Return the option that the user picked
-Assistance Received: none
-********************************************************************* */
-bool Tournament::LoadDeck() {
-	string userInput;
-	Card tempCard;
-	ifstream inputFile;
-
-	// Prompting the user if they want to load a deck
-	do {
-		cout << "Do you want to load in a deck? (y,n): ";
-		cin	>> userInput;
-
-		if (userInput.size() > 1) {
-			cout << "Try again." << endl;
-			userInput = "-1";
-		}
-	} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
-
-	if (tolower(userInput[0]) == 'n') {
-		return false;
-	}
-
-	do {
-		cout << "Enter the name of the file you want to load your deck from." << endl;
-		cout << "Enter 'n' if you don't want to load a deck: ";
-		cin >> userInput;
-
-		inputFile.open(userInput);
-
-		// If the user doesn't actually want to load from a file, then they can say no and start a new game
-		if (userInput == "n" || userInput == "N") {
-			return false;
-		}
-
-		// If the file they entered can't be opened, ask them for another file name
-		if (!inputFile.is_open()) {
-			cout << "Can not find file, try again." << endl;
-		}
-	} while (!inputFile.is_open());
-
-	// Reading each line for a card and storing it into a vector of cards variable
-	while (inputFile.good()) {
-		inputFile >> userInput;
-		tempCard.SetCard(userInput);
-		loadedDeck.push_back(tempCard);
-
-	}
-
-	return true;
-}
-
-/* *********************************************************************
 Function Name: LoadGame
 Purpose: Prompt the user for a text file and load a game for it to be picked up from
 Parameters: None
@@ -321,14 +261,14 @@ bool Tournament::LoadGame() {
 						buildString += userInput[i];
 					}
 				}
-	
+
 				// So long as what was parsed is a valid card, push it into a card and add it to the vector of cards to make up a build
 				if (buildString.size() == 2) {
 					tempCard.SetCard(buildString);
 					loadInfo.buildCards.push_back(tempCard);
 
 				}
-					buildString.erase();
+				buildString.erase();
 			}
 			// Once out of the loop of a build, add the cards to a build object and clear the vector of cards variable
 			tempBuild.SetBuildOfCards(loadInfo.buildCards);
@@ -343,7 +283,7 @@ bool Tournament::LoadGame() {
 				tempCard.SetCard(userInput);
 				loadInfo.deck.push_back(tempCard);
 			}
-		inputFile >> userInput;
+			inputFile >> userInput;
 		}
 
 		// Getting the current player
@@ -362,91 +302,63 @@ bool Tournament::LoadGame() {
 }
 
 /* *********************************************************************
-Function Name: TossCoin
-Purpose: At the beginning of a new game, a coin toss is initiated to determine who goes first
+Function Name: LoadDeck
+Purpose: Prompt the user if they want to load a deck or not, if so, handles reading in the file
 Parameters: None
-Return Value: Returns "Human" or "Computer" for whoever goes first, a string value
-Local Variables: 
-coin, an int which either holds 0 or 1 for the representation of a coin
-playerCoin, a string which holds the user's guess for the coin
+Return Value: Whether the user loaded in a deck of not, true or false, a boolean value
+Local Variables: userInput, a string which gets the menu option from the player
 Algorithm:
-1) Use rng to create a "coin toss"
-2) Prompt the user for what they think the coin is
-3) If they are right, return with the string "Human"
-4) Otherwise, return with the string "Computer"
+1) Prompt the user for what option they want to do
+2) Return the option that the user picked
 Assistance Received: none
 ********************************************************************* */
-string Tournament::TossCoin() {
+bool Tournament::LoadDeck() {
+	string userInput;
+	Card tempCard;
+	ifstream inputFile;
 
-	// Seeding the rng with time
-	srand((unsigned int)time(NULL));
-
-	// coin will either equal 0 for heads or 1 for tails
-	int coin = rand() % 2;
-
-	// Prompt the user for what they want to guess is the coin and validate if they typed in the correct letter
-	string playerCoin;
+	// Prompting the user if they want to load a deck
 	do {
-		cout << "Enter 'h' for heads and 't' for tails: ";
-		cin >> playerCoin;
-		if (playerCoin.size() > 1) {
+		cout << "Do you want to load in a deck? (y,n): ";
+		cin	>> userInput;
+
+		if (userInput.size() > 1) {
 			cout << "Try again." << endl;
-			playerCoin = "-1";
+			userInput = "-1";
 		}
-	} while (tolower(playerCoin[0]) != 'h' && tolower(playerCoin[0]) != 't');
+	} while (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n');
 
-	// If the human guesses the correct virtual coin toss, then they go first
-	if (tolower(playerCoin[0]) == 'h' && coin == 0 || tolower(playerCoin[0]) == 't' && coin == 1) {
-		cout << "You were correct! You go first." << endl;
-		return "Human";
+	if (tolower(userInput[0]) == 'n') {
+		return false;
 	}
-	// Otherwise the computer will go first
-	else {
-		cout << "You were wrong. The computer goes first." << endl;
-		return "Computer";
-	}
-}
 
-/* *********************************************************************
-Function Name: GameWon
-Purpose: Used at the end of the game to output who won
-Parameters: None
-Return Value: Void
-Local Variables: None
-Algorithm:
-1) If the human has more points, output that they won
-2) If the computer has more points, output that they won
-3) If it was a tie, output that
-Assistance Received: none
-********************************************************************* */
-void Tournament::GameWon() {
+	do {
+		cout << "Enter the name of the file you want to load your deck from." << endl;
+		cout << "Enter 'n' if you don't want to load a deck: ";
+		cin >> userInput;
 
-	// Human won
-	if (humanPoints >= 21 && computerPoints < 21) {
-		cout << "Congratulations! You won Casino!" << endl;
-	}
-	// Computer won
-	else if (humanPoints < 21 && computerPoints >= 21) {
-		cout << "The computer won Casino." << endl;
-	}
-	// Its a tie
-	else {
-		cout << "It's a tie!" << endl;
-	}
-}
+		inputFile.open(userInput);
 
-/* *********************************************************************
-Function Name: IncrementRound
-Purpose: Increments the round counter at the end of a round
-Parameters: None
-Return Value: Void
-Local Variables: None
-Algorithm:
-1) Increment the round counter
-Assistance Received: none
-********************************************************************* */
-void Tournament::IncrementRound() {
-	round++;
+		// If the user doesn't actually want to load from a file, then they can say no and start a new game
+		if (userInput == "n" || userInput == "N") {
+			return false;
+		}
+
+		// If the file they entered can't be opened, ask them for another file name
+		if (!inputFile.is_open()) {
+			cout << "Can not find file, try again." << endl;
+		}
+	} while (!inputFile.is_open());
+
+	// Reading each line for a card and storing it into a vector of cards variable
+	while (inputFile.good()) {
+		inputFile >> userInput;
+		tempCard.SetCard(userInput);
+		loadedDeck.push_back(tempCard);
+
+	}
+
+	return true;
 }
 
 /* *********************************************************************
@@ -468,6 +380,20 @@ void Tournament::SaveLastCaptured(string capturer) {
 	else {
 		cout << "Error in saving the last captured player." << endl;
 	}
+}
+
+/* *********************************************************************
+Function Name: IncrementRound
+Purpose: Increments the round counter at the end of a round
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Increment the round counter
+Assistance Received: none
+********************************************************************* */
+void Tournament::IncrementRound() {
+	round++;
 }
 
 /* *********************************************************************
@@ -566,4 +492,78 @@ void Tournament::CalculatePoints() {
 
 	cout << "Total player points: " << humanPoints << endl;
 	cout << "Total computer points: " << computerPoints << endl;
+}
+
+/* *********************************************************************
+Function Name: TossCoin
+Purpose: At the beginning of a new game, a coin toss is initiated to determine who goes first
+Parameters: None
+Return Value: Returns "Human" or "Computer" for whoever goes first, a string value
+Local Variables: 
+coin, an int which either holds 0 or 1 for the representation of a coin
+playerCoin, a string which holds the user's guess for the coin
+Algorithm:
+1) Use rng to create a "coin toss"
+2) Prompt the user for what they think the coin is
+3) If they are right, return with the string "Human"
+4) Otherwise, return with the string "Computer"
+Assistance Received: none
+********************************************************************* */
+string Tournament::TossCoin() {
+
+	// Seeding the rng with time
+	srand((unsigned int)time(NULL));
+
+	// coin will either equal 0 for heads or 1 for tails
+	int coin = rand() % 2;
+
+	// Prompt the user for what they want to guess is the coin and validate if they typed in the correct letter
+	string playerCoin;
+	do {
+		cout << "Enter 'h' for heads and 't' for tails: ";
+		cin >> playerCoin;
+		if (playerCoin.size() > 1) {
+			cout << "Try again." << endl;
+			playerCoin = "-1";
+		}
+	} while (tolower(playerCoin[0]) != 'h' && tolower(playerCoin[0]) != 't');
+
+	// If the human guesses the correct virtual coin toss, then they go first
+	if (tolower(playerCoin[0]) == 'h' && coin == 0 || tolower(playerCoin[0]) == 't' && coin == 1) {
+		cout << "You were correct! You go first." << endl;
+		return "Human";
+	}
+	// Otherwise the computer will go first
+	else {
+		cout << "You were wrong. The computer goes first." << endl;
+		return "Computer";
+	}
+}
+
+/* *********************************************************************
+Function Name: GameWon
+Purpose: Used at the end of the game to output who won
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) If the human has more points, output that they won
+2) If the computer has more points, output that they won
+3) If it was a tie, output that
+Assistance Received: none
+********************************************************************* */
+void Tournament::GameWon() {
+
+	// Human won
+	if (humanPoints >= 21 && computerPoints < 21) {
+		cout << "Congratulations! You won Casino!" << endl;
+	}
+	// Computer won
+	else if (humanPoints < 21 && computerPoints >= 21) {
+		cout << "The computer won Casino." << endl;
+	}
+	// Its a tie
+	else {
+		cout << "It's a tie!" << endl;
+	}
 }

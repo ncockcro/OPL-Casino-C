@@ -290,6 +290,7 @@ Algorithm:
 1) If the move is a build, check the build
 2) If the move is a capture, check the capture
 3) If the move is a trail, check the trail
+4) If the move is for help, return false
 Assistance Received: none
 ********************************************************************* */
 bool Round::CheckMove(char move) {
@@ -322,6 +323,11 @@ bool Round::CheckMove(char move) {
 		else {
 			return false;
 		}
+	}
+
+	// If the player asked for help, return false so they can actually make a move
+	else if (move == 'h') {
+		return false;
 	}
 
 	// Error message if something went wrong and didnt get the correct move character
@@ -578,7 +584,7 @@ void Round::CreatePlayerBuild() {
 	}
 	// Otherwise, set the value to be whatever else the card is
 	else {
-		tableBuilds[buildCounter].SetValueOfBuild(playersBuildCards.back().GetNumber());
+		tableBuilds[buildCounter].SetValueOfBuild(CardNumber(playersBuildCards.back().GetNumber()));
 	}
 
 	// Then remove the cards from the player's hand and the table since those cards are now part of a build
@@ -586,6 +592,7 @@ void Round::CreatePlayerBuild() {
 	player[currentPlayer]->RemoveCard(playerHandBuildCard);
 	
 	buildCounter++;
+	
 }
 
 /* *********************************************************************
@@ -826,6 +833,9 @@ bool Round::CheckCapture() {
 	if (player[currentPlayer]->GetPlayerWantBuild() == 'y') {
 		if (CheckIfPlayerCanCaptureBuild(playerHandCaptureCard, playerHand)) {
 			canCapture = true;
+
+			// Decrement the build counter since the player is capturing the build
+			buildCounter--;
 			// Resetting this variable so the player doesn't always want a build
 			player[currentPlayer]->SetPlayerWantBuild('n');
 		}

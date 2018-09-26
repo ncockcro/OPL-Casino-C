@@ -22,6 +22,7 @@ public:
 	bool CanCaptureBuildOfCards(Card cardToBeCaptured, Card cardInBuild, vector<Card> playerHand);
 	void SetValueOfBuild(int value);
 	int GetValueOfBuild() const;
+	void SetCaptureCardOfBuild(Card card);
 
 private:
 	// Private functions
@@ -29,8 +30,11 @@ private:
 
 	// Owner of a specific build
 	int owner;
-	// The value of the card that is equal to the total value of a build
+	// The value of the entire build
 	int cardValueOfBuild;
+	// The cards that make up the build
 	vector<Card> buildOfCards;
+	// The card of the owner has that can capture the build
+	Card captureCardOfBuild;
 };
 

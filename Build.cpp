@@ -314,3 +314,25 @@ Assistance Received: none
 int Build::GetValueOfBuild() const {
 	return cardValueOfBuild;
 }
+
+/* *********************************************************************
+Function Name: SetCaptureCardOfBuild
+Purpose: To set the card that will be used to capture the build
+Parameters:
+card, a card ojbect passed by value, the card that will be used to capture a build
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Check to make sure the card has an actual number value
+2) If it does, set the value
+3) Otherwise, print out an error message
+Assistance Received: none
+********************************************************************* */
+void Build::SetCaptureCardOfBuild(Card card) {
+	if (card.GetNumber() == CardNumber(card.GetNumber())) {
+		captureCardOfBuild = card;
+	}
+	else {
+		cerr << "Error in setting the capture card in the build class." << endl;
+	}
+}

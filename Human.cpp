@@ -44,12 +44,18 @@ void Human::MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTabl
 	if (userInput == "1") {
 		playerWantSave = true;
 	}
+
+	// Build, capture, or trail
 	else if (userInput == "2") {
 		MakePlay();
 	}
+
+	// Use the computer's AI for help
 	else if (userInput == "3") {
-		// Use the computer's AI for help
+		playerMove = 'h';
+		AskForHelp(table, buildTable);
 	}
+
 	// Quit the game
 	else if (userInput == "4") {
 		exit(1);

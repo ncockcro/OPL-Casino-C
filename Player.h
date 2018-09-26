@@ -58,7 +58,7 @@ protected:
 	bool AICheckForCapture(vector<Card> playerHand, vector<Card> table, vector<Build>tableBuilds);
 	void AIMakeTrail(vector<Card> playerHand);
 	int CardNumber(char number);
-	void AskForHelp();
+	void AskForHelp(vector<Card> table, vector<Build> tableBuilds);
 
 	// Protected varaibles
 	// Current hand and pile of the player

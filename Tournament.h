@@ -40,11 +40,11 @@ private:
 	string StartMenu();
 	bool LoadGame();
 	bool LoadDeck();
+	void SaveLastCaptured(string capturer);
+	void IncrementRound();
+	void CalculatePoints();
 	string TossCoin();
 	void GameWon();
-	void IncrementRound();
-	void SaveLastCaptured(string capturer);
-	void CalculatePoints();
 
 	// Private variables
 	string initialDecision;

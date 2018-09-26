@@ -480,6 +480,7 @@ Assistance Received: none
 ********************************************************************* */
 bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector<Build> buildTable) {
 
+	buildCards.clear();
 	// ****** For creating a new build ******
 	int handCardNumber;
 	// Cycling through the computer's hand and checking if there are cards that add up to that card
@@ -770,6 +771,32 @@ Algorithm:
 1) WORK IN PROGRESS
 Assistance Received: none
 ********************************************************************* */
-void Player::AskForHelp() {
+void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 
+	if (AICheckForBuild(hand, table, tableBuilds)) {
+		cout << "The player should make a build." << endl;
+		cout << "The player should use " << playerCard.GetCard() << " to make a build with ";
+
+		for (size_t i = 0; i < buildCards.size(); i++) {
+			cout << buildCards[i].GetCard() << " ";
+		}
+		cout << endl;
+		cout << "This way the player can capture as many cards as possible." << endl;
+		return;
+	}
+
+	// Check if the player can make a capture
+	if (AICheckForCapture(hand, table, tableBuilds)) {
+		cout << "The player should capture." << endl;
+		cout << "The player should use: " << playerCard.GetCard() << " to capture." << endl;
+		return;
+	}
+
+	// If it cant do either of those things, then trail
+	else {
+		AIMakeTrail(hand);
+		cout << "The player should trail." << endl;
+		cout << "The player should use: " << playerCard.GetCard() << " to trail as there is no other move." << endl;
+		return;
+	}
 }
