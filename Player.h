@@ -25,7 +25,8 @@ public:
 	// Public functions
 	Player();
 	~Player();
-	virtual void MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTable); // Virtual function so both types of players can share certain moves
+	virtual void MakeMove(vector<Card> table, vector<Build> buildTable); // Virtual function so both types of players can share certain moves
+	virtual void PrintMove();
 	void SetHand(vector<Card> fourCards);
 	bool IsEmpty();
 	vector<Card> GetHand() const;
@@ -50,6 +51,8 @@ public:
 	vector<Set> GetPlayerOfSetCards() const;
 	bool GetPlayerWantSave() const;
 	vector<Card> MakeSet();
+	void SetPrintTableBuildCards(vector<Card> cards);
+	void SetPrintTableCaptureCards(vector<Card> cards);
 
 
 protected:
@@ -79,7 +82,11 @@ protected:
 	char playerMove;
 	char playerWantBuild;
 	char playerWantSet;
+	vector<Card> printTableBuildCards;
+	vector<Card> printTableCaptureCards;
 	bool CheckCard(string card);
+	string GetNumberName(char number);
+	string GetSuitName(char suit);
 };
 
 #endif

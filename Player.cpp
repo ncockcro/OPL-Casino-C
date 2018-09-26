@@ -22,7 +22,20 @@ Algorithm:
 1) This is a virtual function so the actualfunction is used in the child classes
 Assistance Received: none
 ********************************************************************* */
-void Player::MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTable) {
+void Player::MakeMove(vector<Card> table, vector<Build> buildTable) {
+}
+
+/* *********************************************************************
+Function Name: MakeMove
+Purpose: For each player to print out the move they just made
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) This is a virtual function so the actual function is used in the child classes
+Assistance Received: none
+********************************************************************* */
+void Player::PrintMove() {
 }
 
 /* *********************************************************************
@@ -445,6 +458,55 @@ vector<Card> Player::MakeSet() {
 }
 
 /* *********************************************************************
+Function Name: SetPrintTableBuildCards
+Purpose: To record any cards that were used in a build from the table
+Parameters:
+cards, a vector of cards passed by value, the cards that were from the table used for a build
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Iterate through the 52 card deck and see if the passed in card matches one of them
+2) If it does, put it into the vector
+Assistance Received: none
+********************************************************************* */
+void Player::SetPrintTableBuildCards(vector<Card> cards) {
+
+	// Cycle through the cards being passed in
+	for (size_t i = 0; i < cards.size(); i++) {
+		// Cycle through the list of 52 cards and make sure the cards match one of them before putting it into the vector
+		for (size_t j = 0; j < uniqueCards.size(); j++) {
+			if (cards[i].GetCard() == uniqueCards[j].GetCard()) {
+				printTableBuildCards.push_back(cards[i]);
+			}
+		}
+	}
+}
+
+/* *********************************************************************
+Function Name: SetPrintTableCaptureCards
+Purpose: To record any cards from the table used in a capture
+Parameters:
+cards, a vector of cards passed by value, the cards to be recorder
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Iterate through the 52 card deck and see if the passed in card matches one of them
+2) If it does, return true, otherwise, return false
+Assistance Received: none
+********************************************************************* */
+void Player::SetPrintTableCaptureCards(vector<Card> cards) {
+	// Cycle through the cards being passed in
+	for (size_t i = 0; i < cards.size(); i++) {
+		// Cycle through the list of 52 cards and make sure the cards match one of them before putting it into the vector
+		for (size_t j = 0; j < uniqueCards.size(); j++) {
+			if (cards[i].GetCard() == uniqueCards[j].GetCard()) {
+				printTableCaptureCards.push_back(cards[i]);
+			}
+		}
+	}
+}
+
+/* *********************************************************************
 Function Name: CheckCard
 Purpose: Takes a card in as input and checks to see if it is one of the 52 in a deck
 Parameters: None
@@ -798,5 +860,47 @@ void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 		cout << "The player should trail." << endl;
 		cout << "The player should use: " << playerCard.GetCard() << " to trail as there is no other move." << endl;
 		return;
+	}
+}
+
+string Player::GetNumberName(char number) {
+
+	if (number == 'X') {
+		return "Ten";
+	}
+	else if (number == 'J') {
+		return "Jack";
+	}
+	else if (number == 'Q') {
+		return "Queen";
+	}
+	else if (number == 'K') {
+		return "King";
+	}
+	else if (number == 'A') {
+		return "Ace";
+	}
+	else {
+		string s;
+		s.push_back(number);
+		return s;
+	}
+}
+
+string Player::GetSuitName(char suit) {
+	if (suit == 'C') {
+		return "Clubs";
+	}
+	else if (suit == 'D') {
+		return "Diamonds";
+	}
+	else if (suit == 'H') {
+		return "Hearts";
+	}
+	else if (suit == 'S') {
+		return "Spades";
+	}
+	else {
+		cerr << "Error, do not know which suit in player class." << endl;
 	}
 }

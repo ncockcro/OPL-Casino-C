@@ -24,11 +24,13 @@ Algorithm:
 3) If it can't build or capture, then just trail
 Assistance Received: none
 ********************************************************************* */
-void Computer::MakeMove(bool falseMove, vector<Card> table, vector<Build> tableBuilds) {
+void Computer::MakeMove(vector<Card> table, vector<Build> tableBuilds) {
 
 	// Check if the computer can make a build
 	if (AICheckForBuild(hand, table, tableBuilds)) {
 		playerMove = 'b';
+
+		cout << "The computer chose to play a " << playerCard.GetNumber();
 		return;
 	}
 

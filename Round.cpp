@@ -55,7 +55,7 @@ void Round::PlayRound(string firstPlayer) {
 		// Player 1 is going now
 		// If they make an error in making a move, they will be prompted again to make a correct move
 		do {
-			player[currentPlayer]->MakeMove(playTrue, table, tableBuilds);
+			player[currentPlayer]->MakeMove(table, tableBuilds);
 
 			// If the player made the choice to save the game, then this function will be triggered
 			if (player[currentPlayer]->GetPlayerWantSave() == true) {
@@ -63,6 +63,9 @@ void Round::PlayRound(string firstPlayer) {
 			}
 
 		} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
+
+		// Print what kind of move the player just made
+		player[currentPlayer]->PrintMove();
 
 		// Switch players
 		SwitchPlayer();
@@ -72,7 +75,7 @@ void Round::PlayRound(string firstPlayer) {
 
 		// Player 2 is going now
 		do {
-			player[currentPlayer]->MakeMove(playTrue, table, tableBuilds);
+			player[currentPlayer]->MakeMove(table, tableBuilds);
 
 			// If the player made the choice to save the game, then this function will be triggered
 			if (player[currentPlayer]->GetPlayerWantSave() == true) {
@@ -80,6 +83,9 @@ void Round::PlayRound(string firstPlayer) {
 			}
 
 		} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
+
+		// Print what kind of move the player just made
+		player[currentPlayer]->PrintMove();
 
 		// Switch again before the loop ends
 		SwitchPlayer();
@@ -366,7 +372,7 @@ bool Round::CheckBuild() {
 	bool addExistingBuildSuccessful = false;
 
 	// If the player is creating a new build...
-	if (player[currentPlayer]->GetNewOrExistingBuild() == 'n') {
+	if (tolower(player[currentPlayer]->GetNewOrExistingBuild()) == 'n') {
 
 		// This is checking to make sure that the cards the user entered in to make a build are actually on the table
 		for (size_t i = 0; i < table.size(); i++) {
@@ -395,7 +401,7 @@ bool Round::CheckBuild() {
 	}
 	// If the player wants to add to an existing build, then we will go through each build to find which one
 	// they want to add to and if it is possible
-	else if (player[currentPlayer]->GetNewOrExistingBuild() == 'e') {
+	else if (tolower(player[currentPlayer]->GetNewOrExistingBuild()) == 'e') {
 		for (size_t i = 0; i < tableBuilds.size(); i++) {
 			
 			// If this function that is called returns true, then it was successful in validating the new build with the
@@ -404,6 +410,7 @@ bool Round::CheckBuild() {
 			// and the current player's hand
 			if (tableBuilds[i].CheckAndAddCardInBuild(playerHandBuildCard, player[currentPlayer]->GetExistingBuildCard(), currentPlayer,
 				player[currentPlayer]->GetHand())) {
+				player[currentPlayer]->SetPrintTableBuildCards(tableBuilds[i].GetBuildOfCards());
 				addExistingBuildSuccessful = true;
 			}
 		}
@@ -568,9 +575,13 @@ void Round::CreatePlayerBuild() {
 	}
 	else {
 		tableBuilds[buildCounter].SetOwner(1);
+		
 	}
 
 	tableBuilds[buildCounter].SetValueOfBuild(CardNumber(lastAddedCard));
+
+	// Saving the build cards to be outputted after the move is done
+	player[currentPlayer]->SetPrintTableBuildCards(playerTableBuildCards);
 
 	// Adding the card from the player's hand onto the build that way I can send all the cards to be added to build object
 	playerTableBuildCards.push_back(playerHandBuildCard);
@@ -592,6 +603,8 @@ void Round::CreatePlayerBuild() {
 	player[currentPlayer]->RemoveCard(playerHandBuildCard);
 	
 	buildCounter++;
+
+
 	
 }
 
@@ -751,7 +764,7 @@ bool Round::CheckCapture() {
 		vector<Card> cardsOfSet;
 
 		// Cycling through all of the sets that the player wants to capture
-		for (int i = 0; i < playerSets.size(); i++) {
+		for (size_t i = 0; i < playerSets.size(); i++) {
 			cardsOfSet = playerSets[i].GetCardsOfSet();
 
 			// For each set, we must check and make sure that the cards are actually on the table
@@ -854,6 +867,9 @@ bool Round::CheckCapture() {
 		if (canCapture == true) {
 			player[currentPlayer]->RemoveCard(playerHandCaptureCard);
 			RemoveTableCards(removedTableCards);
+			// Setting the cards from the table that were captured into a variable in the player class
+			// so they can be outputted that they were captured
+			player[currentPlayer]->SetPrintTableCaptureCards(removedTableCards);
 
 			player[currentPlayer]->AddToPile(pile);
 		}

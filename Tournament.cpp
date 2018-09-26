@@ -37,11 +37,11 @@ void Tournament::PlayGame() {
 	initialDecision = StartMenu();
 
 	// If the decision is "l", than we have to load a file
-	if (initialDecision == "l") {
+	if (initialDecision == "2") {
 		LoadGame();
 	}
 	// If the user wants to exit, just return to main
-	else if (initialDecision == "e") {
+	else if (initialDecision == "3") {
 		cout << "Goodbye!" << endl;
 		return;
 	}
@@ -106,15 +106,15 @@ string Tournament::StartMenu() {
 	cout << endl;
 
 	do {
-		cout << "'n' for new game: " << endl;
-		cout << "'l' for load game: " << endl;
-		cout << "'e' to exit: ";
+		cout << "1.) for new game: " << endl;
+		cout << "2.) for load game: " << endl;
+		cout << "3.) to exit: ";
 		cin >> userInput;
-		if (userInput.size() > 1) {
+		if (userInput.size() > 1 && userInput != "1" && userInput != "2" && userInput != "3") {
 			cout << "Try again." << endl;
 			userInput = "-1";
 		}
-	} while (userInput != "n" && userInput != "l" && userInput != "e");
+	} while (userInput != "1" && userInput != "2" && userInput != "3");
 
 	return userInput;
 }
@@ -378,7 +378,7 @@ void Tournament::SaveLastCaptured(string capturer) {
 		lastCaptured = capturer;
 	}
 	else {
-		cout << "Error in saving the last captured player." << endl;
+		cerr << "Error in saving the last captured player." << endl;
 	}
 }
 

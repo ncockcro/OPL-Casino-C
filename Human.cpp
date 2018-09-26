@@ -23,14 +23,11 @@ Algorithm:
 2) Depending on what the user picked, another function will be called for each type of play
 Assistance Received: none
 ********************************************************************* */
-void Human::MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTable) {
+void Human::MakeMove(vector<Card> table, vector<Build> buildTable) {
 	string userInput;
 
-	// If the player just made a move and it was wrong, it will take them directly to making a move again
-	if (falseMove == false) {
-		MakePlay();
-		return;
-	}
+	printTableBuildCards.clear();
+	printTableCaptureCards.clear();
 
 	do {
 		cout << "1. Save the game" << endl;
@@ -59,6 +56,116 @@ void Human::MakeMove(bool falseMove, vector<Card> table, vector<Build> buildTabl
 	// Quit the game
 	else if (userInput == "4") {
 		exit(1);
+	}
+}
+
+/* *********************************************************************
+Function Name: PrintMove
+Purpose: Outputs a description of what kind of move the player just did
+Parameters: None
+Return Value: Void
+Local Variables:
+userInput, an string used to get user input
+Algorithm:
+1) Prompt the user to enter a type of move to make
+2) Depending on what the user picked, another function will be called for each type of move
+Assistance Received: none
+********************************************************************* */
+void Human::PrintMove() {
+	if (playerMove == 'b') {
+		cout << "The player chose to play a " << playerCard.GetNumber() << " of ";
+		cout << GetSuitName(playerCard.GetSuit()) << endl;
+
+		// Building onto a new build
+		if (tolower(newOrExistingBuild) == 'n') {
+			cout << "to make a new build with the ";
+			
+			// Cycling through the cards in the build that was made
+			for (size_t i = 0; i < printTableBuildCards.size(); i++) {
+
+				if (printTableBuildCards[i].GetCard() == playerCard.GetCard()) {
+					continue;
+				}
+				if (i > 0) {
+					cout << " and ";
+				}
+
+				cout << GetNumberName(printTableBuildCards[i].GetNumber()) << " of ";
+				cout << GetSuitName(printTableBuildCards[i].GetSuit());
+
+			}
+		}
+		// Building onto an existing build
+		else {
+			cout << " to add to an existing build with the ";
+
+			// Cycling through the cards from the existing build that the card was added to
+			for (size_t i = 0; i < printTableBuildCards.size(); i++) {
+				if (i > 0) {
+					cout << " and ";
+				}
+				cout << GetNumberName(printTableBuildCards[i].GetNumber()) << " of ";
+				cout << GetSuitName(printTableBuildCards[i].GetSuit());
+
+			}
+		}
+	}
+	// When the human captures...
+	else if (playerMove == 'c') {
+
+		cout << "The player chose to play a ";
+		// If the number of the card is less than 10, just print the number
+		cout << GetNumberName(playerCard.GetNumber()) << " of ";
+		cout << GetSuitName(playerCard.GetSuit()) << " to capture ";
+
+		// Now cycling through the cards the player captured
+		for (size_t i = 0; i < printTableCaptureCards.size(); i++) {
+
+			if (i > 0) {
+				cout << " and ";
+			}
+			cout << "the ";
+
+			cout << GetNumberName(printTableCaptureCards[i].GetNumber());
+			cout << " of " << GetSuitName(printTableCaptureCards[i].GetSuit()) << endl;
+		}
+
+		vector<Card> cardsOfASet;
+		// Now outputting any sets the player also captured if they did
+		if (tolower(playerWantSet) == 'y') {
+			cout << " and the set of ";
+
+			// First cycling through the list of sets
+			for (size_t i = 0; i < playerOfSetCards.size(); i++) {
+				cardsOfASet = playerOfSetCards[i].GetCardsOfSet();
+
+				// Then cycling through the list of cards in a set
+				for (size_t j = 0; j < cardsOfASet.size(); j++) {
+
+					if (j > 0) {
+						cout << " and ";
+					}
+
+					cout << GetNumberName(cardsOfASet[j].GetNumber());
+					cout << " of ";
+					cout << GetSuitName(cardsOfASet[j].GetSuit());
+				}
+				cout << endl;
+			}
+		}
+	}
+	else if (tolower(playerMove) == 't') {
+		cout << "The player just trailed with ";
+			if (GetNumberName(playerCard.GetNumber()) == "Ace") {
+				cout << "an " << GetNumberName(playerCard.GetNumber());
+			}
+			else {
+				cout << "a " << GetNumberName(playerCard.GetNumber());
+			}
+			cout << " of " << GetSuitName(playerCard.GetSuit());
+	}
+	else {
+		cerr << "Error dont know what the player did in the human class." << endl;
 	}
 }
 
@@ -151,7 +258,11 @@ void Human::MakeBuild() {
 	do {
 		cout << "Are you making a new build or adding to a build? ('n' for new and 'e' for existing): ";
 		cin >> userInput;
-	} while (userInput[0] != 'n' && userInput[0] != 'e' && userInput.size() == 1);
+		if (userInput.size() > 1) {
+			cout << "Try again." << endl;
+			userInput = "-1";
+		}
+	} while (tolower(userInput[0]) != 'n' && tolower(userInput[0]) != 'e');
 
 	newOrExistingBuild = userInput[0];
 

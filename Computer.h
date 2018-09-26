@@ -13,7 +13,7 @@ public:
 	Computer();
 	~Computer();
 
-	void MakeMove(bool falseMove, vector<Card> table, vector<Build> tableBuilds);
+	void MakeMove(vector<Card> table, vector<Build> tableBuilds);
 };
 
 #endif
