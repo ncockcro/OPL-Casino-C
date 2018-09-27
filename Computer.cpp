@@ -151,7 +151,7 @@ void Computer::PrintMove() {
 	else if (playerMove == 't') {
 		cout << "The computer chose to trail with the " << GetNumberName(playerCard.GetNumber()) << " of ";
 		cout << GetSuitName(playerCard.GetSuit()) << endl;
-		cout << "It has no other moves to make." << endl;
+		cout << "It had no other moves to make." << endl;
 	}
 	else {
 		cerr << "Uknown player move in the computer class." << endl;

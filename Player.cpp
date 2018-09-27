@@ -875,6 +875,19 @@ void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 	}
 }
 
+/***********************************************************************
+Function Name: GetNumberName
+Purpose: To get the actual name of a number (e.g. X for ten)
+Parameters:
+number, a char passed by value, the number of a card
+Return Value:
+The word value of a number, a string value
+Local Variables:
+actualNum, a string value, used if the number that was passed in is an actual number
+Algorithm:
+1) If the number passed in is X, J, Q, K, or A, will convert it to the word equivalent
+Assistance Received: none
+********************************************************************* */
 string Player::GetNumberName(char number) {
 
 	if (number == 'X') {
@@ -893,12 +906,24 @@ string Player::GetNumberName(char number) {
 		return "Ace";
 	}
 	else {
-		string s;
-		s.push_back(number);
-		return s;
+		string actualNum;
+		actualNum.push_back(number);
+		return actualNum;
 	}
 }
 
+/***********************************************************************
+Function Name: GetSuitName
+Purpose: To get the actual name of a club (e.g. C for Club)
+Parameters:
+suit, a char passed by value, the suit of a card
+Return Value:
+The word value of a suit, a string value
+Local Variables: None
+Algorithm:
+1) If the suit passed in is C, D, H, or S, will convert it to the word equivalent
+Assistance Received: none
+********************************************************************* */
 string Player::GetSuitName(char suit) {
 	if (suit == 'C') {
 		return "Clubs";
@@ -914,5 +939,6 @@ string Player::GetSuitName(char suit) {
 	}
 	else {
 		cerr << "Error, do not know which suit in player class." << endl;
+		return "ERROR";
 	}
 }

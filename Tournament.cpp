@@ -50,7 +50,7 @@ void Tournament::PlayGame() {
 	currentRound.SetRoundInfo(round, humanPoints, computerPoints);
 
 	// If it is a new game and if they want to load their own deck...
-	if(initialDecision == "n" && LoadDeck() == true) {
+	if(initialDecision == "1" && LoadDeck() == true) {
 		currentRound.LoadDeck(loadedDeck);
 	}
 	else if (initialDecision == "2") {
