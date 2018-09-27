@@ -26,7 +26,7 @@ void Player::MakeMove(vector<Card> table, vector<Build> buildTable) {
 }
 
 /* *********************************************************************
-Function Name: MakeMove
+Function Name: PrintMove
 Purpose: For each player to print out the move they just made
 Parameters: None
 Return Value: Void
@@ -576,6 +576,7 @@ bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector
 
 		// Storing the value of a particular build into a variable
 		buildValue = buildTable[i].GetValueOfBuild();
+		printTableBuildCards = buildTable[i].GetBuildOfCards();
 
 		// If the computer is the build owner, then it can not add to the build
 		if (buildTable[i].GetOwner() == 1) {
@@ -614,6 +615,9 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 	for (size_t i = 0; i < buildTable.size(); i++) {
 		currentBuild = buildTable[i].GetBuildOfCards();
 
+		// Saving the current build of cards to be printed after the computer makes their move
+		printTableBuildCards = buildTable[i].GetBuildOfCards();
+
 		// Then cycle through all of the cards in a specific build and add up the value of the cards
 		for (size_t j = 0; j < currentBuild.size(); j++) {
 			count += CardNumber(currentBuild[j].GetNumber());
@@ -650,8 +654,15 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 
 			// If any of them have the same card number value, the computer can capture the card
 			if (CardNumber(playerHand[j].GetNumber()) == CardNumber(table[i].GetNumber())) {
+
+				
 				playerCard = playerHand[j];
 				isCapturing = true;
+
+				// Saving the card that matched so it can be outputted later to show the computers move
+				if (printTableCaptureCards.size() > 0 && printTableCaptureCards.back().GetCard() != table[i].GetCard()) {
+					printTableCaptureCards.push_back(table[i]);
+				}
 			}
 		}
 	}
@@ -674,6 +685,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 				if (playerCard.GetNumber() == 'A' && CardNumber(table[i].GetNumber()) + CardNumber(table[j].GetNumber()) == 14) {
 					tempCards.push_back(table[j]);
 					tempCards.push_back(table[i]);
+
 					// Before adding the cards to a set, we need to check if they were already placed in a set prior
 					// This for loop will cycle through each of the prior sets
 					for (size_t l = 0; l < playerOfSetCards.size(); l++) {

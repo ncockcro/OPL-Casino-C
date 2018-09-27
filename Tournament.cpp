@@ -53,7 +53,7 @@ void Tournament::PlayGame() {
 	if(initialDecision == "n" && LoadDeck() == true) {
 		currentRound.LoadDeck(loadedDeck);
 	}
-	else if (initialDecision == "l") {
+	else if (initialDecision == "2") {
 		//load data into the current round
 		currentRound.LoadRound(loadInfo.computerHand, loadInfo.computerPile, loadInfo.humanHand, loadInfo.humanPile, 
 			loadInfo.table, loadInfo.builds, loadInfo.deck);

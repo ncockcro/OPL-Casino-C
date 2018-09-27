@@ -14,6 +14,7 @@ public:
 	~Computer();
 
 	void MakeMove(vector<Card> table, vector<Build> tableBuilds);
+	void PrintMove();
 };
 
 #endif

@@ -30,10 +30,10 @@ void Human::MakeMove(vector<Card> table, vector<Build> buildTable) {
 	printTableCaptureCards.clear();
 
 	do {
-		cout << "1. Save the game" << endl;
-		cout << "2. Make a move" << endl;
-		cout << "3. Ask for help" << endl;
-		cout << "4. Quit the game: ";
+		cout << "1.) Save the game" << endl;
+		cout << "2.) Make a move" << endl;
+		cout << "3.) Ask for help" << endl;
+		cout << "4.) Quit the game: ";
 		cin >> userInput;
 	} while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");
 

@@ -99,7 +99,7 @@ void Build::PrintBuild() {
 	for (size_t i = 0; i < buildOfCards.size(); i++) {
 		cout << buildOfCards[i].GetCard() << " ";
 	}
-	cout << " ] ";
+	cout << "] ";
 }
 
 /* *********************************************************************
