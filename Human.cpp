@@ -35,6 +35,12 @@ void Human::MakeMove(vector<Card> table, vector<Build> buildTable) {
 		cout << "3.) Ask for help" << endl;
 		cout << "4.) Quit the game: ";
 		cin >> userInput;
+
+		if (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4") {
+			cout << endl;
+			cout << "Incorrect menu option." << endl;
+			cout << endl;
+		}
 	} while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");
 
 	// Save game
@@ -154,15 +160,10 @@ void Human::PrintMove() {
 			}
 		}
 	}
+	// If the player is trailing
 	else if (tolower(playerMove) == 't') {
-		cout << "The player just trailed with ";
-			if (GetNumberName(playerCard.GetNumber()) == "Ace") {
-				cout << "an " << GetNumberName(playerCard.GetNumber());
-			}
-			else {
-				cout << "a " << GetNumberName(playerCard.GetNumber());
-			}
-			cout << " of " << GetSuitName(playerCard.GetSuit());
+		cout << "The player trailed with the " << GetNumberName(playerCard.GetNumber());
+		cout << " of " << GetSuitName(playerCard.GetSuit());
 	}
 	else {
 		cerr << "Error dont know what the player did in the human class." << endl;
@@ -188,25 +189,26 @@ void Human::MakePlay() {
 		cout << "Type 'b' to build, 'c' to capture, or 't' to trail: ";
 		cin >> userInput;
 
-		if (userInput.size() > 1) {
+		if (tolower(userInput[0]) != 'b' && tolower(userInput[0]) != 'c' && tolower(userInput[0]) != 't' && userInput.size() > 1) {
 			cout << "Try again." << endl;
 			userInput = "-1";
 		}
 	} while (tolower(userInput[0]) != 'b' && tolower(userInput[0]) != 'c' && tolower(userInput[0]) != 't');
 
+
 	// Saving the players move
-	playerMove = userInput[0];
+	playerMove = tolower(userInput[0]);
 
 	// Building
-	if (tolower(userInput[0]) == 'b') {
+	if (playerMove == 'b') {
 		MakeBuild();
 	}
 	// Capturing
-	else if (tolower(userInput[0]) == 'c') {
+	else if (playerMove == 'c') {
 		MakeCapture();
 	}
 	// Trailing
-	else if (tolower(userInput[0]) == 't') {
+	else if (playerMove == 't') {
 		MakeTrail();
 	}
 	else {

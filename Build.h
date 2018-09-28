@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Card.h"
+#include "Deck.h"
 
 using namespace std;
 
@@ -23,7 +24,8 @@ public:
 	void SetValueOfBuild(int value);
 	int GetValueOfBuild() const;
 	void SetCaptureCardOfBuild(Card card);
-
+	Card GetCaptureCardOfBuild() const;
+	
 private:
 	// Private functions
 	int CardNumber(char number);
@@ -36,5 +38,8 @@ private:
 	vector<Card> buildOfCards;
 	// The card of the owner has that can capture the build
 	Card captureCardOfBuild;
+
+	Deck deck = Deck();
+	vector<Card> uniqueCards = deck.GetDeck();
 };
 

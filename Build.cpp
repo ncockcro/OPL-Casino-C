@@ -329,10 +329,31 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 void Build::SetCaptureCardOfBuild(Card card) {
-	if (card.GetNumber() == CardNumber(card.GetNumber())) {
+	
+	// If the card is an actual card being passed in, then set the value
+	for (size_t i = 0; i < uniqueCards.size(); i++) {
+		if (uniqueCards[i].GetCard() == card.GetCard()) {
+			captureCardOfBuild = card;
+		}
+	}
+	if (true) {
 		captureCardOfBuild = card;
 	}
 	else {
 		cerr << "Error in setting the capture card in the build class." << endl;
 	}
+}
+
+/* *********************************************************************
+Function Name: GetCaptureCardOfBuild
+Purpose: To retrieve the card that
+Parameters: None
+Return Value: the card that can capture a build, a card object
+Local Variables: None
+Algorithm:
+1) Return the capture card of a build
+Assistance Received: none
+********************************************************************* */
+Card Build::GetCaptureCardOfBuild() const {
+	return captureCardOfBuild;
 }

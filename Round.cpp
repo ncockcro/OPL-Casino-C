@@ -374,6 +374,11 @@ bool Round::CheckBuild() {
 	// If the player is creating a new build...
 	if (tolower(player[currentPlayer]->GetNewOrExistingBuild()) == 'n') {
 
+		if (playerTableBuildCards.size() < 1) {
+			cout << "You did not enter any cards from the table to make a build with." << endl;
+			return false;
+		}
+
 		// This is checking to make sure that the cards the user entered in to make a build are actually on the table
 		for (size_t i = 0; i < table.size(); i++) {
 			for (size_t j = 0; j < playerTableBuildCards.size(); j++) {
@@ -565,6 +570,7 @@ void Round::CreatePlayerBuild() {
 
 	vector<Card> playersBuildCards = player[currentPlayer]->GetPlayerBuildCards();
 	char lastAddedCard = playersBuildCards.back().GetNumber();
+	vector<Card> handCards;
 
 	// Initialize a build
 	tableBuilds.push_back(Build());
@@ -579,6 +585,15 @@ void Round::CreatePlayerBuild() {
 	}
 
 	tableBuilds[buildCounter].SetValueOfBuild(CardNumber(lastAddedCard));
+
+	// This is for setting the card that is needed for capturing the build
+	handCards = player[currentPlayer]->GetHand();
+	for (size_t i = 0; i < handCards.size(); i++) {
+		if (CardNumber(handCards[i].GetNumber()) == CardNumber(lastAddedCard)) {
+			tableBuilds[buildCounter].SetCaptureCardOfBuild(handCards[i]);
+			break;
+		}
+	}
 
 	// Saving the build cards to be outputted after the move is done
 	player[currentPlayer]->SetPrintTableBuildCards(playerTableBuildCards);

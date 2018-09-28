@@ -545,10 +545,25 @@ bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector
 	buildCards.clear();
 	// ****** For creating a new build ******
 	int handCardNumber;
+	bool skipCard = false;
+	
 	// Cycling through the computer's hand and checking if there are cards that add up to that card
 	for (size_t i = 0; i < playerHand.size(); i++) {
 		handCardNumber = CardNumber(playerHand[i].GetNumber());
 
+		// Cycling through the builds and if the card in the player's hand matches one of the cards
+		// used to capture a build, then it will set skipCard to true and skip over that hand card
+		for (size_t j = 0; j < buildTable.size(); j++) {
+			if (playerHand[i].GetCard() == buildTable[j].GetCaptureCardOfBuild().GetCard()) {
+				skipCard = true;
+			}
+		}	
+
+		// Skipping over a hand card because it is needed in a build
+		if (skipCard) {
+			continue;
+			skipCard = false;
+		}
 		// Now cycling through the computers hand and table, looking for a combination of a card from the hand and a card on
 		// the table that will add up to another card in the player's hand
 		for (size_t j = 0; j < playerHand.size(); j++) {
@@ -660,6 +675,9 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 				isCapturing = true;
 
 				// Saving the card that matched so it can be outputted later to show the computers move
+				printTableCaptureCards.push_back(table[i]);
+
+				// Ensuring that there is no duplication of data in the cards to be printed
 				if (printTableCaptureCards.size() > 0 && printTableCaptureCards.back().GetCard() != table[i].GetCard()) {
 					printTableCaptureCards.push_back(table[i]);
 				}
@@ -849,10 +867,14 @@ void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 
 	if (AICheckForBuild(hand, table, tableBuilds)) {
 		cout << "The player should make a build." << endl;
-		cout << "The player should use " << playerCard.GetCard() << " to make a build with ";
+		cout << "The player should use the " << GetNumberName(playerCard.GetNumber()); 
+		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to make a build with ";
 
 		for (size_t i = 0; i < buildCards.size(); i++) {
-			cout << buildCards[i].GetCard() << " ";
+			if (i > 0) {
+				cout << " and ";
+			}
+			cout << GetNumberName(buildCards[i].GetNumber()) << " of " << GetSuitName(buildCards[i].GetSuit());
 		}
 		cout << endl;
 		cout << "This way the player can capture as many cards as possible." << endl;
@@ -860,9 +882,54 @@ void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 	}
 
 	// Check if the player can make a capture
-	if (AICheckForCapture(hand, table, tableBuilds)) {
-		cout << "The player should capture." << endl;
-		cout << "The player should use: " << playerCard.GetCard() << " to capture." << endl;
+	else if (AICheckForCapture(hand, table, tableBuilds)) {
+		cout << "The player should play the " << GetNumberName(playerCard.GetNumber());
+		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to capture " << endl;
+
+		// Print if the pla
+		if (playerWantBuild == 'y') {
+			cout << "this build that contains: ";
+			for (size_t i = 0; i < printTableBuildCards.size(); i++) {
+				if (i > 1) {
+					cout << " and ";
+				}
+
+				cout << GetNumberName(printTableBuildCards[i].GetNumber()) << " of ";
+				cout << GetSuitName(printTableBuildCards[i].GetSuit());
+			}
+			cout << endl;
+		}
+
+		// Print out any loose cards the player captured
+		for (size_t i = 0; i < printTableCaptureCards.size(); i++) {
+			if (i > 1) {
+				cout << " and ";
+			}
+
+			cout << GetNumberName(printTableCaptureCards[i].GetNumber()) << " of ";
+			cout << GetSuitName(printTableCaptureCards[i].GetSuit());
+		}
+		cout << endl;
+
+		// If the computer captured any sets, output them here
+		vector<Card> setCards;
+		if (playerWantSet == 'y') {
+
+			// First cycling through the vector of sets
+			for (size_t i = 0; i < playerOfSetCards.size(); i++) {
+				setCards = playerOfSetCards[i].GetCardsOfSet();
+
+				// Then cycling through the cards in that set to be printed out
+				for (size_t j = 0; j < setCards.size(); j++) {
+					if (i > 1) {
+						cout << " and ";
+					}
+
+					cout << GetNumberName(setCards[j].GetNumber()) << " of ";
+					cout << GetSuitName(setCards[j].GetSuit());
+				}
+			}
+		}
 		return;
 	}
 

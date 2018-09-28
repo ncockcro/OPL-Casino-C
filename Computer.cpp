@@ -94,7 +94,7 @@ void Computer::PrintMove() {
 			}
 		}
 		else {
-			cerr << "Something went wrong when printing computer moves in the computer class.";
+			cerr << "Something went wrong when printing computer builds in the computer class.";
 		}
 	}
 

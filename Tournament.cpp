@@ -36,12 +36,8 @@ void Tournament::PlayGame() {
 	// Prompt the user for what they want to do
 	initialDecision = StartMenu();
 
-	// If the decision is "l", than we have to load a file
-	if (initialDecision == "2") {
-		LoadGame();
-	}
 	// If the user wants to exit, just return to main
-	else if (initialDecision == "3") {
+	if (initialDecision == "3") {
 		cout << "Goodbye!" << endl;
 		return;
 	}
@@ -53,7 +49,7 @@ void Tournament::PlayGame() {
 	if(initialDecision == "1" && LoadDeck() == true) {
 		currentRound.LoadDeck(loadedDeck);
 	}
-	else if (initialDecision == "2") {
+	else if (initialDecision == "2" && LoadGame()) {
 		//load data into the current round
 		currentRound.LoadRound(loadInfo.computerHand, loadInfo.computerPile, loadInfo.humanHand, loadInfo.humanPile, 
 			loadInfo.table, loadInfo.builds, loadInfo.deck);
