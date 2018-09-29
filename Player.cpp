@@ -310,12 +310,11 @@ void Player::RemovePlayerBuildCard(Card card) {
 
 		// If it is, erase the card from the list of build cards
 		if (card.GetCard() == playerBuildCards[i].GetCard()) {
-			playerBuildCards.erase(playerBuildCards.begin(), playerBuildCards.begin() + i);
+			playerBuildCards.erase(playerBuildCards.begin() + i);
 			return;
 		}
 	}
 
-	cerr << "Error in removing the player build card in the player class." << endl;
 }
 
 /* *********************************************************************
@@ -623,6 +622,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 	vector<Card> currentBuild;
 	int count = 0;
 	bool isCapturing = false;
+	playerWantSet = 'n';
 
 	// Checking to see if any builds can be captured
 
@@ -645,6 +645,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 			// Capturing the build with an ace
 			if (playerHand[i].GetNumber() == 'A' && count == 14) {
 				playerWantBuild = 'y';
+				printPlayerCapturedBuild = 'y';
 				playerCard = playerHand[j];
 				existingBuildCard = currentBuild[j];
 				return true;
@@ -653,6 +654,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 			// Capturing the build with any other card
 			if (CardNumber(playerHand[j].GetNumber()) == count) {
 				playerWantBuild = 'y';
+				printPlayerCapturedBuild = 'y';
 				playerCard = playerHand[j];
 				existingBuildCard = currentBuild[j];
 				return true;

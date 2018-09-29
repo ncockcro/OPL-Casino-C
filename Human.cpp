@@ -260,7 +260,7 @@ void Human::MakeBuild() {
 	do {
 		cout << "Are you making a new build or adding to a build? ('n' for new and 'e' for existing): ";
 		cin >> userInput;
-		if (userInput.size() > 1) {
+		if (tolower(userInput[0]) != 'n' && tolower(userInput[0]) != 'e' && userInput.size() > 1) {
 			cout << "Try again." << endl;
 			userInput = "-1";
 		}
@@ -349,7 +349,11 @@ void Human::MakeCapture() {
 	do {
 		cout << "Do you want to capture a build? (y,n): ";
 		cin >> userInput;
-	} while (userInput[0] != 'y' && userInput[0] != 'n' && userInput.size() != 1);
+		if (tolower(userInput[0]) != 'y' && tolower(userInput[0]) != 'n' || userInput.size() > 1) {
+			cout << "Try again." << endl;
+			userInput = "-1";
+		}
+	} while (userInput[0] != 'y' && userInput[0] != 'n');
 
 	playerWantBuild = userInput[0];
 

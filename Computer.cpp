@@ -101,12 +101,12 @@ void Computer::PrintMove() {
 	// If the computer captured...
 	else if (playerMove == 'c') {
 		cout << "The computer chose to play a " << GetNumberName(playerCard.GetNumber());
-		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to capture the "
-			;
+		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to capture the " << endl;
+
 		// If the computer captured a build...
-		if (playerWantBuild == 'y') {
+		if (printPlayerCapturedBuild == 'y') {
 			for (size_t i = 0; i < printTableBuildCards.size(); i++) {
-				if (i > 1) {
+				if (i > 0) {
 					cout << " and ";
 				}
 
@@ -114,6 +114,7 @@ void Computer::PrintMove() {
 				cout << GetSuitName(printTableBuildCards[i].GetSuit());
 			}
 		}
+		cout << "." << endl;
 
 		// Print out any loose cards the player captured
 		for (size_t i = 0; i < printTableCaptureCards.size(); i++) {
@@ -146,6 +147,10 @@ void Computer::PrintMove() {
 		}
 
 		cout << "It wanted to add more cards to its pile." << endl;
+
+		// Clearing the print vectors
+		printTableBuildCards.clear();
+		printTableCaptureCards.clear();
 	}
 	// If the computer trailed...
 	else if (playerMove == 't') {

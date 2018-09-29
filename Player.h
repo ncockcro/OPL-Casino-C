@@ -81,6 +81,7 @@ protected:
 	Card existingBuildCard;
 	char playerMove;
 	char playerWantBuild;
+	char printPlayerCapturedBuild;
 	char playerWantSet;
 	vector<Card> printTableBuildCards;
 	vector<Card> printTableCaptureCards;

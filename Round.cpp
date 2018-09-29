@@ -584,12 +584,18 @@ void Round::CreatePlayerBuild() {
 		
 	}
 
-	tableBuilds[buildCounter].SetValueOfBuild(CardNumber(lastAddedCard));
+	// This is used for counting up the total value of a build and setting it right after to the specific build
+	int countOfBuild = 0;
+	for (size_t i = 0; i < playerTableBuildCards.size(); i++) {
+		countOfBuild += CardNumber(playerTableBuildCards[i].GetNumber());
+	}
+	countOfBuild += CardNumber(playerHandBuildCard.GetNumber());
+	tableBuilds[buildCounter].SetValueOfBuild(countOfBuild);
 
 	// This is for setting the card that is needed for capturing the build
 	handCards = player[currentPlayer]->GetHand();
 	for (size_t i = 0; i < handCards.size(); i++) {
-		if (CardNumber(handCards[i].GetNumber()) == CardNumber(lastAddedCard)) {
+		if (CardNumber(handCards[i].GetNumber()) == countOfBuild) {
 			tableBuilds[buildCounter].SetCaptureCardOfBuild(handCards[i]);
 			break;
 		}
@@ -604,14 +610,14 @@ void Round::CreatePlayerBuild() {
 	// With all the cards being used for a build, we push them onto the vector of builds
 	tableBuilds[buildCounter].SetBuildOfCards(playerTableBuildCards);
 
-	// If the card the player is going to capture the build with is an ace, set the value of the build to 14
+	/*// If the card the player is going to capture the build with is an ace, set the value of the build to 14
 	if (playersBuildCards.back().GetNumber() == 'A') {
 		tableBuilds[buildCounter].SetValueOfBuild(14);
 	}
 	// Otherwise, set the value to be whatever else the card is
 	else {
 		tableBuilds[buildCounter].SetValueOfBuild(CardNumber(playersBuildCards.back().GetNumber()));
-	}
+	}*/
 
 	// Then remove the cards from the player's hand and the table since those cards are now part of a build
 	RemoveTableCards(playerTableBuildCards);
@@ -722,6 +728,18 @@ void Round::PrintHandPileAndTable() {
 	cout << "Computer pile: ";
 	for (size_t i = 0; i < computerPile.size(); i++) {
 		cout << computerPile[i].GetCard() << " ";
+	}
+	cout << endl;
+
+	// Print deck
+	vector<Card> tempDeck;
+	tempDeck = deckOfCards.GetDeck();
+	cout << "Deck: ";
+	for (size_t i = 0; i < tempDeck.size(); i++) {
+		cout << tempDeck[i].GetCard() << " ";
+		if (i % 4 == 3) {
+			cout << endl;
+		}
 	}
 	cout << endl;
 
@@ -939,6 +957,19 @@ bool Round::CheckIfPlayerCanCaptureBuild(Card playerHandCaptureCard, vector<Card
 			player[currentPlayer]->AddToPile(tempPile);
 
 			player[currentPlayer]->RemovePlayerBuildCard(playerHandCaptureCard);
+
+			// If the player that captured the build is not the current owner, then we need to cycle through the owner of the build's
+			// card's and remove it from their build cards that way they can discard that card again
+			if (tableBuilds[i].GetOwner() != currentPlayer) {
+				int buildOwner = tableBuilds[i].GetOwner();
+				vector<Card> buildOwnerHand;
+				buildOwnerHand = player[buildOwner]->GetHand();
+
+				for (size_t j = 0; j < buildOwnerHand.size(); j++) {
+					player[buildOwner]->RemovePlayerBuildCard(buildOwnerHand[j]);
+				}
+			}
+
 			tableBuilds.erase(tableBuilds.begin() + i);
 			player[currentPlayer]->RemoveCard(playerHandCaptureCard);
 			return true;
