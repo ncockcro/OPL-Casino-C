@@ -96,7 +96,9 @@ void Round::PlayRound(string firstPlayer) {
 		}
 
 	// while there are still cards in the deck and cards in the player's hands
-	} while (!deckOfCards.IsEmpty() && !player[0]->IsEmpty() && !player[1]->IsEmpty());
+	} while (!deckOfCards.IsEmpty() || !player[0]->IsEmpty() || !player[1]->IsEmpty());
+
+	
 
 	// Print out the player's piles at the end of the round
 	PrintPlayerPiles();
@@ -488,7 +490,7 @@ bool Round::CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards) {
 			return hasRightCards;
 		}
 		// If the player is creating a build with an ace as the card they will use to capture it with later...
-		if (playerHand[i].GetNumber() == 'A' && aceAs14) {
+		if (playerHand[i].GetNumber() == 'A' && aceAs14 == 14 || aceAs1 == 14) {
 			hasRightCards = true;
 			player[currentPlayer]->AddToPlayerBuildCards(playerHand[i]);
 			return hasRightCards;
@@ -1060,6 +1062,7 @@ Parameters: None
 Return Value: None
 Local Variables:
 outputFile, an output stream object, used for writing to an output file
+outputName, a string, used for storing the user specified file name
 tempBuild, a vector of cards, used to temporarily store a build
 tempDeck, a vector of cards, used to temporarily store the remaining cards in the deck
 Algorithm:
@@ -1068,12 +1071,23 @@ Assistance Received: none
 ********************************************************************* */
 void Round::SaveGame() {
 	ofstream outputFile;
+	string outputName;
+
+	// Asking the user for an output file name
+	cout << "Enter a name for the save file (Or 'n' for a default save name): ";
+	cin >> outputName;
+
+	// Or if they want a default save file name...
+	if (outputName == "n") {
+		outputName = "CasinoSaveFile.txt";
+	}
 
 	// Open the file
-	outputFile.open("CasinoSaveFile.txt");
+	outputFile.open(outputName);
 
 	// Save the round
 	outputFile << "Round: " << currentRound << endl;
+	outputFile << endl;
 
 	// Save the information pertaining to the computer
 	outputFile << "Computer: " << endl;
@@ -1089,7 +1103,7 @@ void Round::SaveGame() {
 	for (size_t i = 0; i < player[1]->GetPile().size(); i++) {
 		outputFile << player[1]->GetPile()[i].GetCard() << " ";
 	}
-	outputFile << endl;
+	outputFile << endl << endl;
 
 	// Save information pertaining to the human
 	outputFile << "Human: " << endl;
@@ -1105,7 +1119,7 @@ void Round::SaveGame() {
 	for (size_t i = 0; i < player[0]->GetPile().size(); i++) {
 		outputFile << player[0]->GetPile()[i].GetCard() << " ";
 	}
-	outputFile << endl;
+	outputFile  << endl << endl;
 
 	// save the table (builds and loose cards)
 	outputFile << "Table: ";
@@ -1118,10 +1132,10 @@ void Round::SaveGame() {
 	for (size_t i = 0; i < table.size(); i++) {
 		outputFile << table[i].GetCard() << " ";
 	}
-	outputFile << endl;
+	outputFile << endl << endl;
 
 	// Save the build owners
-	outputFile << "Build Owner: " << endl;
+	outputFile << "Build Owner: " << endl << endl;
 
 	// Save the deck
 	vector<Card> tempDeck = deckOfCards.GetDeck();
@@ -1129,7 +1143,7 @@ void Round::SaveGame() {
 	for (size_t i = 0; i < tempDeck.size(); i++) {
 		outputFile << tempDeck[i].GetCard() << " ";
 	}
-	outputFile << endl;
+	outputFile << endl << endl;
 
 	// Save the current player
 	if (currentPlayer == 0) {

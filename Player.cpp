@@ -623,6 +623,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 	int count = 0;
 	bool isCapturing = false;
 	playerWantSet = 'n';
+	playerOfSetCards.clear();
 
 	// Checking to see if any builds can be captured
 
@@ -647,7 +648,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 				playerWantBuild = 'y';
 				printPlayerCapturedBuild = 'y';
 				playerCard = playerHand[j];
-				existingBuildCard = currentBuild[j];
+				existingBuildCard = currentBuild.back();
 				return true;
 			}
 
@@ -656,11 +657,13 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 				playerWantBuild = 'y';
 				printPlayerCapturedBuild = 'y';
 				playerCard = playerHand[j];
-				existingBuildCard = currentBuild[j];
+				existingBuildCard = currentBuild.back();
 				return true;
 			}
 		}
 	}
+
+	Card tableCardToBeCaptured;
 
 	// If there were no builds to capture, then we will check for any loose cards to capture
 	// First cycling through the table
@@ -674,6 +677,7 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 
 				
 				playerCard = playerHand[j];
+				tableCardToBeCaptured = table[i];
 				isCapturing = true;
 
 				// Saving the card that matched so it can be outputted later to show the computers move
@@ -699,7 +703,23 @@ bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vect
 		// Next two for loops go through the table and we are looking for combinations of cards on the table
 		// that add up to the card the computer is capturing with
 		for (size_t i = 0; i < table.size(); i++) {
+			// If the card that is going to be in a set is already going to be used to capture,
+			// then we must skip over it
+			if (table[i].GetCard() == tableCardToBeCaptured.GetCard()) {
+				continue;
+			}
 			for (size_t j = 0; j < table.size(); j++) {
+
+				// If it is the same card on both tables, then we need to skip it as you can not have a set of the same card
+				if (table[i].GetCard() == table[j].GetCard()) {
+					continue;
+				}
+
+				// If the card that is going to be in a set is already going to be used to capture,
+				// then we must skip over it
+				if (table[j].GetCard() == tableCardToBeCaptured.GetCard()) {
+					continue;
+				}
 
 				// If the card the player is capturing with is an ace, then we need to look for sets that add up to 14
 				if (playerCard.GetNumber() == 'A' && CardNumber(table[i].GetNumber()) + CardNumber(table[j].GetNumber()) == 14) {

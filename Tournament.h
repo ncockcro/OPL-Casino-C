@@ -42,7 +42,7 @@ private:
 	bool LoadDeck();
 	void SaveLastCaptured(string capturer);
 	void IncrementRound();
-	void CalculatePoints();
+	void CalculatePoints(Round currentRound);
 	string TossCoin();
 	void GameWon();
 

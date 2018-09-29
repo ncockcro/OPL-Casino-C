@@ -64,7 +64,7 @@ void Tournament::PlayGame() {
 	SaveLastCaptured(currentRound.GetLastCapture());
 	IncrementRound();
 
-	CalculatePoints();
+	CalculatePoints(currentRound);
 
 	// The rest of the game is continued onwards until one person has scored the correct amount of points
 	do {
@@ -75,7 +75,7 @@ void Tournament::PlayGame() {
 		currentRound2.SetRoundInfo(round, humanPoints, computerPoints);
 		currentRound2.PlayRound(lastCaptured);
 
-		CalculatePoints();
+		CalculatePoints(currentRound2);
 
 	} while (humanPoints < 21 && computerPoints < 21);
 
@@ -238,39 +238,43 @@ bool Tournament::LoadGame() {
 		Build tempBuild;
 
 		// If the build keyword is in the text file, then we need to parse it for a build
-		if (userInput == "Build") {
-			inputFile >> userInput;
-
-			// If the string is not computer or human, then we know there is some text of the build we need to parse
-			while (userInput != "Computer" && userInput != "Human") {
+		do {
+			if (userInput == "Build") {
 				inputFile >> userInput;
-				for (size_t i = 0; i < userInput.size(); i++) {
-					// Checking for a suit
-					if (userInput[i] == 'C' || userInput[i] == 'D' || userInput[i] == 'H' || userInput[i] == 'S') {
-						buildString += userInput[i];
-					}
-					// Checking for a number
-					if (userInput[i] == '2' || userInput[i] == '3' || userInput[i] == '4' || userInput[i] == '5' ||
-						userInput[i] == '6' || userInput[i] == '7' || userInput[i] == '8' || userInput[i] == '9' ||
-						userInput[i] == 'X' || userInput[i] == 'J' || userInput[i] == 'Q' || userInput[i] == 'K' ||
-						userInput[i] == 'A') {
-						buildString += userInput[i];
-					}
-				}
 
-				// So long as what was parsed is a valid card, push it into a card and add it to the vector of cards to make up a build
-				if (buildString.size() == 2) {
-					tempCard.SetCard(buildString);
-					loadInfo.buildCards.push_back(tempCard);
+				// If the string is not computer or human, then we know there is some text of the build we need to parse
+				while (userInput != "Computer" && userInput != "Human") {
+					inputFile >> userInput;
+					for (size_t i = 0; i < userInput.size(); i++) {
+						// Checking for a suit
+						if (userInput[i] == 'C' || userInput[i] == 'D' || userInput[i] == 'H' || userInput[i] == 'S') {
+							buildString += userInput[i];
+						}
+						// Checking for a number
+						if (userInput[i] == '2' || userInput[i] == '3' || userInput[i] == '4' || userInput[i] == '5' ||
+							userInput[i] == '6' || userInput[i] == '7' || userInput[i] == '8' || userInput[i] == '9' ||
+							userInput[i] == 'X' || userInput[i] == 'J' || userInput[i] == 'Q' || userInput[i] == 'K' ||
+							userInput[i] == 'A') {
+							buildString += userInput[i];
+						}
+					}
 
+					// So long as what was parsed is a valid card, push it into a card and add it to the vector of cards to make up a build
+					if (buildString.size() == 2) {
+						tempCard.SetCard(buildString);
+						loadInfo.buildCards.push_back(tempCard);
+
+					}
+					buildString.erase();
 				}
-				buildString.erase();
+				// Once out of the loop of a build, add the cards to a build object and clear the vector of cards variable
+				tempBuild.SetBuildOfCards(loadInfo.buildCards);
+				loadInfo.builds.push_back(tempBuild);
+				loadInfo.buildCards.clear();
 			}
-			// Once out of the loop of a build, add the cards to a build object and clear the vector of cards variable
-			tempBuild.SetBuildOfCards(loadInfo.buildCards);
-			loadInfo.builds.push_back(tempBuild);
-			loadInfo.buildCards.clear();
-		}
+			tempBuild = Build();
+			inputFile >> userInput;
+		} while (userInput == "Build");
 
 		// Getting the deck
 		if (userInput == "Deck:") {
@@ -278,6 +282,8 @@ bool Tournament::LoadGame() {
 			while (userInput.size() == 2) {
 				tempCard.SetCard(userInput);
 				loadInfo.deck.push_back(tempCard);
+
+				inputFile >> userInput;
 			}
 			inputFile >> userInput;
 		}
@@ -411,14 +417,19 @@ Algorithm:
 4) Otherwise, return with the string "Computer"
 Assistance Received: none
 ********************************************************************* */
-void Tournament::CalculatePoints() {
+void Tournament::CalculatePoints(Round currentRound) {
 
 	vector<Card> humanPile = currentRound.GetPlayerPile();
 	vector<Card> computerPile = currentRound.GetComputerPile();
+
 	int humanRoundPoints = 0;
 	int computerRoundPoints = 0;
 	int humanSpadeCount = 0;
 	int computerSpadeCount = 0;
+	int humanAceCount = 0;
+	int computerAceCount = 0;
+	
+	cout << endl;
 
 	// Checking for specific cards through the human pile
 	for (size_t i = 0; i < humanPile.size(); i++) {
@@ -427,12 +438,15 @@ void Tournament::CalculatePoints() {
 			humanSpadeCount++;
 		}
 		if (humanPile[i].GetCard() == "S2") {
+			cout << "The human had the 2 of Spade, plus a point." << endl;
 			humanRoundPoints++;
 		}
 		if (humanPile[i].GetCard() == "DX") {
+			cout << "The human had the Ten of Diamonds, plus two points." << endl;
 			humanRoundPoints += 2;
 		}
 		if (humanPile[i].GetNumber() == 'A') {
+			humanAceCount++;
 			humanRoundPoints++;
 		}
 	}
@@ -441,15 +455,18 @@ void Tournament::CalculatePoints() {
 	for (size_t i = 0; i < computerPile.size(); i++) {
 
 		if (computerPile[i].GetSuit() == 'S') {
-			humanSpadeCount++;
+			computerSpadeCount++;
 		}
 		if (computerPile[i].GetCard() == "S2") {
+			cout << "The computer had the 2 of Spade, plus a point." << endl;
 			computerRoundPoints++;
 		}
 		if (computerPile[i].GetCard() == "DX") {
+			cout << "The computer had the Ten of Diamonds, plus two points." << endl;
 			computerRoundPoints += 2;
 		}
 		if (computerPile[i].GetNumber() == 'A') {
+			computerAceCount++;
 			computerRoundPoints++;
 		}
 	}
@@ -483,11 +500,16 @@ void Tournament::CalculatePoints() {
 	cout << "Total number of spades by the computer: " << computerSpadeCount << endl;
 	cout << endl;
 
+	cout << "Total number of aces by the player: " << humanAceCount << endl;
+	cout << "Total number of aces by the computer: " << computerAceCount << endl;
+
 	cout << "Total amount of points earned by the player this round: " << humanRoundPoints << endl;
 	cout << "Total amount of points earned by the computer this round: " << computerRoundPoints << endl;
 
 	cout << "Total player points: " << humanPoints << endl;
-	cout << "Total computer points: " << computerPoints << endl;
+	cout << "Total computer points: " << computerPoints << endl << endl;
+
+	system("pause");
 }
 
 /* *********************************************************************
@@ -562,4 +584,6 @@ void Tournament::GameWon() {
 	else {
 		cout << "It's a tie!" << endl;
 	}
+
+	system("pause");
 }
