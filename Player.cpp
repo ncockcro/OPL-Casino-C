@@ -894,6 +894,7 @@ Assistance Received: none
 void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 
 	if (AICheckForBuild(hand, table, tableBuilds)) {
+		cout << endl;
 		cout << "The player should make a build." << endl;
 		cout << "The player should use the " << GetNumberName(playerCard.GetNumber()); 
 		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to make a build with ";
@@ -906,13 +907,15 @@ void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 		}
 		cout << endl;
 		cout << "This way the player can capture as many cards as possible." << endl;
+		cout << endl;
 		return;
 	}
 
 	// Check if the player can make a capture
 	else if (AICheckForCapture(hand, table, tableBuilds)) {
-		cout << "The player should play the " << GetNumberName(playerCard.GetNumber());
-		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to capture " << endl;
+		cout << endl;
+		cout << "The player should play the " << endl << GetNumberName(playerCard.GetNumber());
+		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to capture ";
 
 		// Print if the pla
 		if (playerWantBuild == 'y') {
@@ -958,14 +961,18 @@ void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {
 				}
 			}
 		}
+		cout << "This way the player can capture as many cards as possible." << endl;
+		cout << endl;
 		return;
 	}
 
 	// If it cant do either of those things, then trail
 	else {
 		AIMakeTrail(hand);
-		cout << "The player should trail." << endl;
-		cout << "The player should use: " << playerCard.GetCard() << " to trail as there is no other move." << endl;
+		cout << endl;
+		cout << "The player should trail and use the" << endl;
+		cout << GetNumberName(playerCard.GetNumber()) << " of " << GetSuitName(playerCard.GetSuit()) << " to trail as there is no other move." << endl;
+		cout << endl;
 		return;
 	}
 }

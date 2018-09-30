@@ -79,6 +79,7 @@ Assistance Received: none
 ********************************************************************* */
 void Human::PrintMove() {
 	if (playerMove == 'b') {
+		cout << endl;
 		cout << "The player chose to play a " << playerCard.GetNumber() << " of ";
 		cout << GetSuitName(playerCard.GetSuit()) << endl;
 
@@ -115,10 +116,11 @@ void Human::PrintMove() {
 
 			}
 		}
+		cout << endl;
 	}
 	// When the human captures...
 	else if (playerMove == 'c') {
-
+		cout << endl;
 		cout << "The player chose to play a ";
 		// If the number of the card is less than 10, just print the number
 		cout << GetNumberName(playerCard.GetNumber()) << " of ";
@@ -162,8 +164,10 @@ void Human::PrintMove() {
 	}
 	// If the player is trailing
 	else if (tolower(playerMove) == 't') {
+		cout << endl;
 		cout << "The player trailed with the " << GetNumberName(playerCard.GetNumber());
 		cout << " of " << GetSuitName(playerCard.GetSuit());
+		cout << endl;
 	}
 	else {
 		cerr << "Error dont know what the player did in the human class." << endl;

@@ -31,31 +31,25 @@ public:
 
 private:
 	// Private functions
-	void SwitchPlayer();
 	void DealCardsToPlayers();
 	void DealCardsToTable();
 	void SetTable(vector<Card> deckOfCards);
-
-	// Used for validating a player's move
+	void PrintHandPileAndTable();
+	void SaveGame();
 	bool CheckMove(char move);
 	bool CheckBuild();
-	bool CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards); // Checks the number in a players hand and the number they are trying to add up to in a build
+	bool CheckBuildNumbers(Card playerCard, vector<Card> playerBuildCards);
 	int CardNumber(char number);
 	void CreatePlayerBuild();
 	void RemoveTableCards(vector<Card> cards);
-	void AddCardsToTable(vector<Card> cards);
-	void PrintHandPileAndTable();
-
 	bool CheckCapture();
 	bool CheckIfPlayerCanCaptureBuild(Card playerHandCaptureCard, vector<Card> playerHand);
-
+	bool CheckTrail();
+	void AddCardsToTable(vector<Card> cards);
+	void SwitchPlayer();
 	void PrintPlayerPiles();
 
-	// Trailing
-	bool CheckTrail();
-
-	void SaveGame();
-
+	// Private variables
 	vector<Card> computerPile;
 	int humanScore;
 	vector<Card> humanHand;
@@ -65,16 +59,13 @@ private:
 	vector<Build> builds;
 	vector<Card> deck;
 	string nextPlayer;
-
-	// Private variables
 	string lastCapture;
 	int currentPlayer;
 	Deck deckOfCards;
 	Human p1 = Human();
 	Computer p2 = Computer();
 	bool playTrue;
-
-	vector<Player*> player; // A vector of player objects which will act as one index for the player and the others as the computer
+	vector<Player*> player;
 	
 	// Used if the player is making a build
 	Card playerHandBuildCard;

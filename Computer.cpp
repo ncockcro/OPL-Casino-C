@@ -26,6 +26,32 @@ Assistance Received: none
 ********************************************************************* */
 void Computer::MakeMove(vector<Card> table, vector<Build> tableBuilds) {
 
+	string userInput;
+
+	do {
+		cout << "1.) Save the game" << endl;
+		cout << "2.) Make a move" << endl;
+		cout << "3.) Quit the game: ";
+		cin >> userInput;
+
+		if (userInput != "1" && userInput != "2" && userInput != "3") {
+			cout << endl;
+			cout << "Incorrect menu option." << endl;
+			cout << endl;
+		}
+	} while (userInput != "1" && userInput != "2" && userInput != "3");
+
+	// Save game
+	if (userInput == "1") {
+		playerWantSave = true;
+		return;
+	}
+
+	// Quit the game
+	else if (userInput == "3") {
+		exit(1);
+	}
+
 	// Check if the computer can make a build
 	if (AICheckForBuild(hand, table, tableBuilds)) {
 		playerMove = 'b';
