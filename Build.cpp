@@ -155,9 +155,17 @@ bool Build::CheckAndAddCardInBuild(Card cardToBeAdded, Card cardInBuild, int cur
 		// Does it equal one of the cards in their hand
 		for (size_t i = 0; i < playerHand.size(); i++) {
 			// If it does equal, update the build with the added card and return true
-			if (CardNumber(playerHand[i].GetNumber()) == aceAs1 || CardNumber(playerHand[i].GetNumber()) == aceAs14) {
+			if (CardNumber(playerHand[i].GetNumber()) == aceAs1 || CardNumber(playerHand[i].GetNumber()) == aceAs14 ||
+				playerHand[i].GetNumber() == 'A' && aceAs1 == 14) {
 				buildOfCards = tempBuild;
 				owner = currentPlayer;
+
+				if (playerHand[i].GetNumber() != 'A') {
+					cardValueOfBuild = CardNumber(playerHand[i].GetNumber());
+				}
+				else {
+					cardValueOfBuild = 14;
+				}
 
 				return true;
 			}

@@ -6,11 +6,6 @@ Set::Set()
 {
 }
 
-
-Set::~Set()
-{
-}
-
 /* *********************************************************************
 Function Name: SetCardsOfSet
 Purpose: To set a vector of cards into a set

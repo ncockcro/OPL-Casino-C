@@ -6,11 +6,6 @@ Computer::Computer()
 {
 }
 
-
-Computer::~Computer()
-{
-}
-
 /* *********************************************************************
 Function Name: MakeMove
 Purpose: To make a move specific for the computer
@@ -28,9 +23,10 @@ void Computer::MakeMove(vector<Card> table, vector<Build> tableBuilds) {
 
 	string userInput;
 
+	cout << "Computer's turn." << endl;
 	do {
 		cout << "1.) Save the game" << endl;
-		cout << "2.) Make a move" << endl;
+		cout << "2.) Computer make a move" << endl;
 		cout << "3.) Quit the game: ";
 		cin >> userInput;
 
@@ -87,12 +83,13 @@ void Computer::PrintMove() {
 	// If the computer made a build...
 	if (playerMove == 'b') {
 	
+		cout << endl;
 		cout << "The computer chose to play a " << GetNumberName(playerCard.GetNumber()) << " of ";
 		cout << GetSuitName(playerCard.GetSuit());
 
 		// **** New Builds ****
 		if (newOrExistingBuild == 'n') {
-			cout << " to make a build with the ";
+			cout << endl << " to make a build with the ";
 
 			// Cycling through the cards that were from the table that made the build
 			for (size_t i = 0; i < buildCards.size(); i++) {
@@ -108,7 +105,7 @@ void Computer::PrintMove() {
 
 		// **** Adding to an existing build ****
 		else if (newOrExistingBuild == 'e') {
-			cout << "to add to an existing build with the ";
+			cout << " to add to an existing build with the ";
 
 			// Cycling through the cards that already existed in the build
 			for (size_t i = 0; i < printTableBuildCards.size(); i++) {
@@ -118,6 +115,7 @@ void Computer::PrintMove() {
 				cout << GetNumberName(printTableBuildCards[i].GetNumber()) << " of ";
 				cout << GetSuitName(printTableBuildCards[i].GetSuit());
 			}
+			cout << ". " << endl << "It wanted to steal the opponents cards." << endl;
 		}
 		else {
 			cerr << "Something went wrong when printing computer builds in the computer class.";
@@ -128,7 +126,7 @@ void Computer::PrintMove() {
 	// If the computer captured...
 	else if (playerMove == 'c') {
 		cout << "The computer chose to play a " << GetNumberName(playerCard.GetNumber());
-		cout << " of " << GetSuitName(playerCard.GetSuit()) << " to capture the " << endl;
+		cout << " of " << GetSuitName(playerCard.GetSuit()) << endl << "to capture the ";
 
 		// If the computer captured a build...
 		if (printPlayerCapturedBuild == 'y') {
@@ -141,7 +139,6 @@ void Computer::PrintMove() {
 				cout << GetSuitName(printTableBuildCards[i].GetSuit());
 			}
 		}
-		cout << "." << endl;
 
 		// Print out any loose cards the player captured
 		for (size_t i = 0; i < printTableCaptureCards.size(); i++) {
@@ -154,10 +151,9 @@ void Computer::PrintMove() {
 		}
 		cout << endl;
 
-		// If the computer captured any sets, output them here
-		cout << " and the set of ";
 		vector<Card> setCards;
 		if (playerWantSet == 'y') {
+			cout << " and the set of ";
 
 			// First cycling through the vector of sets
 			for (size_t i = 0; i < playerOfSetCards.size(); i++) {
@@ -165,7 +161,7 @@ void Computer::PrintMove() {
 
 				// Then cycling through the cards in that set to be printed out
 				for (size_t j = 0; j < setCards.size(); j++) {
-					if (i > 1) {
+					if (i > 0) {
 						cout << " and ";
 					}
 
@@ -174,7 +170,7 @@ void Computer::PrintMove() {
 				}
 			}
 		}
-
+		cout << endl;
 		cout << "It wanted to add more cards to its pile." << endl;
 
 		// Clearing the print vectors

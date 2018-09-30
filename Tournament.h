@@ -17,7 +17,6 @@ class Tournament
 public:
 	// Public functions
 	Tournament();
-	~Tournament();
 	void PlayGame();
 
 	struct LoadGameInfo {
@@ -40,6 +39,7 @@ private:
 	string StartMenu();
 	bool LoadGame();
 	bool LoadDeck();
+	void LoadRoundAndScore();
 	void SaveLastCaptured(string capturer);
 	void IncrementRound();
 	void CalculatePoints(Round currentRound);

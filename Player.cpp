@@ -7,15 +7,12 @@ Player::Player()
 	playerWantSave = false;
 }
 
-// Default destructor
-Player::~Player()
-{
-}
-
 /* *********************************************************************
 Function Name: MakeMove
 Purpose: For each player to make a move in a round
-Parameters: None
+Parameters:
+table, a vector of cards passed by value, holds the current cards on the table
+buildTable, a vector of builds passed by value, holds the current builds on the table
 Return Value: Void
 Local Variables: None
 Algorithm:
@@ -46,8 +43,7 @@ fourCards, a vector of cards passed by value. It holds the four cards to be adde
 Return Value: Void
 Local Variables: None
 Algorithm:
-1) Go through the deck of 52 cards and the four cards passed in
-2) If the cards that were passed in match any of the cards in the deck, the card will be pushed to the players hand
+1) Push the four cards onto the player's hand
 Assistance Received: none
 ********************************************************************* */
 void Player::SetHand(vector<Card> fourCards) {
@@ -59,6 +55,17 @@ void Player::SetHand(vector<Card> fourCards) {
 
 }
 
+/* *********************************************************************
+Function Name: AddCardsToHand
+Purpose: Adds any cards that are passed in to the function
+Parameters:
+cards, a vector of cards passed by value. It holds the cards to be added to a player's hand
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Add the cards to the player's hand
+Assistance Received: none
+********************************************************************* */
 void Player::AddCardsToHand(vector<Card> cards) {
 	for (size_t i = 0; i < cards.size(); i++) {
 		hand.push_back(cards[i]);
@@ -431,38 +438,6 @@ bool Player::GetPlayerWantSave() const {
 }
 
 /* *********************************************************************
-Function Name: MakeSet
-Purpose: Has the user enter more kids for capturing a set
-Parameters: None
-Return Value: The cards being used for a set, a vector of cards value
-Local Variables:
-userInput, an string used to get user input
-count, an int for keeping track of how many cards they entered
-Algorithm:
-1) Prompt the user to enter two cards used for a set
-2) Return the value to be used in another function
-Assistance Received: none
-********************************************************************* */
-vector<Card> Player::MakeSet() {
-	string userInput;
-	int count = 0;
-
-	do {
-		cout << "Enter the two cards that make up a set for you to capture (Type a card and hit enter): ";
-		cin >> userInput;
-
-		if (CheckCard(userInput)) {
-			playerSetCards.push_back(Card());
-			playerSetCards[count].SetCard(userInput);
-			count++;
-		}
-
-	} while (count < 2);
-
-	return playerSetCards;
-}
-
-/* *********************************************************************
 Function Name: SetPrintTableBuildCards
 Purpose: To record any cards that were used in a build from the table
 Parameters:
@@ -542,7 +517,12 @@ playerHand, an vector of cards passed by value. It holds a player's hand
 Return Value: If the computer can build or not, a boolean value
 Local Variables: None
 Algorithm:
-1) WORK IN PROGRESS
+1) Cycle through the table and the player's hand for any cards that can be added together
+2) After the cards have been added together, check and see if there are any cards in the player's
+inventory that equal the new total sum
+3) It will also check if there are any existing builds that the computer can add to which it will build onto
+4) If there are, then the computer can capture
+5) If there aren't, the function will return false
 Assistance Received: none
 ********************************************************************* */
 bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector<Build> buildTable) {
@@ -623,6 +603,32 @@ bool Player::AICheckForBuild(vector<Card> playerHand, vector<Card> table, vector
 
 	return false;
 }
+
+/* *********************************************************************
+Function Name: AICheckForCapture
+Purpose: Check if there are any cards for a player to capture
+Parameters:
+playerHand, an vector of cards passed by value. It holds a player's hand
+table, a vector of cards passed by value. It holds current table cards
+buildTable, a vector of builds passed value. It holds the current builds on the table
+Return Value: If the computer cancapture or not, a boolean value
+Local Variables:
+currentBuild, a vector of cards, holds the current build while cycling through all the builds
+count, an int, holds the count of numbers in a build
+isCapturing, a boolean, false if not capturing, true otherwise
+tableCardToBeCaptured, a card value, holds the table card that will be captured
+tempCards, a vector of card object, a temporary holding for a card
+setOfCards, a vector of cards, holds a pair of cards that make up a set
+tempSet, a set object, temporarily holds a set object
+canCapture, a boolean, true if can capture, false otherwise
+Algorithm:
+1) First, cycle through any builds on the table and see if there are any to be captured
+2) If not, then check and see if there are any loose same value cards which can be captured
+3) Then check if there are any combination of cards to make up a set which can be captured
+4) If any of these are true, the function will return true
+5) Otherwise, it will return false
+Assistance Received: none
+********************************************************************* */
 bool Player::AICheckForCapture(vector<Card> playerHand, vector<Card> table, vector<Build> buildTable) {
 
 	vector<Card> currentBuild;
@@ -888,7 +894,9 @@ Parameters: None
 Return Value: Void
 Local Variables:None
 Algorithm:
-1) WORK IN PROGRESS
+1) Use the AI's ability to check for a build and if it can, it will display the cards to use
+2) If it can't build, use the AI's ability to check for a capture and if it can, display the cards to capture
+3) If the AI can't do either of those, then trail and output a card for the player to trail with
 Assistance Received: none
 ********************************************************************* */
 void Player::AskForHelp(vector<Card> table, vector<Build> tableBuilds) {

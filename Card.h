@@ -11,7 +11,6 @@ class Card
 public:
 	// Public functions
 	Card();
-	~Card();
 
 	// Setters
 	void SetCard(string passedCard);

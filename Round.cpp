@@ -109,7 +109,7 @@ void Round::LoadRound(vector<Card> loadComputerHand, vector<Card> loadComputerPi
 	}
 
 	// Load in the deck
-	deck = loadDeck;
+	deckOfCards = loadDeck;
 
 	loadGame = true;
 }
@@ -191,6 +191,9 @@ void Round::PlayRound(string firstPlayer) {
 
 	// while there are still cards in the deck and cards in the player's hands
 	} while (!deckOfCards.IsEmpty() || !player[0]->IsEmpty() || !player[1]->IsEmpty());
+
+	// Adding the table cards to whoever captured last
+	GiveTableCards();
 
 	
 
@@ -565,6 +568,7 @@ bool Round::CheckBuild() {
 	// If the player wants to add to an existing build, then we will go through each build to find which one
 	// they want to add to and if it is possible
 	else if (tolower(player[currentPlayer]->GetNewOrExistingBuild()) == 'e') {
+
 		for (size_t i = 0; i < tableBuilds.size(); i++) {
 
 			// If this function that is called returns true, then it was successful in validating the new build with the
@@ -574,6 +578,8 @@ bool Round::CheckBuild() {
 			if (tableBuilds[i].CheckAndAddCardInBuild(playerHandBuildCard, player[currentPlayer]->GetExistingBuildCard(), currentPlayer,
 				player[currentPlayer]->GetHand())) {
 				player[currentPlayer]->SetPrintTableBuildCards(tableBuilds[i].GetBuildOfCards());
+				// Removing the card the player added from the player's hand
+				player[currentPlayer]->RemoveCard(playerHandBuildCard);
 				addExistingBuildSuccessful = true;
 			}
 		}
@@ -819,11 +825,12 @@ bool Round::CheckCapture() {
 	vector<Card> playerHand = player[currentPlayer]->GetHand();
 
 	// Local variables for capturing
-	char number = CardNumber(playerHandCaptureCard.GetNumber());
+	int number = CardNumber(playerHandCaptureCard.GetNumber());
 	vector<Card> pile;
 	vector<Card> removedTableCards;
 	pile.push_back(playerHandCaptureCard);
 	bool canCapture = false;
+	bool looseCardsCapture = false;
 
 	// Local variables for sets
 	vector<Card> setCards;
@@ -847,7 +854,7 @@ bool Round::CheckCapture() {
 			for (size_t j = 0; j < table.size(); j++) {
 				for (size_t l = 0; l < cardsOfSet.size(); l++) {
 					// If the card is on the table, push it onto the pile vector to be added later
-					if (table[j].GetCard() == cardsOfSet[l].GetCard()) {
+					if (table[j].GetNumber() == cardsOfSet[l].GetNumber()) {
 
 						pile.push_back(table[j]);
 						removedTableCards.push_back(table[j]);
@@ -866,12 +873,16 @@ bool Round::CheckCapture() {
 			}
 
 			// If the set card's numbers add up to the capture card, then they can make the set
-			if (aceAs1Count != CardNumber(playerHandCaptureCard.GetNumber()) && aceAs14Count != CardNumber(playerHandCaptureCard.GetNumber())) {
+			if (playerHandCaptureCard.GetNumber() == 'A' && aceAs1Count == 14) {
+				// Left blank intentionally so the function wouldn't return false in the else if statement
+			}
+			else if (aceAs1Count != CardNumber(playerHandCaptureCard.GetNumber()) && aceAs14Count != CardNumber(playerHandCaptureCard.GetNumber())) {
 				cout << "Card numbers did not add up to what you were capturing with. Try again." << endl;
 				return false;
 			}
 			aceAs1Count = 0;
 			aceAs14Count = 0;
+			canCapture = true;
 		}
 	}
 
@@ -888,13 +899,46 @@ bool Round::CheckCapture() {
 		}
 	}
 	else {
+		bool partOfBuild = false;
 		// Checking to see if there are any cards on the table that match the card the player wants to capture with the same value
 		for (size_t i = 0; i < table.size(); i++) {
-			if (CardNumber(table[i].GetNumber()) == number) {
-				pile.push_back(table[i]);
-				removedTableCards.push_back(table[i]);
-				canCapture = true;
+
+			if (tableBuilds.size() == 0) {
+				if (CardNumber(table[i].GetNumber()) == number) {
+					pile.push_back(table[i]);
+					removedTableCards.push_back(table[i]);
+					canCapture = true;
+					looseCardsCapture = true;
+				}
 			}
+			for (size_t j = 0; j < tableBuilds.size(); j++) {
+
+				if (tableBuilds[j].GetValueOfBuild() == number) {
+					partOfBuild = true;
+					continue;
+				}
+
+				if (number == 1 && tableBuilds[j].GetValueOfBuild() == 14) {
+					partOfBuild = true;
+					continue;
+				}
+
+				if (CardNumber(table[i].GetNumber()) == number) {
+					pile.push_back(table[i]);
+					removedTableCards.push_back(table[i]);
+					canCapture = true;
+					looseCardsCapture = true;
+				}
+			}
+		}
+
+		if (partOfBuild) {
+			cout << "You can not capture with that card because it is needed for a build." << endl;
+			return false;
+		}
+
+		if (looseCardsCapture) {
+			player[currentPlayer]->SetPrintTableCaptureCards(removedTableCards);
 		}
 
 		// If everything is correct, add the cards and remove them properly
@@ -903,7 +947,6 @@ bool Round::CheckCapture() {
 			RemoveTableCards(removedTableCards);
 			// Setting the cards from the table that were captured into a variable in the player class
 			// so they can be outputted that they were captured
-			player[currentPlayer]->SetPrintTableCaptureCards(removedTableCards);
 
 			player[currentPlayer]->AddToPile(pile);
 		}
@@ -1153,4 +1196,28 @@ void Round::SetTable(vector<Card> deckOfCards) {
 	table.push_back(deckOfCards[1]);
 	table.push_back(deckOfCards[2]);
 	table.push_back(deckOfCards[3]);
+}
+
+/* *********************************************************************
+Function Name: SGiveTableCards
+Purpose: At the end of the round, the player that captured last gets the table cards
+Parameters: None
+Return Value: void
+Local Variables: None
+Algorithm:
+1) If the human captured last, they get the cards
+2) If the computer captured last, they get the cards
+Assistance Received: none
+********************************************************************* */
+void Round::GiveTableCards() {
+	if (lastCapture == "Human") {
+		player[0]->AddToPile(table);
+	}
+	else if (lastCapture == "Computer") {
+		player[1]->AddToPile(table);
+	}
+	else {
+		cerr << "Error, there is a problem giving the table cards in the round " << endl;
+	}
+
 }

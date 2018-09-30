@@ -11,7 +11,6 @@ class Set
 {
 public:
 	Set();
-	~Set();
 
 	void SetCardsOfSet(vector<Card> cards);
 	vector<Card> GetCardsOfSet() const;

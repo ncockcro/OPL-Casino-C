@@ -14,20 +14,18 @@ class Deck
 {
 public:
 	// Public functions
-	Deck(); // Default constructor
+	Deck();
 	Deck(vector<Card> cards);
-	~Deck(); // Default destructor
-	void PrintDeck(); // Prints the current deck of cards
+	void PrintDeck();
 	bool IsEmpty();
 	vector<Card> GetDeck() const;
 	void RemoveFourCards();
 
 private:
 	// Private functions
-	void ShuffleCards(); // Shuffles the deck if one was created
+	void ShuffleCards();
 
 	// Private variables
-	//Card::CardStruct card;
 	vector<Card> deckOfCards;
 };
 

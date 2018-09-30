@@ -48,6 +48,7 @@ private:
 	void AddCardsToTable(vector<Card> cards);
 	void SwitchPlayer();
 	void PrintPlayerPiles();
+	void GiveTableCards();
 
 	// Private variables
 	vector<Card> computerPile;

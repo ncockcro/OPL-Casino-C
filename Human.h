@@ -10,7 +10,6 @@ class Human: public Player
 {
 public:
 	Human();
-	~Human();
 
 	// Public functions
 	void MakeMove(vector<Card> table, vector<Build> buildTable);

@@ -11,7 +11,6 @@ class Computer: public Player
 {
 public:
 	Computer();
-	~Computer();
 
 	void MakeMove(vector<Card> table, vector<Build> tableBuilds);
 	void PrintMove();

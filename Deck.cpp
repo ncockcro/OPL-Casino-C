@@ -113,11 +113,6 @@ Deck::Deck(vector<Card> cards) {
 	deckOfCards = cards;
 }
 
-
-Deck::~Deck()
-{
-}
-
 /* *********************************************************************
 Function Name: PrintDeck
 Purpose: Print out the cards from the deck
@@ -195,7 +190,7 @@ Algorithm:
 Assistance Received: none
 ********************************************************************* */
 void Deck::ShuffleCards() {
-	// srand(time());
+	srand((unsigned int)time(0));
 
 	// Shuffles the vector of cards
 	random_shuffle(begin(deckOfCards), end(deckOfCards));

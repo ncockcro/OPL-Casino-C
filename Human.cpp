@@ -6,11 +6,6 @@ Human::Human()
 {
 }
 
-
-Human::~Human()
-{
-}
-
 /* *********************************************************************
 Function Name: MakeMove
 Purpose: Prompts the user for what kind of move they want to make
@@ -29,6 +24,7 @@ void Human::MakeMove(vector<Card> table, vector<Build> buildTable) {
 	printTableBuildCards.clear();
 	printTableCaptureCards.clear();
 
+	cout << "Human's turn." << endl;
 	do {
 		cout << "1.) Save the game" << endl;
 		cout << "2.) Make a move" << endl;
@@ -141,7 +137,12 @@ void Human::PrintMove() {
 		vector<Card> cardsOfASet;
 		// Now outputting any sets the player also captured if they did
 		if (tolower(playerWantSet) == 'y') {
-			cout << " and the set of ";
+			if (printTableCaptureCards.size() > 0) {
+				cout << " and the set of ";
+			}
+			else {
+				cout << endl << "the set of ";
+			}
 
 			// First cycling through the list of sets
 			for (size_t i = 0; i < playerOfSetCards.size(); i++) {
@@ -441,6 +442,10 @@ void Human::MakeTrail() {
 			if (userInput == hand[i].GetCard()) {
 				validCard = true;
 			}
+		}
+
+		if (validCard == false) {
+			cout << "You don't have that card." << endl;
 		}
 
 	} while (!validCard);

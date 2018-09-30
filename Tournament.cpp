@@ -9,11 +9,6 @@ Tournament::Tournament()
 
 }
 
-// Default destructor
-Tournament::~Tournament()
-{
-}
-
 /* *********************************************************************
 Function Name: PlayGame
 Purpose: The main game loop of Casino which runs the tournament 
@@ -50,6 +45,8 @@ void Tournament::PlayGame() {
 		currentRound.LoadDeck(loadedDeck);
 	}
 	else if (initialDecision == "2" && LoadGame()) {
+		// load data into the tournament
+		LoadRoundAndScore();
 		//load data into the current round
 		currentRound.LoadRound(loadInfo.computerHand, loadInfo.computerPile, loadInfo.humanHand, loadInfo.humanPile, 
 			loadInfo.table, loadInfo.builds, loadInfo.deck);
@@ -67,8 +64,8 @@ void Tournament::PlayGame() {
 	CalculatePoints(currentRound);
 
 	// The rest of the game is continued onwards until one person has scored the correct amount of points
-	do {
-		
+	while (humanPoints < 21 && computerPoints < 21) {
+
 		currentRound = Round();
 		// After the toin coss, it is the player whoever captured last
 		Round currentRound2 = Round();
@@ -76,8 +73,7 @@ void Tournament::PlayGame() {
 		currentRound2.PlayRound(lastCaptured);
 
 		CalculatePoints(currentRound2);
-
-	} while (humanPoints < 21 && computerPoints < 21);
+	}
 
 	// Checks the points of each player to see if someone won or it was a tie
 	GameWon();
@@ -106,8 +102,8 @@ string Tournament::StartMenu() {
 		cout << "2.) for load game: " << endl;
 		cout << "3.) to exit: ";
 		cin >> userInput;
-		if (userInput.size() > 1 && userInput != "1" && userInput != "2" && userInput != "3") {
-			cout << "Try again." << endl;
+		if (userInput.size() > 1 || userInput != "1" && userInput != "2" && userInput != "3") {
+			cout << "Invalid menu option." << endl;
 			userInput = "-1";
 		}
 	} while (userInput != "1" && userInput != "2" && userInput != "3");
@@ -120,10 +116,13 @@ Function Name: LoadGame
 Purpose: Prompt the user for a text file and load a game for it to be picked up from
 Parameters: None
 Return Value: Whether the user loaded in a deck of not, true or false, a boolean value
-Local Variables: userInput, a string which gets the menu option from the player
+Local Variables: 
+userInput, a string which gets the menu option from the player
+tempCard, a card object which temporarily holds a card
+inputFile, an ifstream object which reads in the text file the user specifies
 Algorithm:
 1) Prompt the user for what file they want to load in
-2) Return the option that the user picked
+2) Parse the file, saving everything to a struct in the tournament class
 Assistance Received: none
 ********************************************************************* */
 bool Tournament::LoadGame() {
@@ -224,6 +223,11 @@ bool Tournament::LoadGame() {
 		if (userInput == "Table:") {
 			inputFile >> userInput;
 			while (userInput != "Build" && userInput != "Deck:") {
+				if (userInput == "[") {
+					while (userInput != "]") {
+						inputFile >> userInput;
+					}
+				}
 				if (userInput.size() == 2) {
 					tempCard.SetCard(userInput);
 					loadInfo.table.push_back(tempCard);
@@ -269,6 +273,17 @@ bool Tournament::LoadGame() {
 				}
 				// Once out of the loop of a build, add the cards to a build object and clear the vector of cards variable
 				tempBuild.SetBuildOfCards(loadInfo.buildCards);
+
+				if (userInput == "Computer") {
+					tempBuild.SetOwner(1);
+				}
+				else if (userInput == "Human") {
+					tempBuild.SetOwner(0);
+				}
+				else {
+					cerr << "Error in setting the build owner in tournament class." << endl;
+				}
+
 				loadInfo.builds.push_back(tempBuild);
 				loadInfo.buildCards.clear();
 				inputFile >> userInput;
@@ -279,11 +294,15 @@ bool Tournament::LoadGame() {
 		// Getting the deck
 		if (userInput == "Deck:") {
 			inputFile >> userInput;
-			while (userInput.size() == 2) {
-				tempCard.SetCard(userInput);
-				loadInfo.deck.push_back(tempCard);
 
-				inputFile >> userInput;
+			// If userinput equals "Next" then that means the deck is empty and should be skipped over
+			if (userInput != "Next") {
+				while (userInput.size() == 2) {
+					tempCard.SetCard(userInput);
+					loadInfo.deck.push_back(tempCard);
+
+					inputFile >> userInput;
+				}
 			}
 			inputFile >> userInput;
 		}
@@ -304,7 +323,10 @@ Function Name: LoadDeck
 Purpose: Prompt the user if they want to load a deck or not, if so, handles reading in the file
 Parameters: None
 Return Value: Whether the user loaded in a deck of not, true or false, a boolean value
-Local Variables: userInput, a string which gets the menu option from the player
+Local Variables: 
+userInput, a string which gets the menu option from the player
+tempCard, a card object which temporarily holds a card
+inputFile, an ifstream object which is the file the user types in
 Algorithm:
 1) Prompt the user for what option they want to do
 2) Return the option that the user picked
@@ -357,6 +379,24 @@ bool Tournament::LoadDeck() {
 	}
 
 	return true;
+}
+
+/* *********************************************************************
+Function Name: LoadRoundAndScore
+Purpose: When loading in a text file, set the round and player's scores
+Parameters: None
+Return Value: Void
+Local Variables: None
+Algorithm:
+1) Set the round and player's scores to what was in the text file
+Assistance Received: none
+********************************************************************* */
+void Tournament::LoadRoundAndScore() {
+	round = loadInfo.round;
+
+	humanPoints = loadInfo.humanScore;
+
+	computerPoints = loadInfo.computerScore;
 }
 
 /* *********************************************************************

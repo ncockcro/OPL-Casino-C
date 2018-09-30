@@ -6,11 +6,6 @@ Card::Card()
 {
 }
 
-
-Card::~Card()
-{
-}
-
 /* *********************************************************************
 Function Name: SetCard
 Purpose: Setting a string to be the value of a card

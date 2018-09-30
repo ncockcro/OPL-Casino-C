@@ -24,8 +24,7 @@ class Player
 public:
 	// Public functions
 	Player();
-	~Player();
-	virtual void MakeMove(vector<Card> table, vector<Build> buildTable); // Virtual function so both types of players can share certain moves
+	virtual void MakeMove(vector<Card> table, vector<Build> buildTable);
 	virtual void PrintMove();
 	void SetHand(vector<Card> fourCards);
 	void AddCardsToHand(vector<Card> cards);
@@ -37,7 +36,6 @@ public:
 	Card GetExistingBuildCard() const;
 	char GetPlayerMove() const;
 	void RemoveCard(Card card);
-
 	void SetPile(vector<Card> passedPile);
 	void AddToPile(vector<Card> passedPile);
 	vector<Card> GetPile() const;
@@ -51,7 +49,6 @@ public:
 	vector<Card> GetPlayerSetCards() const;
 	vector<Set> GetPlayerOfSetCards() const;
 	bool GetPlayerWantSave() const;
-	vector<Card> MakeSet();
 	void SetPrintTableBuildCards(vector<Card> cards);
 	void SetPrintTableCaptureCards(vector<Card> cards);
 
@@ -63,19 +60,19 @@ protected:
 	void AIMakeTrail(vector<Card> playerHand);
 	int CardNumber(char number);
 	void AskForHelp(vector<Card> table, vector<Build> tableBuilds);
+	bool CheckCard(string card);
+	string GetNumberName(char number);
+	string GetSuitName(char suit);
 
 	// Protected varaibles
-	// Current hand and pile of the player
 	vector<Card> hand;
 	vector<Card> pile;
 	vector<Card> playerBuildCards;
 	vector<Card> playerSetCards;
 	vector<Set> playerOfSetCards;
-
 	Deck deck = Deck();
 	vector<Card> uniqueCards = deck.GetDeck();
 	bool playerWantSave;
-
 	Card playerCard;
 	vector<Card> buildCards;
 	char newOrExistingBuild;
@@ -86,9 +83,6 @@ protected:
 	char playerWantSet;
 	vector<Card> printTableBuildCards;
 	vector<Card> printTableCaptureCards;
-	bool CheckCard(string card);
-	string GetNumberName(char number);
-	string GetSuitName(char suit);
 };
 
 #endif
