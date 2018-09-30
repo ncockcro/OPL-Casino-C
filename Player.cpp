@@ -59,6 +59,12 @@ void Player::SetHand(vector<Card> fourCards) {
 
 }
 
+void Player::AddCardsToHand(vector<Card> cards) {
+	for (size_t i = 0; i < cards.size(); i++) {
+		hand.push_back(cards[i]);
+	}
+}
+
 /* *********************************************************************
 Function Name: IsEmpty
 Purpose: To check if a player's hand is empty

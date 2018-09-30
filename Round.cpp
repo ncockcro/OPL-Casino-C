@@ -612,37 +612,11 @@ void Round::CreatePlayerBuild() {
 	// With all the cards being used for a build, we push them onto the vector of builds
 	tableBuilds[buildCounter].SetBuildOfCards(playerTableBuildCards);
 
-	/*// If the card the player is going to capture the build with is an ace, set the value of the build to 14
-	if (playersBuildCards.back().GetNumber() == 'A') {
-		tableBuilds[buildCounter].SetValueOfBuild(14);
-	}
-	// Otherwise, set the value to be whatever else the card is
-	else {
-		tableBuilds[buildCounter].SetValueOfBuild(CardNumber(playersBuildCards.back().GetNumber()));
-	}*/
-
 	// Then remove the cards from the player's hand and the table since those cards are now part of a build
 	RemoveTableCards(playerTableBuildCards);
 	player[currentPlayer]->RemoveCard(playerHandBuildCard);
 	
 	buildCounter++;
-
-
-	
-}
-
-/* *********************************************************************
-Function Name: AddToExistingBuild
-Purpose: To validate if a player can add to a build and if so, add to it
-Parameters: None
-Return Value: Returns true if successful, false otherwise, a bolean value
-Local Variables: None
-Algorithm:
-1) 
-Assistance Received: none
-********************************************************************* */
-bool Round::AddToExistingBuild() {
-	return false;
 }
 
 /* *********************************************************************
@@ -1135,7 +1109,9 @@ void Round::SaveGame() {
 	outputFile << endl << endl;
 
 	// Save the build owners
-	outputFile << "Build Owner: " << endl << endl;
+	if (tableBuilds.size() > 0) {
+		outputFile << "Build Owner: " << endl << endl;
+	}
 
 	// Save the deck
 	vector<Card> tempDeck = deckOfCards.GetDeck();
@@ -1181,18 +1157,20 @@ void Round::LoadRound(vector<Card> loadComputerHand, vector<Card> loadComputerPi
 	vector<Card> loadHumanPile, vector<Card> loadTable, vector<Build> loadBuilds, vector<Card> loadDeck) {
 
 	// Load in computer's attributes
-	player[1]->SetHand(loadComputerHand);
+	player[1]->AddCardsToHand(loadComputerHand);
 	player[1]->SetPile(loadComputerPile);
 
 	// Load in player's attributes
-	player[0]->SetHand(loadHumanHand);
+	player[0]->AddCardsToHand(loadHumanHand);
 	player[0]->SetPile(loadHumanPile);
 
 	// Load in the table
 	table = loadTable;
 
 	// Load in the builds
-	tableBuilds = loadBuilds;
+	if (loadBuilds.size() > 0) {
+		tableBuilds = loadBuilds;
+	}
 
 	// Load in the deck
 	deck = loadDeck;

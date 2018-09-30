@@ -96,6 +96,7 @@ void Computer::PrintMove() {
 		else {
 			cerr << "Something went wrong when printing computer builds in the computer class.";
 		}
+		printTableBuildCards.clear();
 	}
 
 	// If the computer captured...
@@ -125,8 +126,10 @@ void Computer::PrintMove() {
 			cout << GetNumberName(printTableCaptureCards[i].GetNumber()) << " of ";
 			cout << GetSuitName(printTableCaptureCards[i].GetSuit());
 		}
+		cout << endl;
 
 		// If the computer captured any sets, output them here
+		cout << " and the set of ";
 		vector<Card> setCards;
 		if (playerWantSet == 'y') {
 

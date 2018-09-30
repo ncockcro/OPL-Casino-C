@@ -323,6 +323,7 @@ void Human::MakeCapture() {
 	bool hasCard = false;
 	vector<Card> setCards;
 
+	playerWantSet = 'n';
 
 	// Prompts the user for a card they would like to build
 	do {

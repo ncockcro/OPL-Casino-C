@@ -271,9 +271,9 @@ bool Tournament::LoadGame() {
 				tempBuild.SetBuildOfCards(loadInfo.buildCards);
 				loadInfo.builds.push_back(tempBuild);
 				loadInfo.buildCards.clear();
+				inputFile >> userInput;
 			}
 			tempBuild = Build();
-			inputFile >> userInput;
 		} while (userInput == "Build");
 
 		// Getting the deck
@@ -292,10 +292,6 @@ bool Tournament::LoadGame() {
 		if (userInput == "Player:") {
 			inputFile >> userInput;
 			loadInfo.nextPlayer = userInput;
-		}
-
-		for (size_t i = 0; i < loadInfo.deck.size(); i++) {
-			cout << loadInfo.deck[i].GetCard() << endl;
 		}
 
 	}

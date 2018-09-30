@@ -28,6 +28,7 @@ public:
 	virtual void MakeMove(vector<Card> table, vector<Build> buildTable); // Virtual function so both types of players can share certain moves
 	virtual void PrintMove();
 	void SetHand(vector<Card> fourCards);
+	void AddCardsToHand(vector<Card> cards);
 	bool IsEmpty();
 	vector<Card> GetHand() const;
 	Card GetPlayerCard() const;
