@@ -211,22 +211,31 @@ void Round::PlayRound(string firstPlayer) {
 		// Switch players
 		SwitchPlayer();
 
+		// So long as there are still cards in the deck and both of the player's hands are empty, deal more cards
+		// If we need to deal more cards in the middle of a round, this could have happened if the game was loaded in
+		if (!deckOfCards.IsEmpty() && player[0]->IsEmpty() && player[1]->IsEmpty()) {
+			DealCardsToPlayers();
+		}
+
 		// Print table and have the other player make a move
 		PrintHandPileAndTable();
 
 		// Player 2 is going now
-		do {
-			player[currentPlayer]->MakeMove(table, tableBuilds);
+		// If both of the player's hands are empty then we need to skip this move since the round is over and they have no cards
+		if (player[0]->IsEmpty() == false || player[1]->IsEmpty() == false) {
+			do {
+				player[currentPlayer]->MakeMove(table, tableBuilds);
 
-			// If the player made the choice to save the game, then this function will be triggered
-			if (player[currentPlayer]->GetPlayerWantSave() == true) {
-				SaveGame();
-			}
+				// If the player made the choice to save the game, then this function will be triggered
+				if (player[currentPlayer]->GetPlayerWantSave() == true) {
+					SaveGame();
+				}
 
-		} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
+			} while (CheckMove(player[currentPlayer]->GetPlayerMove()) == false);
 
-		// Print what kind of move the player just made
-		player[currentPlayer]->PrintMove();
+			// Print what kind of move the player just made
+			player[currentPlayer]->PrintMove();
+		}
 
 		// Switch again before the loop ends
 		SwitchPlayer();
