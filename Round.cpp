@@ -54,16 +54,14 @@ void Round::SetRoundInfo(int round, int humanScore, int computerScore) {
 }
 
 /* *********************************************************************
-Function Name: SetRoundInfo
-Purpose: Setting the round info so if the player decides to save the game, the info is available
+Function Name: LoadDeck
+Purpose: Loading in a deck of cards at the beginning of a game
 Parameters:
-round, an integer value, holds the current round
-humanScore, an integer value, holds the human's score
-computerScore, an integer value, holds the computer's score
+loadedDeck, a vector of cards value, holds the cards from the loaded in deck
 Return Value: Void
 Local Variables: None
 Algorithm:
-1) Set the round, human score, and computer score
+1) Set the deck of cards for the round with what was passed in
 Assistance Received: none
 ********************************************************************* */
 void Round::LoadDeck(vector<Card> loadedDeck) {
@@ -104,8 +102,50 @@ void Round::LoadRound(vector<Card> loadComputerHand, vector<Card> loadComputerPi
 	table = loadTable;
 
 	// Load in the builds
+	vector<Card> buildCards;
+	int count = 0;
 	if (loadBuilds.size() > 0) {
 		tableBuilds = loadBuilds;
+
+		// Cycling through the builds and setting the correct value of it 
+		for (size_t i = 0; i < tableBuilds.size(); i++) {
+			buildCards = tableBuilds[i].GetBuildOfCards();
+
+			for (size_t j = 0; j < buildCards.size(); j++) {
+				count += CardNumber(buildCards[j].GetNumber());
+			}
+			tableBuilds[i].SetValueOfBuild(count);
+			// If the computer is the owner of the build...
+			if (tableBuilds[i].GetOwner() == 1) {
+				// Cycle through and find the card that can capture the build
+				for (size_t j = 0; j < loadComputerHand.size(); j++) {
+					if (CardNumber(loadComputerHand[j].GetNumber()) == count) {
+						tableBuilds[i].SetCaptureCardOfBuild(loadComputerHand[j]);
+					}
+
+					if (loadComputerHand[j].GetNumber() == 'A' && count == 14) {
+						tableBuilds[i].SetCaptureCardOfBuild(loadComputerHand[j]);
+					}
+				}
+			}
+			// If the human is the owner...
+			else if (tableBuilds[i].GetOwner() == 0) {
+				// Cycle through and find the card that can capture the build
+				for (size_t j = 0; j < loadHumanHand.size(); j++) {
+					if (CardNumber(loadHumanHand[j].GetNumber()) == count) {
+						tableBuilds[i].SetCaptureCardOfBuild(loadHumanHand[j]);
+					}
+
+					if (loadHumanHand[j].GetNumber() == 'A' && count == 14) {
+						tableBuilds[i].SetCaptureCardOfBuild(loadHumanHand[j]);
+					}
+				}
+			}
+			count = 0;
+		}
+
+
+		buildCounter = loadBuilds.size();
 	}
 
 	// Load in the deck
@@ -123,7 +163,14 @@ Return Value: void
 Local Variables:
 playTrue, is true if a player's move is valid, false otherwise, a boolean value
 Algorithm:
-1) WORK IN PROGRESS
+1) Check to see who is going first, either human or computer
+2) If we are not loading in a game, deal the first four cards to human,
+next four cards to computer, and next four cards to the table
+3) Then go through the game loop of a round where one player goes, 
+the move is validated, then the next player goes, and the move is validated
+4) This process continues until there are no more cards in the deck and
+no more cards in the player's hands
+5) Then the player who captured last gets the table cards and the piles are printed
 Assistance Received: none
 ********************************************************************* */
 void Round::PlayRound(string firstPlayer) {
@@ -913,12 +960,14 @@ bool Round::CheckCapture() {
 			}
 			for (size_t j = 0; j < tableBuilds.size(); j++) {
 
-				if (tableBuilds[j].GetValueOfBuild() == number) {
+				// If the card the player is capturing with equals the build and they are the owner
+				if (tableBuilds[j].GetValueOfBuild() == number && tableBuilds[j].GetOwner() == currentPlayer) {
 					partOfBuild = true;
 					continue;
 				}
 
-				if (number == 1 && tableBuilds[j].GetValueOfBuild() == 14) {
+				// Same thing but if they are using an ace
+				if (number == 1 && tableBuilds[j].GetValueOfBuild() == 14 && tableBuilds[j].GetOwner() == currentPlayer) {
 					partOfBuild = true;
 					continue;
 				}

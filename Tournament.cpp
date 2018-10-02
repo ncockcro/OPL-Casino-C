@@ -50,6 +50,7 @@ void Tournament::PlayGame() {
 		//load data into the current round
 		currentRound.LoadRound(loadInfo.computerHand, loadInfo.computerPile, loadInfo.humanHand, loadInfo.humanPile, 
 			loadInfo.table, loadInfo.builds, loadInfo.deck);
+		currentRound.SetRoundInfo(round, humanPoints, computerPoints);
 		currentRound.PlayRound(loadInfo.nextPlayer);
 	}
 	else {
@@ -131,7 +132,7 @@ bool Tournament::LoadGame() {
 	ifstream inputFile;
 
 	do {
-		cout << "Enter the name of the file you want to load your deck from." << endl;
+		cout << "Enter the name of the file you want to load your game from." << endl;
 		cout << "Enter 'n' if you just want to play a new game: ";
 		cin >> userInput;
 
