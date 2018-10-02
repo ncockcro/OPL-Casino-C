@@ -194,7 +194,7 @@ void Human::MakePlay() {
 		cout << "Type 'b' to build, 'c' to capture, or 't' to trail: ";
 		cin >> userInput;
 
-		if (tolower(userInput[0]) != 'b' && tolower(userInput[0]) != 'c' && tolower(userInput[0]) != 't' && userInput.size() > 1) {
+		if (tolower(userInput[0]) != 'b' && tolower(userInput[0]) != 'c' && tolower(userInput[0]) != 't' || userInput.size() != 1) {
 			cout << "Try again." << endl;
 			userInput = "-1";
 		}
